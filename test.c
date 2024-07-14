@@ -1,3 +1,5 @@
+/** Просьба не обращать внимание на код, создал его для проверки отображения в GitHub */
+
 #define main EntryPointInProgram
 #include <stdio.h>
 
