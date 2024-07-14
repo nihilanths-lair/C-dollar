@@ -4,6 +4,6 @@
 int EntryPointInProgram()
 {
     setlocale(0, "");
-    printf(" Резец");
+    printf(" C$ – new language programming, is awesome!");
     return 0;
 }
