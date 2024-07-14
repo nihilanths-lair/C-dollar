@@ -6,6 +6,6 @@
 int EntryPointInProgram()
 {
     setlocale(0, "");
-    printf(" C$ – new language programming, is awesome!");
+    printf(" Готов участвовать в разработке С-hook!");
     return 0;
 }
