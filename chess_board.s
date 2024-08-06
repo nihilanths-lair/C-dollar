@@ -96,7 +96,10 @@ main:
 	leaq	.LC6(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	movb	$0, -48(%rbp)
+	movq	$0, -48(%rbp)
+	movq	$0, -40(%rbp)
+	movq	$0, -32(%rbp)
+	movq	$0, -24(%rbp)
 	leaq	-48(%rbp), %rax
 	movq	%rax, %rdx
 	leaq	.LC7(%rip), %rax

@@ -2,9 +2,11 @@
 #include <locale.h>
 #include <string.h>
 //
+#define EntryPointInProgram main // #define EntryPointToProgram main
+#define EOS "" // #define EOS '\0'
 //char fop(FILE *h, const char *fn);
 //
-int main(int argc, char *argv[])
+int EntryPointInProgram(int argc, char *argv[])
 {
     setlocale(0, ""); // установим русский язык
     //
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
     {
         printf("Файл открыт на чтение.\n"); // если файл существует, то считаем с него конфигурационные данные
         //if (fop(h, "compiler.cfg") == -1) return 1;
-        char cfg[32]; cfg[0] = '\0';
+        char cfg[32] = EOS; // cfg[0] = EOS;
         printf("A | cfg[] = \"%s\"\n", cfg);
         fgets(cfg, sizeof (cfg), h);
         printf("B | cfg[] = \"%s\"\n", cfg);
