@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <locale.h>
+#include <string.h>
 //
 char fop(FILE *h, const char *fn);
 //
@@ -55,5 +56,7 @@ char fop(FILE *h, const char *fn)
     printf("A | cfg[] = \"%s\"\n", cfg);
     fgets(cfg, sizeof (cfg), h);
     printf("B | cfg[] = \"%s\"\n", cfg);
+    if (!strcmp(cfg, "Аргументы с консоли: Нет")) printf("Аргументы с файла.\n");
+    else printf("Аргументы с консоли.");
     return 0;
 }

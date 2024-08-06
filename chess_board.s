@@ -116,6 +116,10 @@ main:
 	.ascii "A | cfg[] = \"%s\"\12\0"
 .LC14:
 	.ascii "B | cfg[] = \"%s\"\12\0"
+.LC15:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340.\0"
+.LC16:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350.\0"
 	.text
 	.globl	fop
 	.def	fop;	.scl	2;	.type	32;	.endef
@@ -148,7 +152,7 @@ fop:
 	movq	%rax, %rcx
 	call	printf
 	movl	$-1, %eax
-	jmp	.L13
+	jmp	.L15
 .L10:
 	leaq	.LC10(%rip), %rax
 	movq	%rax, %rcx
@@ -189,8 +193,23 @@ fop:
 	leaq	.LC14(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
-	movl	$0, %eax
+	leaq	-64(%rbp), %rax
+	leaq	.LC11(%rip), %rdx
+	movq	%rax, %rcx
+	call	strcmp
+	testl	%eax, %eax
+	jne	.L13
+	leaq	.LC15(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	jmp	.L14
 .L13:
+	leaq	.LC16(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
+.L14:
+	movl	$0, %eax
+.L15:
 	addq	$96, %rsp
 	popq	%rbp
 	ret
@@ -204,3 +223,4 @@ fop:
 	.def	fopen;	.scl	2;	.type	32;	.endef
 	.def	fwrite;	.scl	2;	.type	32;	.endef
 	.def	fgets;	.scl	2;	.type	32;	.endef
+	.def	strcmp;	.scl	2;	.type	32;	.endef
