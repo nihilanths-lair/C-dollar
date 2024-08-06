@@ -108,12 +108,14 @@ main:
 	.align 8
 .LC10:
 	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
-	.align 8
 .LC11:
-	.ascii "\315\345 \361\354\356\343 \356\362\352\360\373\362\374 \364\340\351\353 \355\340 \367\362\345\355\350\345.\0"
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350: \315\345\362\0"
+	.align 8
 .LC12:
-	.ascii "\324\340\351\353 \357\345\360\345\356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+	.ascii "\315\345 \361\354\356\343 \356\362\352\360\373\362\374 \364\340\351\353 \355\340 \367\362\345\355\350\345.\0"
 .LC13:
+	.ascii "\324\340\351\353 \357\345\360\345\356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+.LC14:
 	.ascii "\324\340\351\353 \356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
 	.text
 	.globl	fop
@@ -153,21 +155,12 @@ fop:
 	movq	%rax, %rcx
 	call	puts
 	movq	16(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$116, %ecx
-	call	fputc
-	movq	16(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$101, %ecx
-	call	fputc
-	movq	16(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$115, %ecx
-	call	fputc
-	movq	16(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$116, %ecx
-	call	fputc
+	movq	%rax, %r9
+	movl	$24, %r8d
+	movl	$1, %edx
+	leaq	.LC11(%rip), %rax
+	movq	%rax, %rcx
+	call	fwrite
 	movq	16(%rbp), %rax
 	movq	%rax, %rcx
 	call	fclose
@@ -181,18 +174,18 @@ fop:
 	movq	%rax, 16(%rbp)
 	cmpq	$0, 16(%rbp)
 	jne	.L12
-	leaq	.LC11(%rip), %rax
+	leaq	.LC12(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
 	movl	$-1, %eax
 	jmp	.L11
 .L12:
-	leaq	.LC12(%rip), %rax
+	leaq	.LC13(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
 	jmp	.L13
 .L9:
-	leaq	.LC13(%rip), %rax
+	leaq	.LC14(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
 .L13:
@@ -209,4 +202,4 @@ fop:
 	.def	puts;	.scl	2;	.type	32;	.endef
 	.def	fclose;	.scl	2;	.type	32;	.endef
 	.def	fopen;	.scl	2;	.type	32;	.endef
-	.def	fputc;	.scl	2;	.type	32;	.endef
+	.def	fwrite;	.scl	2;	.type	32;	.endef
