@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include <locale.h>
 //
-char fop(FILE* h, const char* fn);
+char fop(FILE *h, const char *fn);
 //
-int main()
+int main(int argc, char *argv[])
 {
     setlocale(0, ""); // установим русский язык
     //
     FILE* h = NULL;
     if (fop(h, "compiler.cfg") == -1) return 1;
+    printf("Количество переданных аргументов функции main: %d.\n", argc);
+    for (int i = 0; i < argc; ++i)
+    {
+        printf("Аргумент %d: %s\n", i, argv[i]);
+    }
     char symbol;
     if ((symbol = fgetc(h)) == EOF) // если файл пуст, то
     {
@@ -19,7 +24,7 @@ int main()
     printf("Файл закрыт.");
     return 0;
 }
-char fop(FILE* h, const char* fn)
+char fop(FILE *h, const char *fn)
 {
     h = fopen(fn, "rb"); // откроем файл
     if (h == NULL) // если файл не существует, то
