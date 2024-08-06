@@ -110,13 +110,12 @@ main:
 	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
 .LC11:
 	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350: \315\345\362\0"
-	.align 8
 .LC12:
-	.ascii "\315\345 \361\354\356\343 \356\362\352\360\373\362\374 \364\340\351\353 \355\340 \367\362\345\355\350\345.\0"
-.LC13:
-	.ascii "\324\340\351\353 \357\345\360\345\356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
-.LC14:
 	.ascii "\324\340\351\353 \356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+.LC13:
+	.ascii "A | cfg[] = \"%s\"\12\0"
+.LC14:
+	.ascii "B | cfg[] = \"%s\"\12\0"
 	.text
 	.globl	fop
 	.def	fop;	.scl	2;	.type	32;	.endef
@@ -126,8 +125,8 @@ fop:
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
 	.seh_setframe	%rbp, 0
-	subq	$32, %rsp
-	.seh_stackalloc	32
+	subq	$96, %rsp
+	.seh_stackalloc	96
 	.seh_endprologue
 	movq	%rcx, 16(%rbp)
 	movq	%rdx, 24(%rbp)
@@ -149,7 +148,7 @@ fop:
 	movq	%rax, %rcx
 	call	printf
 	movl	$-1, %eax
-	jmp	.L11
+	jmp	.L13
 .L10:
 	leaq	.LC10(%rip), %rax
 	movq	%rax, %rcx
@@ -167,31 +166,32 @@ fop:
 	leaq	.LC6(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	movq	24(%rbp), %rax
-	leaq	.LC7(%rip), %rdx
-	movq	%rax, %rcx
-	call	fopen
-	movq	%rax, 16(%rbp)
-	cmpq	$0, 16(%rbp)
-	jne	.L12
+	jmp	.L12
+.L9:
 	leaq	.LC12(%rip), %rax
 	movq	%rax, %rcx
-	call	printf
-	movl	$-1, %eax
-	jmp	.L11
+	call	puts
 .L12:
+	movb	$0, -64(%rbp)
+	leaq	-64(%rbp), %rax
+	movq	%rax, %rdx
 	leaq	.LC13(%rip), %rax
 	movq	%rax, %rcx
-	call	puts
-	jmp	.L13
-.L9:
+	call	printf
+	movq	16(%rbp), %rdx
+	leaq	-64(%rbp), %rax
+	movq	%rdx, %r8
+	movl	$64, %edx
+	movq	%rax, %rcx
+	call	fgets
+	leaq	-64(%rbp), %rax
+	movq	%rax, %rdx
 	leaq	.LC14(%rip), %rax
 	movq	%rax, %rcx
-	call	puts
-.L13:
+	call	printf
 	movl	$0, %eax
-.L11:
-	addq	$32, %rsp
+.L13:
+	addq	$96, %rsp
 	popq	%rbp
 	ret
 	.seh_endproc
@@ -203,3 +203,4 @@ fop:
 	.def	fclose;	.scl	2;	.type	32;	.endef
 	.def	fopen;	.scl	2;	.type	32;	.endef
 	.def	fwrite;	.scl	2;	.type	32;	.endef
+	.def	fgets;	.scl	2;	.type	32;	.endef
