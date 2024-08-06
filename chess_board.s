@@ -5,18 +5,35 @@
 .LC0:
 	.ascii "\0"
 .LC1:
-	.ascii "compiler.cfg\0"
-	.align 8
+	.ascii "rb\0"
 .LC2:
-	.ascii "\312\356\353\350\367\345\361\362\342\356 \357\345\360\345\344\340\355\355\373\365 \340\360\343\363\354\345\355\362\356\342 \364\363\355\352\366\350\350 main: %d.\12\0"
+	.ascii "compiler.cfg\0"
 .LC3:
-	.ascii "\300\360\343\363\354\345\355\362 %d: %s\12\0"
+	.ascii "wb\0"
 .LC4:
-	.ascii "\324\340\351\353 \357\363\361\362\356\351.\0"
+	.ascii "\315\345 \361\354\356\343 \361\356\347\344\340\362\374 \364\340\351\353.\0"
+	.align 8
 .LC5:
-	.ascii "\324\340\351\353 \361\356\344\345\360\346\350\362 \347\340\357\350\361\374.\0"
+	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
 .LC6:
-	.ascii "\324\340\351\353 \347\340\352\360\373\362.\0"
+	.ascii "\324\340\351\353 \356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+.LC7:
+	.ascii "A | cfg[] = \"%s\"\12\0"
+.LC8:
+	.ascii "B | cfg[] = \"%s\"\12\0"
+.LC9:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350\0"
+.LC10:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350.\0"
+	.align 8
+.LC11:
+	.ascii "\312\356\353\350\367\345\361\362\342\356 \357\345\360\345\344\340\355\355\373\365 \340\360\343\363\354\345\355\362\356\342 \364\363\355\352\366\350\350 main: %d.\12\0"
+.LC12:
+	.ascii "\300\360\343\363\354\345\355\362 %d: %s\12\0"
+.LC13:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340\0"
+.LC14:
+	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340.\0"
 	.text
 	.globl	main
 	.def	main;	.scl	2;	.type	32;	.endef
@@ -26,8 +43,8 @@ main:
 	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
 	.seh_setframe	%rbp, 0
-	subq	$64, %rsp
-	.seh_stackalloc	64
+	subq	$80, %rsp
+	.seh_stackalloc	80
 	.seh_endprologue
 	movl	%ecx, 16(%rbp)
 	movq	%rdx, 24(%rbp)
@@ -37,23 +54,80 @@ main:
 	movl	$0, %ecx
 	call	setlocale
 	movq	$0, -16(%rbp)
-	movq	-16(%rbp), %rax
-	leaq	.LC1(%rip), %rdx
+	leaq	.LC1(%rip), %rax
+	movq	%rax, %rdx
+	leaq	.LC2(%rip), %rax
 	movq	%rax, %rcx
-	call	fop
-	cmpb	$-1, %al
+	call	fopen
+	movq	%rax, -16(%rbp)
+	cmpq	$0, -16(%rbp)
 	jne	.L2
-	movl	$1, %eax
-	jmp	.L3
+	leaq	.LC3(%rip), %rax
+	movq	%rax, %rdx
+	leaq	.LC2(%rip), %rax
+	movq	%rax, %rcx
+	call	fopen
+	movq	%rax, -16(%rbp)
+	cmpq	$0, -16(%rbp)
+	jne	.L3
+	leaq	.LC4(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
+	movl	$-1, %eax
+	jmp	.L4
+.L3:
+	leaq	.LC5(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	movabsq	$-941843941183721280, %rax
+	movabsq	$-1447378466093588229, %rdx
+	movq	%rax, -48(%rbp)
+	movq	%rdx, -40(%rbp)
+	movq	$224, -32(%rbp)
+	movq	$0, -24(%rbp)
+	movq	-16(%rbp), %rdx
+	leaq	-48(%rbp), %rax
+	movq	%rax, %rcx
+	call	fputs
+	jmp	.L5
 .L2:
+	leaq	.LC6(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	movb	$0, -48(%rbp)
+	leaq	-48(%rbp), %rax
+	movq	%rax, %rdx
+	leaq	.LC7(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
+	movq	-16(%rbp), %rdx
+	leaq	-48(%rbp), %rax
+	movq	%rdx, %r8
+	movl	$32, %edx
+	movq	%rax, %rcx
+	call	fgets
+	leaq	-48(%rbp), %rax
+	movq	%rax, %rdx
+	leaq	.LC8(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
+	leaq	-48(%rbp), %rax
+	leaq	.LC9(%rip), %rdx
+	movq	%rax, %rcx
+	call	strcmp
+	testl	%eax, %eax
+	jne	.L6
+	leaq	.LC10(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
 	movl	16(%rbp), %eax
 	movl	%eax, %edx
-	leaq	.LC2(%rip), %rax
+	leaq	.LC11(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
 	movl	$0, -4(%rbp)
-	jmp	.L4
-.L5:
+	jmp	.L7
+.L8:
 	movl	-4(%rbp), %eax
 	cltq
 	leaq	0(,%rax,8), %rdx
@@ -63,164 +137,37 @@ main:
 	movl	-4(%rbp), %eax
 	movq	%rdx, %r8
 	movl	%eax, %edx
-	leaq	.LC3(%rip), %rax
+	leaq	.LC12(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
 	addl	$1, -4(%rbp)
-.L4:
+.L7:
 	movl	-4(%rbp), %eax
 	cmpl	16(%rbp), %eax
-	jl	.L5
-	movq	-16(%rbp), %rax
-	movq	%rax, %rcx
-	call	fgetc
-	movb	%al, -17(%rbp)
-	cmpb	$-1, -17(%rbp)
-	jne	.L6
-	leaq	.LC4(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-	jmp	.L7
+	jl	.L8
+	jmp	.L5
 .L6:
-	leaq	.LC5(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-.L7:
-	movq	-16(%rbp), %rax
-	movq	%rax, %rcx
-	call	fclose
-	leaq	.LC6(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-	movl	$0, %eax
-.L3:
-	addq	$64, %rsp
-	popq	%rbp
-	ret
-	.seh_endproc
-	.section .rdata,"dr"
-.LC7:
-	.ascii "rb\0"
-.LC8:
-	.ascii "wb\0"
-.LC9:
-	.ascii "\315\345 \361\354\356\343 \361\356\347\344\340\362\374 \364\340\351\353.\0"
-	.align 8
-.LC10:
-	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
-.LC11:
-	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350: \315\345\362\0"
-.LC12:
-	.ascii "\324\340\351\353 \356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
-.LC13:
-	.ascii "A | cfg[] = \"%s\"\12\0"
-.LC14:
-	.ascii "B | cfg[] = \"%s\"\12\0"
-.LC15:
-	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340.\0"
-.LC16:
-	.ascii "\300\360\343\363\354\345\355\362\373 \361 \352\356\355\361\356\353\350.\0"
-	.text
-	.globl	fop
-	.def	fop;	.scl	2;	.type	32;	.endef
-	.seh_proc	fop
-fop:
-	pushq	%rbp
-	.seh_pushreg	%rbp
-	movq	%rsp, %rbp
-	.seh_setframe	%rbp, 0
-	subq	$96, %rsp
-	.seh_stackalloc	96
-	.seh_endprologue
-	movq	%rcx, 16(%rbp)
-	movq	%rdx, 24(%rbp)
-	movq	24(%rbp), %rax
-	leaq	.LC7(%rip), %rdx
-	movq	%rax, %rcx
-	call	fopen
-	movq	%rax, 16(%rbp)
-	cmpq	$0, 16(%rbp)
-	jne	.L9
-	movq	24(%rbp), %rax
-	leaq	.LC8(%rip), %rdx
-	movq	%rax, %rcx
-	call	fopen
-	movq	%rax, 16(%rbp)
-	cmpq	$0, 16(%rbp)
-	jne	.L10
-	leaq	.LC9(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-	movl	$-1, %eax
-	jmp	.L15
-.L10:
-	leaq	.LC10(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-	movq	16(%rbp), %rax
-	movq	%rax, %r9
-	movl	$24, %r8d
-	movl	$1, %edx
-	leaq	.LC11(%rip), %rax
-	movq	%rax, %rcx
-	call	fwrite
-	movq	16(%rbp), %rax
-	movq	%rax, %rcx
-	call	fclose
-	leaq	.LC6(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-	jmp	.L12
-.L9:
-	leaq	.LC12(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-.L12:
-	movb	$0, -64(%rbp)
-	leaq	-64(%rbp), %rax
-	movq	%rax, %rdx
-	leaq	.LC13(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-	movq	16(%rbp), %rdx
-	leaq	-64(%rbp), %rax
-	movq	%rdx, %r8
-	movl	$64, %edx
-	movq	%rax, %rcx
-	call	fgets
-	leaq	-64(%rbp), %rax
-	movq	%rax, %rdx
-	leaq	.LC14(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-	leaq	-64(%rbp), %rax
-	leaq	.LC11(%rip), %rdx
+	leaq	-48(%rbp), %rax
+	leaq	.LC13(%rip), %rdx
 	movq	%rax, %rcx
 	call	strcmp
 	testl	%eax, %eax
-	jne	.L13
-	leaq	.LC15(%rip), %rax
+	jne	.L5
+	leaq	.LC14(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	jmp	.L14
-.L13:
-	leaq	.LC16(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-.L14:
+.L5:
 	movl	$0, %eax
-.L15:
-	addq	$96, %rsp
+.L4:
+	addq	$80, %rsp
 	popq	%rbp
 	ret
 	.seh_endproc
 	.ident	"GCC: (Rev6, Built by MSYS2 project) 13.2.0"
 	.def	setlocale;	.scl	2;	.type	32;	.endef
-	.def	printf;	.scl	2;	.type	32;	.endef
-	.def	fgetc;	.scl	2;	.type	32;	.endef
-	.def	puts;	.scl	2;	.type	32;	.endef
-	.def	fclose;	.scl	2;	.type	32;	.endef
 	.def	fopen;	.scl	2;	.type	32;	.endef
-	.def	fwrite;	.scl	2;	.type	32;	.endef
+	.def	printf;	.scl	2;	.type	32;	.endef
+	.def	puts;	.scl	2;	.type	32;	.endef
+	.def	fputs;	.scl	2;	.type	32;	.endef
 	.def	fgets;	.scl	2;	.type	32;	.endef
 	.def	strcmp;	.scl	2;	.type	32;	.endef
