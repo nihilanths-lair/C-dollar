@@ -48,22 +48,6 @@ main:
 	leaq	.LC2(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$116, %ecx
-	call	fputc
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$101, %ecx
-	call	fputc
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$115, %ecx
-	call	fputc
-	movq	-8(%rbp), %rax
-	movq	%rax, %rdx
-	movl	$116, %ecx
-	call	fputc
 	jmp	.L5
 .L4:
 	leaq	.LC3(%rip), %rax
@@ -137,6 +121,22 @@ fop:
 	movq	%rax, %rcx
 	call	puts
 	movq	16(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$116, %ecx
+	call	fputc
+	movq	16(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$101, %ecx
+	call	fputc
+	movq	16(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$115, %ecx
+	call	fputc
+	movq	16(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$116, %ecx
+	call	fputc
+	movq	16(%rbp), %rax
 	movq	%rax, %rcx
 	call	fclose
 	leaq	.LC4(%rip), %rax
@@ -174,7 +174,7 @@ fop:
 	.def	setlocale;	.scl	2;	.type	32;	.endef
 	.def	fgetc;	.scl	2;	.type	32;	.endef
 	.def	puts;	.scl	2;	.type	32;	.endef
-	.def	fputc;	.scl	2;	.type	32;	.endef
 	.def	printf;	.scl	2;	.type	32;	.endef
 	.def	fclose;	.scl	2;	.type	32;	.endef
 	.def	fopen;	.scl	2;	.type	32;	.endef
+	.def	fputc;	.scl	2;	.type	32;	.endef

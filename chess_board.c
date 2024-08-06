@@ -13,11 +13,6 @@ int main()
     if ((symbol = fgetc(h)) == EOF) // если файл пуст, то
     {
         printf("Файл пустой.\n");
-        // заполним его конфигурационными данными по умолчанию
-        fputc('t', h);
-        fputc('e', h);
-        fputc('s', h);
-        fputc('t', h);
     }
     else printf("Файл содержит запись.");
     fclose(h);
@@ -36,6 +31,11 @@ char fop(FILE* h, const char* fn)
             return -1;
         }
         printf("Файл создан и открыт на запись.\n");
+        // заполним его конфигурационными данными по умолчанию
+        fputc('t', h);
+        fputc('e', h);
+        fputc('s', h);
+        fputc('t', h);
         fclose(h);
         printf("Файл закрыт.\n");
         h = fopen(fn, "rb"); // откроем файл, и считаем конфигурационные данные с него
