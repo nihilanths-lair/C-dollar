@@ -5,10 +5,12 @@
 .LC0:
 	.ascii "\0"
 .LC1:
-	.ascii "\324\340\351\353 \357\363\361\362\356\351.\0"
+	.ascii "compiler.cfg\0"
 .LC2:
-	.ascii "\324\340\351\353 \361\356\344\345\360\346\350\362 \347\340\357\350\361\374.\0"
+	.ascii "\324\340\351\353 \357\363\361\362\356\351.\0"
 .LC3:
+	.ascii "\324\340\351\353 \361\356\344\345\360\346\350\362 \347\340\357\350\361\374.\0"
+.LC4:
 	.ascii "\324\340\351\353 \347\340\352\360\373\362.\0"
 	.text
 	.globl	main
@@ -29,6 +31,7 @@ main:
 	call	setlocale
 	movq	$0, -8(%rbp)
 	movq	-8(%rbp), %rax
+	leaq	.LC1(%rip), %rdx
 	movq	%rax, %rcx
 	call	fop
 	cmpb	$-1, %al
@@ -42,7 +45,7 @@ main:
 	movb	%al, -9(%rbp)
 	cmpb	$-1, -9(%rbp)
 	jne	.L4
-	leaq	.LC1(%rip), %rax
+	leaq	.LC2(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
 	movq	-8(%rbp), %rax
@@ -63,14 +66,14 @@ main:
 	call	fputc
 	jmp	.L5
 .L4:
-	leaq	.LC2(%rip), %rax
+	leaq	.LC3(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
 .L5:
 	movq	-8(%rbp), %rax
 	movq	%rax, %rcx
 	call	fclose
-	leaq	.LC3(%rip), %rax
+	leaq	.LC4(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
 	movl	$0, %eax
@@ -80,10 +83,8 @@ main:
 	ret
 	.seh_endproc
 	.section .rdata,"dr"
-.LC4:
-	.ascii "rb\0"
 .LC5:
-	.ascii "compiler.cfg\0"
+	.ascii "rb\0"
 .LC6:
 	.ascii "wb\0"
 .LC7:
@@ -111,17 +112,16 @@ fop:
 	.seh_stackalloc	32
 	.seh_endprologue
 	movq	%rcx, 16(%rbp)
-	leaq	.LC4(%rip), %rax
-	movq	%rax, %rdx
-	leaq	.LC5(%rip), %rax
+	movq	%rdx, 24(%rbp)
+	movq	24(%rbp), %rax
+	leaq	.LC5(%rip), %rdx
 	movq	%rax, %rcx
 	call	fopen
 	movq	%rax, 16(%rbp)
 	cmpq	$0, 16(%rbp)
 	jne	.L7
-	leaq	.LC6(%rip), %rax
-	movq	%rax, %rdx
-	leaq	.LC5(%rip), %rax
+	movq	24(%rbp), %rax
+	leaq	.LC6(%rip), %rdx
 	movq	%rax, %rcx
 	call	fopen
 	movq	%rax, 16(%rbp)
@@ -139,12 +139,11 @@ fop:
 	movq	16(%rbp), %rax
 	movq	%rax, %rcx
 	call	fclose
-	leaq	.LC3(%rip), %rax
+	leaq	.LC4(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	leaq	.LC4(%rip), %rax
-	movq	%rax, %rdx
-	leaq	.LC5(%rip), %rax
+	movq	24(%rbp), %rax
+	leaq	.LC5(%rip), %rdx
 	movq	%rax, %rcx
 	call	fopen
 	movq	%rax, 16(%rbp)

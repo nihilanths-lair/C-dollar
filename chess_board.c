@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <locale.h>
 //
-char fop(FILE* h);
+char fop(FILE* h, const char *fn);
 //
 int main()
 {
     setlocale(0, ""); // установим русский язык
     //
     FILE* h = NULL;
-    if (fop(h) == -1) return 1;
+    if (fop(h, "compiler.cfg") == -1) return 1;
     char symbol;
     if ((symbol = fgetc(h)) == EOF) // если файл пуст, то
     {
@@ -24,12 +24,12 @@ int main()
     printf("Файл закрыт.");
     return 0;
 }
-char fop(FILE* h)
+char fop(FILE* h, const char *fn)
 {
-    h = fopen("compiler.cfg", "rb"); // откроем файл
+    h = fopen(fn, "rb"); // откроем файл
     if (h == NULL) // если файл не существует, то
     {
-        h = fopen("compiler.cfg", "wb"); // создадим его, и
+        h = fopen(fn, "wb"); // создадим его, и
         if (h == NULL) // снова проверим, что файл создан
         {
             printf("Не смог создать файл.");
@@ -38,7 +38,7 @@ char fop(FILE* h)
         printf("Файл создан и открыт на запись.\n");
         fclose(h);
         printf("Файл закрыт.\n");
-        h = fopen("compiler.cfg", "rb"); // откроем файл, и считаем конфигурационные данные с него
+        h = fopen(fn, "rb"); // откроем файл, и считаем конфигурационные данные с него
         if (h == NULL) // если файл не существует, то
         {
             printf("Не смог открыть файл на чтение.");
