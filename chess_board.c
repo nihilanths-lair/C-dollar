@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
             printf("Аргументы с файла.\n");
         }
     }
+    fclose(h);
+    printf("Файл закрыт.");
     /*
     char symbol;
     if ((symbol = fgetc(h)) == EOF) // если файл пуст, то
@@ -52,8 +54,6 @@ int main(int argc, char *argv[])
         printf("Файл пустой.\n");
     }
     else printf("Файл содержит запись.");
-    fclose(h);
-    printf("Файл закрыт.");
     */
     return 0;
 }

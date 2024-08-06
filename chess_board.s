@@ -34,6 +34,8 @@
 	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340\0"
 .LC14:
 	.ascii "\300\360\343\363\354\345\355\362\373 \361 \364\340\351\353\340.\0"
+.LC15:
+	.ascii "\324\340\351\353 \347\340\352\360\373\362.\0"
 	.text
 	.globl	main
 	.def	main;	.scl	2;	.type	32;	.endef
@@ -53,22 +55,22 @@ main:
 	movq	%rax, %rdx
 	movl	$0, %ecx
 	call	setlocale
-	movq	$0, -16(%rbp)
+	movq	$0, -8(%rbp)
 	leaq	.LC1(%rip), %rax
 	movq	%rax, %rdx
 	leaq	.LC2(%rip), %rax
 	movq	%rax, %rcx
 	call	fopen
-	movq	%rax, -16(%rbp)
-	cmpq	$0, -16(%rbp)
+	movq	%rax, -8(%rbp)
+	cmpq	$0, -8(%rbp)
 	jne	.L2
 	leaq	.LC3(%rip), %rax
 	movq	%rax, %rdx
 	leaq	.LC2(%rip), %rax
 	movq	%rax, %rcx
 	call	fopen
-	movq	%rax, -16(%rbp)
-	cmpq	$0, -16(%rbp)
+	movq	%rax, -8(%rbp)
+	cmpq	$0, -8(%rbp)
 	jne	.L3
 	leaq	.LC4(%rip), %rax
 	movq	%rax, %rcx
@@ -85,7 +87,7 @@ main:
 	movq	%rdx, -40(%rbp)
 	movq	$224, -32(%rbp)
 	movq	$0, -24(%rbp)
-	movq	-16(%rbp), %rdx
+	movq	-8(%rbp), %rdx
 	leaq	-48(%rbp), %rax
 	movq	%rax, %rcx
 	call	fputs
@@ -100,7 +102,7 @@ main:
 	leaq	.LC7(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
-	movq	-16(%rbp), %rdx
+	movq	-8(%rbp), %rdx
 	leaq	-48(%rbp), %rax
 	movq	%rdx, %r8
 	movl	$32, %edx
@@ -125,24 +127,24 @@ main:
 	leaq	.LC11(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
-	movl	$0, -4(%rbp)
+	movl	$0, -12(%rbp)
 	jmp	.L7
 .L8:
-	movl	-4(%rbp), %eax
+	movl	-12(%rbp), %eax
 	cltq
 	leaq	0(,%rax,8), %rdx
 	movq	24(%rbp), %rax
 	addq	%rdx, %rax
 	movq	(%rax), %rdx
-	movl	-4(%rbp), %eax
+	movl	-12(%rbp), %eax
 	movq	%rdx, %r8
 	movl	%eax, %edx
 	leaq	.LC12(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
-	addl	$1, -4(%rbp)
+	addl	$1, -12(%rbp)
 .L7:
-	movl	-4(%rbp), %eax
+	movl	-12(%rbp), %eax
 	cmpl	16(%rbp), %eax
 	jl	.L8
 	jmp	.L5
@@ -157,6 +159,12 @@ main:
 	movq	%rax, %rcx
 	call	puts
 .L5:
+	movq	-8(%rbp), %rax
+	movq	%rax, %rcx
+	call	fclose
+	leaq	.LC15(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
 	movl	$0, %eax
 .L4:
 	addq	$80, %rsp
@@ -171,3 +179,4 @@ main:
 	.def	fputs;	.scl	2;	.type	32;	.endef
 	.def	fgets;	.scl	2;	.type	32;	.endef
 	.def	strcmp;	.scl	2;	.type	32;	.endef
+	.def	fclose;	.scl	2;	.type	32;	.endef
