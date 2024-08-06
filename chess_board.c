@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
 //
-char fop(FILE* h, const char *fn);
+char fop(FILE* h, const char* fn);
 //
 int main()
 {
@@ -24,7 +24,7 @@ int main()
     printf("Файл закрыт.");
     return 0;
 }
-char fop(FILE* h, const char *fn)
+char fop(FILE* h, const char* fn)
 {
     h = fopen(fn, "rb"); // откроем файл
     if (h == NULL) // если файл не существует, то
