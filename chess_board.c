@@ -10,12 +10,16 @@ int main()
     FILE* h = NULL;
     if (fop(h) == -1) return 1;
     char symbol;
-    if ((symbol = fgetc(h)) == EOF)
+    if ((symbol = fgetc(h)) == EOF) // если файл пуст, то
     {
-        printf("Файл пустой.");
-        return 1;
+        printf("Файл пустой.\n");
+        // заполним его конфигурационными данными по умолчанию
+        fputc('t', h);
+        fputc('e', h);
+        fputc('s', h);
+        fputc('t', h);
     }
-    printf("Файл содержит запись.");
+    else printf("Файл содержит запись.");
     fclose(h);
     printf("Файл закрыт.");
     return 0;

@@ -4,6 +4,12 @@
 	.section .rdata,"dr"
 .LC0:
 	.ascii "\0"
+.LC1:
+	.ascii "\324\340\351\353 \357\363\361\362\356\351.\0"
+.LC2:
+	.ascii "\324\340\351\353 \361\356\344\345\360\346\350\362 \347\340\357\350\361\374.\0"
+.LC3:
+	.ascii "\324\340\351\353 \347\340\352\360\373\362.\0"
 	.text
 	.globl	main
 	.def	main;	.scl	2;	.type	32;	.endef
@@ -30,6 +36,43 @@ main:
 	movl	$1, %eax
 	jmp	.L3
 .L2:
+	movq	-8(%rbp), %rax
+	movq	%rax, %rcx
+	call	fgetc
+	movb	%al, -9(%rbp)
+	cmpb	$-1, -9(%rbp)
+	jne	.L4
+	leaq	.LC1(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	movq	-8(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$116, %ecx
+	call	fputc
+	movq	-8(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$101, %ecx
+	call	fputc
+	movq	-8(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$115, %ecx
+	call	fputc
+	movq	-8(%rbp), %rax
+	movq	%rax, %rdx
+	movl	$116, %ecx
+	call	fputc
+	jmp	.L5
+.L4:
+	leaq	.LC2(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
+.L5:
+	movq	-8(%rbp), %rax
+	movq	%rax, %rcx
+	call	fclose
+	leaq	.LC3(%rip), %rax
+	movq	%rax, %rcx
+	call	printf
 	movl	$0, %eax
 .L3:
 	addq	$48, %rsp
@@ -37,25 +80,23 @@ main:
 	ret
 	.seh_endproc
 	.section .rdata,"dr"
-.LC1:
-	.ascii "rb\0"
-.LC2:
-	.ascii "compiler.cfg\0"
-.LC3:
-	.ascii "wb\0"
 .LC4:
+	.ascii "rb\0"
+.LC5:
+	.ascii "compiler.cfg\0"
+.LC6:
+	.ascii "wb\0"
+.LC7:
 	.ascii "\315\345 \361\354\356\343 \361\356\347\344\340\362\374 \364\340\351\353.\0"
 	.align 8
-.LC5:
-	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
-.LC6:
-	.ascii "\324\340\351\353 \347\340\352\360\373\362.\0"
-	.align 8
-.LC7:
-	.ascii "\315\345 \361\354\356\343 \356\362\352\360\373\362\374 \364\340\351\353 \355\340 \367\362\345\355\350\345.\0"
 .LC8:
-	.ascii "\324\340\351\353 \357\345\360\345\356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+	.ascii "\324\340\351\353 \361\356\347\344\340\355 \350 \356\362\352\360\373\362 \355\340 \347\340\357\350\361\374.\0"
+	.align 8
 .LC9:
+	.ascii "\315\345 \361\354\356\343 \356\362\352\360\373\362\374 \364\340\351\353 \355\340 \367\362\345\355\350\345.\0"
+.LC10:
+	.ascii "\324\340\351\353 \357\345\360\345\356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
+.LC11:
 	.ascii "\324\340\351\353 \356\362\352\360\373\362 \355\340 \367\362\345\355\350\345.\0"
 	.text
 	.globl	fop
@@ -70,40 +111,17 @@ fop:
 	.seh_stackalloc	32
 	.seh_endprologue
 	movq	%rcx, 16(%rbp)
-	leaq	.LC1(%rip), %rax
-	movq	%rax, %rdx
-	leaq	.LC2(%rip), %rax
-	movq	%rax, %rcx
-	call	fopen
-	movq	%rax, 16(%rbp)
-	cmpq	$0, 16(%rbp)
-	jne	.L5
-	leaq	.LC3(%rip), %rax
-	movq	%rax, %rdx
-	leaq	.LC2(%rip), %rax
-	movq	%rax, %rcx
-	call	fopen
-	movq	%rax, 16(%rbp)
-	cmpq	$0, 16(%rbp)
-	jne	.L6
 	leaq	.LC4(%rip), %rax
-	movq	%rax, %rcx
-	call	printf
-	movl	$-1, %eax
-	jmp	.L7
-.L6:
+	movq	%rax, %rdx
 	leaq	.LC5(%rip), %rax
 	movq	%rax, %rcx
-	call	puts
-	movq	16(%rbp), %rax
-	movq	%rax, %rcx
-	call	fclose
+	call	fopen
+	movq	%rax, 16(%rbp)
+	cmpq	$0, 16(%rbp)
+	jne	.L7
 	leaq	.LC6(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-	leaq	.LC1(%rip), %rax
 	movq	%rax, %rdx
-	leaq	.LC2(%rip), %rax
+	leaq	.LC5(%rip), %rax
 	movq	%rax, %rcx
 	call	fopen
 	movq	%rax, 16(%rbp)
@@ -113,32 +131,51 @@ fop:
 	movq	%rax, %rcx
 	call	printf
 	movl	$-1, %eax
-	jmp	.L7
+	jmp	.L9
 .L8:
 	leaq	.LC8(%rip), %rax
 	movq	%rax, %rcx
 	call	puts
-	jmp	.L9
-.L5:
-	leaq	.LC9(%rip), %rax
-	movq	%rax, %rcx
-	call	puts
-.L9:
 	movq	16(%rbp), %rax
 	movq	%rax, %rcx
 	call	fclose
-	leaq	.LC6(%rip), %rax
+	leaq	.LC3(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	leaq	.LC4(%rip), %rax
+	movq	%rax, %rdx
+	leaq	.LC5(%rip), %rax
+	movq	%rax, %rcx
+	call	fopen
+	movq	%rax, 16(%rbp)
+	cmpq	$0, 16(%rbp)
+	jne	.L10
+	leaq	.LC9(%rip), %rax
 	movq	%rax, %rcx
 	call	printf
-	movl	$0, %eax
+	movl	$-1, %eax
+	jmp	.L9
+.L10:
+	leaq	.LC10(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+	jmp	.L11
 .L7:
+	leaq	.LC11(%rip), %rax
+	movq	%rax, %rcx
+	call	puts
+.L11:
+	movl	$0, %eax
+.L9:
 	addq	$32, %rsp
 	popq	%rbp
 	ret
 	.seh_endproc
 	.ident	"GCC: (Rev6, Built by MSYS2 project) 13.2.0"
 	.def	setlocale;	.scl	2;	.type	32;	.endef
-	.def	fopen;	.scl	2;	.type	32;	.endef
-	.def	printf;	.scl	2;	.type	32;	.endef
+	.def	fgetc;	.scl	2;	.type	32;	.endef
 	.def	puts;	.scl	2;	.type	32;	.endef
+	.def	fputc;	.scl	2;	.type	32;	.endef
+	.def	printf;	.scl	2;	.type	32;	.endef
 	.def	fclose;	.scl	2;	.type	32;	.endef
+	.def	fopen;	.scl	2;	.type	32;	.endef
