@@ -9,7 +9,7 @@ int EntryPointInProgram(int argc, char *argv[])
 {
     setlocale(0, ""); // установим русский язык
     //
-    FILE* h = NULL;
+    FILE *h = NULL;
     h = fopen("compiler.cfg", "rb"); // откроем файл
     if (h == NULL) // если файл не существует, то
     {
