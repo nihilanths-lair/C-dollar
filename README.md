@@ -14,7 +14,7 @@
 ```1``` ``` StartOfTheScript(){} ``` <br>
 или <br>
 ```1``` ``` ScriptEntryPoint(){} ``` <br>
-<br>
+или <br>
 ```1``` ``` ExecuteScript(){} ``` <br>
 <br>
 
