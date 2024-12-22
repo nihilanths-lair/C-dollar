@@ -15,6 +15,7 @@
 или <br>
 ```1``` ``` ScriptEntryPoint(){} ``` <br>
 <br>
+```1``` ``` ExecuteScript(){} ``` <br>
 <br>
 
 ---------------------
