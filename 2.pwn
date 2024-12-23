@@ -33,6 +33,7 @@ hidden_function::CMD_2(playerid, const cmdtext[], &idx)
             SendClientMessage(playerid, -1, !"У вас недостаточно количества.");
             return true;
         }
+        new sum = denomination * quantity; // сумма денег = номинал (ценность) * количество (ед./шт.)
     }
     // проверка на соответствие типа
     else if (type == 2)
@@ -53,12 +54,8 @@ hidden_function::CMD_2(playerid, const cmdtext[], &idx)
             SendClientMessage(playerid, -1, !"У вас недостаточно количества.");
             return true;
         }
+        new sum = denomination * quantity; // сумма денег = номинал (ценность) * количество (ед./шт.)
     }
-    else
-    {
-        SendClientMessage(playerid, -1, !"Неверный тип денег.");
-        return true;
-    }
-    new sum = denomination * quantity; // сумма денег = номинал (ценность) * количество (ед./шт.)
+    else SendClientMessage(playerid, -1, !"Неверный тип денег.");
     return true;
 }
