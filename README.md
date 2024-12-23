@@ -19,7 +19,10 @@
 ```C
 ExecuteScript(){}
 ```
-| 
+|
+```C
+ВыполнитьСкрипт(){}
+```
 |    2    |   1   |
 ```C
 ScriptEntryPoint(){}
