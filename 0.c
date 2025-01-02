@@ -41,24 +41,6 @@ int main(void)
     {
         printf("byte_code[%i] = %02X\n", registers.ip, byte_code[registers.ip] & 0xFF);
     }
-    /*
-    while (true)
-    {
-        registers.ip = 0;
-        registers.opcode = "\0";
-        Opcode opcode = (Opcode) registers.opcode[registers.ip++]; // Получение кода операции
-        //------------------------------------------------------------------------------------------------//
-        // Проверка на корректность oп-кода, обработка ошибок (использовать только при чистой интерпретации)
-        if (opcode >= sizeof (opcode_table) / sizeof (opcode_table[0]))
-        {
-            fprintf(stderr, "Invalid opcode: %d\n", opcode);
-            return EXIT_FAILURE;
-        }
-        //------------------------------------------------------------------------------------------------//
-        opcode_table[opcode](&registers);
-        if (opcode == OP_HALT) break;
-    }
-    */
     Stop:
     return EXIT_SUCCESS;
 }
