@@ -1,45 +1,22 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
-// Определение команд
-typedef enum
-{
-    OP_ADD,
-    OP_SUB,
-    OP_MUL,
-    OP_DIV,
-    OP_HALT // Команда остановки
-} Opcode;
-// Структура виртуальной машины (VM) -  можно добавить другие поля, например стек
-typedef struct
-{
+// РћРїСЂРµРґРµР»РµРЅРёРµ РєРѕРјР°РЅРґ
+typedef enum { OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
+// РЎС‚СЂСѓРєС‚СѓСЂР° РІРёСЂС‚СѓР°Р»СЊРЅРѕР№ РјР°С€РёРЅС‹ (VM) - РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РґСЂСѓРіРёРµ РїРѕР»СЏ, РЅР°РїСЂРёРјРµСЂ СЃС‚РµРє
+typedef struct {
     unsigned char* code;
-    int pc; // Program Counter
+    int pc;
 } VM;
-// Функции, выполняющие команды
-void op_add(VM *vm)
-{
-    printf("op_add();\n");
-}
-void op_sub(VM *vm)
-{
-    printf("op_sub();\n");
-}
-void op_mul(VM *vm)
-{
-    printf("op_mul();\n");
-}
-void op_div(VM *vm)
-{
-    printf("op_div();\n");
-}
-void op_halt(VM *vm)
-{
-    printf("op_halt();\n");
-}
-// Таблица переходов
+// Р¤СѓРЅРєС†РёРё, РІС‹РїРѕР»РЅСЏСЋС‰РёРµ РєРѕРјР°РЅРґС‹
+void op_add(VM *vm) { printf("op_add();\n"); }
+void op_sub(VM *vm) { printf("op_sub();\n"); }
+void op_mul(VM *vm) { printf("op_mul();\n"); }
+void op_div(VM *vm) { printf("op_div();\n"); }
+void op_halt(VM *vm) { printf("op_halt();\n"); }
+// РўР°Р±Р»РёС†Р° РїРµСЂРµС…РѕРґРѕРІ
 void (*op_table[])(VM*) = { op_add, op_sub, op_mul, op_div, op_halt };
-// Выполнение кода виртуальной машины
+// Р’С‹РїРѕР»РЅРµРЅРёРµ РєРѕРґР° РІРёСЂС‚СѓР°Р»СЊРЅРѕР№ РјР°С€РёРЅС‹
 int execute(VM* vm)
 {
     while (1)
@@ -49,14 +26,14 @@ int execute(VM* vm)
         printf("vm->pc = %i\n", vm->pc);
         printf("vm->code = \"%s\"\n", vm->code);
         printf("vm->code[vm->pc] = \"%s\"\n", vm->code[vm->pc]);
-        Opcode opcode = (Opcode) vm->code[vm->pc++]; // Получение кода операции
-        // Проверка на корректность oп-кода, обработка ошибок
+        Opcode opcode = (Opcode) vm->code[vm->pc++]; // РџРѕР»СѓС‡РµРЅРёРµ РєРѕРґР° РѕРїРµСЂР°С†РёРё
+        // РџСЂРѕРІРµСЂРєР° РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ oРї-РєРѕРґР°, РѕР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
         if (opcode >= sizeof (op_table) / sizeof (op_table[0]))
         {
             fprintf(stderr, "Invalid opcode: %d\n", opcode);
-            return EXIT_FAILURE; // или другое значение, сигнализирующее об ошибке
+            return EXIT_FAILURE; // РёР»Рё РґСЂСѓРіРѕРµ Р·РЅР°С‡РµРЅРёРµ, СЃРёРіРЅР°Р»РёР·РёСЂСѓСЋС‰РµРµ РѕР± РѕС€РёР±РєРµ
         }
-        op_table[opcode](vm);  // Вызов соответствующей функции
+        op_table[opcode](vm);  // Р’С‹Р·РѕРІ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ С„СѓРЅРєС†РёРё
         if (opcode == OP_HALT) break;
     }
     return EXIT_SUCCESS;
@@ -64,7 +41,7 @@ int execute(VM* vm)
 int main(void)
 {
     setlocale(0, "");
-    // Инициализация VM (загрузка кода и т.д.)
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ VM (Р·Р°РіСЂСѓР·РєР° РєРѕРґР° Рё С‚.Рґ.)
     VM vm;
     // ...
     execute(&vm);
