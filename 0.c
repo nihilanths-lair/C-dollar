@@ -18,33 +18,26 @@ void op_halt(VM *vm) { printf("op_halt();\n"); }
 // Таблица переходов
 void (*op_table[])(VM*) = { op_add, op_sub, op_mul, op_div, op_halt };
 // Выполнение кода виртуальной машины
-int execute(VM* vm)
+int main(void)
 {
+    setlocale(0, "");
+    VM vm;
     while (true)
     {
-        vm->pc = 0;
-        vm->code = "\0";
-        printf("vm->pc = %i\n", vm->pc);
-        printf("vm->code = \"%s\"\n", vm->code);
-        printf("vm->code[vm->pc] = \"%s\"\n", vm->code[vm->pc]);
-        Opcode opcode = (Opcode) vm->code[vm->pc++]; // Получение кода операции
+        vm.pc = 0;
+        vm.code = "\0";
+        printf("vm->pc = %i\n", vm.pc);
+        printf("vm->code = \"%s\"\n", vm.code);
+        printf("vm->code[vm->pc] = \"%s\"\n", vm.code[vm.pc]);
+        Opcode opcode = (Opcode) vm.code[vm.pc++]; // Получение кода операции
         // Проверка на корректность oп-кода, обработка ошибок
         if (opcode >= sizeof (op_table) / sizeof (op_table[0]))
         {
             fprintf(stderr, "Invalid opcode: %d\n", opcode);
-            return EXIT_FAILURE; // или другое значение, сигнализирующее об ошибке
+            return EXIT_FAILURE;
         }
-        op_table[opcode](vm);  // Вызов соответствующей функции
+        op_table[opcode](&vm);  // Вызов соответствующей функции
         if (opcode == OP_HALT) break;
     }
     return EXIT_SUCCESS;
-}
-int main(void)
-{
-    setlocale(0, "");
-    // Инициализация VM (загрузка кода и т.д.)
-    VM vm;
-    // ...
-    execute(&vm);
-    return 0;
 }
