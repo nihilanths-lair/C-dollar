@@ -18,7 +18,7 @@ typedef struct {
 // Массив указателей на функции
 void (*opcode_table[0xFF])(Registers *registers);
 
-// Реализация функций
+// Реализация функций, выполняющие команды
 void mnemonic__mov_al(Registers *registers)
 {
     printf("mnemonic__mov_al();\n");
@@ -29,7 +29,6 @@ void mnemonic__mov_al(Registers *registers)
     registers->al = bytecode[registers->ip];
     printf("registers->al = %02X\n", registers->al);
 }
-// Реализация функций
 void mnemonic__mov_dl(Registers *registers)
 {
     printf("mnemonic__mov_dl();\n");
@@ -39,14 +38,7 @@ void mnemonic__mov_dl(Registers *registers)
     registers->dl = bytecode[registers->ip];
     printf("registers->dl = %02X\n", registers->dl);
 }
-
-// Определение команд
-//typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
-
-// Функции, выполняющие команды
 void mnemonic__unknown() { printf("mnemonic__unknown();\n"); } // отсутствует или свободный
-
-//
 int main(void)
 {
     setlocale(0x00, "");
@@ -68,6 +60,5 @@ int main(void)
         //printf("bytecode[0x%02X] = %02X|%03i\n", registers.ip, bytecode[registers.ip], bytecode[registers.ip]);
         opcode_table[bytecode[registers.ip]](&registers);
     }
-    Stop:
     return EXIT_SUCCESS;
 }
