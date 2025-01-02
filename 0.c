@@ -24,8 +24,13 @@ int main(void)
 {
     setlocale(0, "");
     VM vm;
-    printf("byte_code[] = \"%s\"", byte_code);
+    printf("byte_code[] = \"%s\"\n", byte_code);
     // Выполнение кода виртуальной машины
+    int i = -1;
+    while (byte_code[++i] != 0x00)
+    {
+        printf("byte_code[%i] = %02X\n", i, byte_code[i] & 0xFF);
+    }
     while (false)
     {
         vm.pc = 0;
