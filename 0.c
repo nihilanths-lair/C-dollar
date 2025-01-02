@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <locale.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 // Определение команд
 typedef enum { OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
@@ -19,7 +20,7 @@ void (*op_table[])(VM*) = { op_add, op_sub, op_mul, op_div, op_halt };
 // Выполнение кода виртуальной машины
 int execute(VM* vm)
 {
-    while (1)
+    while (true)
     {
         vm->pc = 0;
         vm->code = "\0";
