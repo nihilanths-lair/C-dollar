@@ -10,20 +10,22 @@ typedef struct {
     int pc;
 } VM;
 // Функции, выполняющие команды
-void op_add(VM *vm) { printf("op_add();\n"); }
-void op_sub(VM *vm) { printf("op_sub();\n"); }
-void op_mul(VM *vm) { printf("op_mul();\n"); }
-void op_div(VM *vm) { printf("op_div();\n"); }
-void op_halt(VM *vm) { printf("op_halt();\n"); }
-// Таблица переходов
-void (*op_table[])(VM*) = { op_add, op_sub, op_mul, op_div, op_halt };
+void op_add() { printf("op_add();\n"); }
+void op_sub() { printf("op_sub();\n"); }
+void op_mul() { printf("op_mul();\n"); }
+void op_div() { printf("op_div();\n"); }
+void op_halt() { printf("op_halt();\n"); }
+// Массив указателей на функции
+void (*op_table[])() = { op_add, op_sub, op_mul, op_div, op_halt };
+char byte_code[] = {0xC3, 0xEB, 0x65, 0xE1};
 //
 int main(void)
 {
     setlocale(0, "");
     VM vm;
+    printf("byte_code[] = \"%s\"", byte_code);
     // Выполнение кода виртуальной машины
-    while (true)
+    while (false)
     {
         vm.pc = 0;
         vm.code = "\0";
