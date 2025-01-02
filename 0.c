@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 // Считанный байт-код с файла
-unsigned char bytecode[] = {0xB2, 0x20, 0xB4, 0x02};
+unsigned char bytecode[] = {0xB2, 0x20, 0xB4, 0x02, 0xCD, 0x21};
 
 // Регистры виртуальной машины
 typedef struct {
@@ -39,6 +39,10 @@ void mnemonic__mov_dl(Registers *registers)
     registers->ip ++;
     registers->dl = bytecode[registers->ip];
 }
+void mnemonic__int(Registers *registers)
+{
+    if (registers->ah == 0x02) printf("%c", registers->dl);
+}
 void mnemonic__unknown() { printf("mnemonic__unknown();\n"); } // отсутствует или свободный
 int main(void)
 {
@@ -50,11 +54,14 @@ int main(void)
     opcode_table[0xB2] = mnemonic__mov_dl;
     opcode_table[0xB3] = mnemonic__unknown;
     opcode_table[0xB4] = mnemonic__mov_ah;
-    for (unsigned char i = 0xB5; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
+    for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__int;
+    for (unsigned char i = 0xCE; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
     // Убедимся, что все указатели на функции проинициализированы
     //for (unsigned char i = 0x00; i < 0xFF; i ++) opcode_table[i](i);
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
+    registers.ah = 0x00, registers.al = 0x00;
+    registers.dl = 0x00;
     registers.ip = -1;
     //printf("byte_code[] = \"%s\"\n", byte_code);
     // информация для отладки кода
