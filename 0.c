@@ -7,8 +7,8 @@ typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
 // Структура виртуальной машины (VM) - можно добавить другие поля, например стек
 typedef struct {
     unsigned char *code;
-    int pc;
-} VM;
+    short ip; // Instruction Pointer
+} registers;
 // Функции, выполняющие команды
 void op_mov() { printf("op_mov()"); }
 void op_add() { printf("op_add()"); }
@@ -23,22 +23,23 @@ char byte_code[] = {0xC3, 0xEB, 0x65, 0xE1};
 int main(void)
 {
     setlocale(0, "");
-    VM vm;
-    printf("byte_code[] = \"%s\"\n", byte_code);
+    // инициализация регистров и установка первоначальных значений
+    registers registers;
+    registers.ip = -1;
+    //printf("byte_code[] = \"%s\"\n", byte_code);
     // Выполнение кода виртуальной машины
-    int i = -1;
-    while (byte_code[++i] != 0x00)
+    while (byte_code[++ registers.ip] != 0x00)
     {
-        printf("byte_code[%i] = %02X\n", i, byte_code[i] & 0xFF);
+        printf("byte_code[%i] = %02X\n", registers.ip, byte_code[registers.ip] & 0xFF);
     }
     while (false)
     {
-        vm.pc = 0;
-        vm.code = "\0";
-        printf("vm.pc = %i\n", vm.pc);
-        printf("vm.code = \"%s\"\n", vm.code);
-        printf("vm.code[vm.pc] = \"%s\"\n", vm.code[vm.pc]);
-        Opcode opcode = (Opcode) vm.code[vm.pc++]; // Получение кода операции
+        registers.ip = 0;
+        registers.code = "\0";
+        printf("vm.pc = %i\n", registers.ip);
+        printf("vm.code = \"%s\"\n", registers.code);
+        printf("vm.code[vm.pc] = \"%s\"\n", registers.code[registers.ip]);
+        Opcode opcode = (Opcode) registers.code[registers.ip++]; // Получение кода операции
         /*------------------------------------------------------------------------------------------------*/
         // Проверка на корректность oп-кода, обработка ошибок (использовать только при чистой интерпретации)
         if (opcode >= sizeof (opcode_table) / sizeof (opcode_table[0]))
@@ -47,7 +48,7 @@ int main(void)
             return EXIT_FAILURE;
         }
         /*------------------------------------------------------------------------------------------------*/
-        opcode_table[opcode](&vm);
+        opcode_table[opcode](&registers);
         if (opcode == OP_HALT) break;
     }
     return EXIT_SUCCESS;
