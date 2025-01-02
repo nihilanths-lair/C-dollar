@@ -17,11 +17,12 @@ void op_div(VM *vm) { printf("op_div();\n"); }
 void op_halt(VM *vm) { printf("op_halt();\n"); }
 // Таблица переходов
 void (*op_table[])(VM*) = { op_add, op_sub, op_mul, op_div, op_halt };
-// Выполнение кода виртуальной машины
+//
 int main(void)
 {
     setlocale(0, "");
     VM vm;
+    // Выполнение кода виртуальной машины
     while (true)
     {
         vm.pc = 0;
@@ -30,13 +31,15 @@ int main(void)
         printf("vm->code = \"%s\"\n", vm.code);
         printf("vm->code[vm->pc] = \"%s\"\n", vm.code[vm.pc]);
         Opcode opcode = (Opcode) vm.code[vm.pc++]; // Получение кода операции
-        // Проверка на корректность oп-кода, обработка ошибок
+        /*------------------------------------------------------------------------------------------------*/
+        // Проверка на корректность oп-кода, обработка ошибок (использовать только при чистой интерпретации)
         if (opcode >= sizeof (op_table) / sizeof (op_table[0]))
         {
             fprintf(stderr, "Invalid opcode: %d\n", opcode);
             return EXIT_FAILURE;
         }
-        op_table[opcode](&vm);  // Вызов соответствующей функции
+        /*------------------------------------------------------------------------------------------------*/
+        op_table[opcode](&vm);
         if (opcode == OP_HALT) break;
     }
     return EXIT_SUCCESS;
