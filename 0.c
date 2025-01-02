@@ -6,7 +6,7 @@
 typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
 // Структура виртуальной машины (VM) - можно добавить другие поля, например стек
 typedef struct {
-    unsigned char *code;
+    unsigned char *opcode;
     short ip; // Instruction Pointer
 } Registers;
 // Функции, выполняющие команды
@@ -19,7 +19,7 @@ void op_halt() { printf("op_halt();"); }
 // Массив указателей на функции
 void (*opcode_table[])() = { op_mov, op_add, op_sub, op_mul, op_div, op_halt };
 // Считанный байт-код с файла
-char byte_code[] = {0xC3, 0xEB, 0x65, 0xE1};
+char byte_code[] = {0xB0, 0xEB, 0x65, 0xE1};
 //
 int main(void)
 {
@@ -36,11 +36,8 @@ int main(void)
     while (false)
     {
         registers.ip = 0;
-        registers.code = "\0";
-        printf("vm.pc = %i\n", registers.ip);
-        printf("vm.code = \"%s\"\n", registers.code);
-        printf("vm.code[vm.pc] = \"%s\"\n", registers.code[registers.ip]);
-        Opcode opcode = (Opcode) registers.code[registers.ip++]; // Получение кода операции
+        registers.opcode = "\0";
+        Opcode opcode = (Opcode) registers.opcode[registers.ip++]; // Получение кода операции
         /*------------------------------------------------------------------------------------------------*/
         // Проверка на корректность oп-кода, обработка ошибок (использовать только при чистой интерпретации)
         if (opcode >= sizeof (opcode_table) / sizeof (opcode_table[0]))
