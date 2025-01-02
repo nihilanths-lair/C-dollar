@@ -6,8 +6,8 @@
 typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
 // Структура виртуальной машины (VM) - можно добавить другие поля, например стек
 typedef struct {
-    unsigned char *opcode;
-    short ip; // Instruction Pointer
+    char *opcode; // Instruction (op-code)
+    short ip;     // Instruction Pointer
 } Registers;
 // Функции, выполняющие команды
 void op_mov() { printf("op_mov()"); }
