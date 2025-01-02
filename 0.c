@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Структура виртуальной машины (VM) - можно добавить другие поля, например стек
+// Регистры виртуальной машины
 typedef struct {
-    char *opcode; // Instruction (op-code)
+    //char *opcode; // Instruction (op-code)
     short ip;     // Instruction Pointer
 } Registers;
 
