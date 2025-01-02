@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 // Считанный байт-код с файла
-unsigned char bytecode[] = {0xB2, 0x20};
+unsigned char bytecode[] = {0xB2, 0x20, 0xB4, 0x02};
 
 // Регистры виртуальной машины
 typedef struct {
@@ -31,21 +31,13 @@ void mnemonic__mov_al(Registers *registers)
 }
 void mnemonic__mov_ah(Registers *registers)
 {
-    //printf("mnemonic__mov_ah();\n");
-    printf("IP:[%04X]\n", registers->ip);
     registers->ip ++;
-    printf("IP:[%04X]\n", registers->ip);
     registers->ah = bytecode[registers->ip];
-    printf("AH:[%02X]\n", registers->ah);
 }
 void mnemonic__mov_dl(Registers *registers)
 {
-    //printf("mnemonic__mov_dl();\n");
-    //printf("registers->ip = %04X\n", registers->ip);
     registers->ip ++;
-    //printf("registers->ip = %04X\n", registers->ip);
     registers->dl = bytecode[registers->ip];
-    //printf("registers->dl = %02X\n", registers->dl);
 }
 void mnemonic__unknown() { printf("mnemonic__unknown();\n"); } // отсутствует или свободный
 int main(void)
@@ -65,15 +57,17 @@ int main(void)
     Registers registers;
     registers.ip = -1;
     //printf("byte_code[] = \"%s\"\n", byte_code);
+    // информация для отладки кода
+    printf("- 8-bits registers -\n");
     // Выполнение кода виртуальной машины
     while (bytecode[++ registers.ip] != 0x00)
     {
         //printf("bytecode[0x%02X] = %02X|%03i\n", registers.ip, bytecode[registers.ip], bytecode[registers.ip]);
         // информация для отладки кода
-        printf("- 8-bits registers -\n");
         printf("     H L\n");
         printf("AX:[%02X|%02X]\n", registers.ah, registers.al);
         printf("DX:[--|%02X]\n", registers.dl);
+        printf("IP:[%04X]\n", registers.ip);
         opcode_table[bytecode[registers.ip]](&registers);
     }
     return EXIT_SUCCESS;
