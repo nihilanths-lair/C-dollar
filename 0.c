@@ -21,13 +21,8 @@ void (*opcode_table[0xFF])(Registers *registers);
 // Реализация функций, выполняющие команды
 void mnemonic__mov_al(Registers *registers)
 {
-    printf("mnemonic__mov_al();\n");
-    printf("registers->ip = %04X\n", registers->ip);
     registers->ip ++;
-    printf("registers->ip = %04X\n", registers->ip);
-    //opcode_table[bytecode[registers->ip]]();
     registers->al = bytecode[registers->ip];
-    printf("registers->al = %02X\n", registers->al);
 }
 void mnemonic__mov_ah(Registers *registers)
 {
@@ -41,7 +36,9 @@ void mnemonic__mov_dl(Registers *registers)
 }
 void mnemonic__int(Registers *registers)
 {
-    if (registers->ah == 0x02) printf("%c", registers->dl);
+    registers->ip ++;
+    //registers->ah = bytecode[registers->ip];
+    if (bytecode[registers->ip] == 0x02) printf("'%c'\n", registers->dl);
 }
 void mnemonic__unknown() { printf("mnemonic__unknown();\n"); } // отсутствует или свободный
 int main(void)
@@ -54,7 +51,8 @@ int main(void)
     opcode_table[0xB2] = mnemonic__mov_dl;
     opcode_table[0xB3] = mnemonic__unknown;
     opcode_table[0xB4] = mnemonic__mov_ah;
-    for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__int;
+    for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__unknown;
+    opcode_table[0xCD] = mnemonic__int;
     for (unsigned char i = 0xCE; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
     // Убедимся, что все указатели на функции проинициализированы
     //for (unsigned char i = 0x00; i < 0xFF; i ++) opcode_table[i](i);
