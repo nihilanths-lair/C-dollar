@@ -8,7 +8,7 @@ typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
 typedef struct {
     unsigned char *code;
     short ip; // Instruction Pointer
-} registers;
+} Registers;
 // Функции, выполняющие команды
 void op_mov() { printf("op_mov()"); }
 void op_add() { printf("op_add()"); }
@@ -25,7 +25,7 @@ int main(void)
 {
     setlocale(0, "");
     // инициализация регистров и установка первоначальных значений
-    registers registers;
+    Registers registers;
     registers.ip = -1;
     //printf("byte_code[] = \"%s\"\n", byte_code);
     // Выполнение кода виртуальной машины
