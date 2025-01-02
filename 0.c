@@ -10,21 +10,29 @@ typedef struct {
     short ip;     // Instruction Pointer
 } Registers;
 // Функции, выполняющие команды
-void op_mov() { printf("op_mov()"); }
-void op_add() { printf("op_add()"); }
-void op_sub() { printf("op_sub();"); }
-void op_mul() { printf("op_mul();"); }
-void op_div() { printf("op_div();"); }
-void op_halt() { printf("op_halt();"); }
+void mnemonic__unknown() { printf("mnemonic__unknown();\n"); } // отсутствует или свободный
+void mnemonic__mov_al() { printf("mnemonic__mov_al();\n"); }
+//void mnemonic_add() { printf("op_add()"); }
+//void mnemonic_sub() { printf("op_sub();"); }
+//void mnemonic_mul() { printf("op_mul();"); }
+//void mnemonic_div() { printf("op_div();"); }
+//void mnemonic_halt() { printf("op_halt();"); }
 // Массив указателей на функции
-void (*opcode_table[])() = { op_mov, op_add, op_sub, op_mul, op_div, op_halt };
+void (*opcode_table[0xFF])();
 // Считанный байт-код с файла
 char byte_code[] = {0xB0, 0xEB, 0x65, 0xE1};
 //
 int main(void)
 {
-    setlocale(0, "");
-    // инициализация регистров и установка первоначальных значений
+    setlocale(0x00, "");
+    // Инициализация указателей на функции
+    for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
+    opcode_table[0xB0] = mnemonic__mov_al;
+    for (unsigned char i = 0xB1; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
+    // Проверим, что все указатели на функции проинициализированы
+    for (unsigned char i = 0x00; i < 0xFF; i ++) opcode_table[i]();
+    goto Stop;
+    // Инициализация регистров и установка первоначальных значений
     Registers registers;
     registers.ip = -1;
     //printf("byte_code[] = \"%s\"\n", byte_code);
@@ -33,21 +41,24 @@ int main(void)
     {
         printf("byte_code[%i] = %02X\n", registers.ip, byte_code[registers.ip] & 0xFF);
     }
-    while (false)
+    /*
+    while (true)
     {
         registers.ip = 0;
         registers.opcode = "\0";
         Opcode opcode = (Opcode) registers.opcode[registers.ip++]; // Получение кода операции
-        /*------------------------------------------------------------------------------------------------*/
+        //------------------------------------------------------------------------------------------------//
         // Проверка на корректность oп-кода, обработка ошибок (использовать только при чистой интерпретации)
         if (opcode >= sizeof (opcode_table) / sizeof (opcode_table[0]))
         {
             fprintf(stderr, "Invalid opcode: %d\n", opcode);
             return EXIT_FAILURE;
         }
-        /*------------------------------------------------------------------------------------------------*/
+        //------------------------------------------------------------------------------------------------//
         opcode_table[opcode](&registers);
         if (opcode == OP_HALT) break;
     }
+    */
+    Stop:
     return EXIT_SUCCESS;
 }
