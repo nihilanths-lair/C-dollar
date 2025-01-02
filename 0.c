@@ -12,11 +12,7 @@ typedef struct {
 // Функции, выполняющие команды
 void mnemonic__unknown(unsigned char *i) { printf("%02X|%03i: mnemonic__unknown();\n", i, i); } // отсутствует или свободный
 void mnemonic__mov_al(unsigned char *i) { printf("%02X|%03i: mnemonic__mov_al();\n", i, i); }
-//void mnemonic_add() { printf("op_add()"); }
-//void mnemonic_sub() { printf("op_sub();"); }
-//void mnemonic_mul() { printf("op_mul();"); }
-//void mnemonic_div() { printf("op_div();"); }
-//void mnemonic_halt() { printf("op_halt();"); }
+
 // Массив указателей на функции
 void (*opcode_table[0xFF])();
 // Считанный байт-код с файла
