@@ -18,6 +18,7 @@ void op_div() { printf("op_div();"); }
 void op_halt() { printf("op_halt();"); }
 // Массив указателей на функции
 void (*opcode_table[])() = { op_mov, op_add, op_sub, op_mul, op_div, op_halt };
+// Считанный байт-код с файла
 char byte_code[] = {0xC3, 0xEB, 0x65, 0xE1};
 //
 int main(void)
