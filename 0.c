@@ -2,8 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-// Определение команд
-typedef enum { OP_MOV, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_HALT } Opcode;
+
 // Структура виртуальной машины (VM) - можно добавить другие поля, например стек
 typedef struct {
     char *opcode; // Instruction (op-code)
