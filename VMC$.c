@@ -201,17 +201,17 @@ int main(void)
     registers.ip = 0x0000;
     
     FILE* h = fopen("0.bin", "rb");
-	if (h == NULL) return EXIT_FAILURE;
-	
-	fseek(h, 0, SEEK_END);
-	int fsize = ftell(h);
-	printf("Êîë-âî áàéò â ôàéëå: %lld.\n", fsize);
-	fseek(h, 0, SEEK_SET);
-	
-	int i = -1;
-	while (++i < fsize) { bytecode[i] = fgetc(h); printf("%02X ", bytecode[i]); }
-	printf("\n\n");
-	fclose(h);
+    if (h == NULL) return EXIT_FAILURE;
+    
+    fseek(h, 0, SEEK_END);
+    int fsize = ftell(h);
+    printf("Êîë-âî áàéò â ôàéëå: %lld.\n", fsize);
+    fseek(h, 0, SEEK_SET);
+    
+    int i = -1;
+    while (++i < fsize) { bytecode[i] = fgetc(h); printf("%02X ", bytecode[i]); }
+    printf("\n\n");
+    fclose(h);
 
     // èíôîðìàöèÿ äëÿ îòëàäêè êîäà
     //printf("\n- 16-bits registers -\n");
