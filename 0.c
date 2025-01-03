@@ -13,9 +13,10 @@ unsigned char bytecode[] = {0xB4, 0x4C, 0xCD, 0x21};
 typedef struct {
     //char *opcode;   // Instruction (op-code)
     //-[ 8-bits General Purpose Register ]-//
-    short ax;
-    unsigned char ah, al;
-    unsigned char dl;
+    short ax; unsigned char ah, al;
+    short bx; unsigned char bh, bl;
+    short cx; unsigned char ch, cl;
+    short dx; unsigned char dh, dl;
     short ip;         // Instruction Pointer
 } Registers;
 
@@ -35,6 +36,18 @@ void mnemonic__mov_ah(Registers *registers)
 {
     registers->ip ++;
     registers->ax = (registers->ax & 0x00FF) | (bytecode[registers->ip] << 8);
+    registers->ip ++;
+}
+void mnemonic__mov_dh(Registers *registers)
+{
+    registers->ip ++;
+    registers->dx = (registers->dx & 0x00FF) | (bytecode[registers->ip] << 8);
+    registers->ip ++;
+}
+void mnemonic__mov_ax(Registers *registers)
+{
+    registers->ip ++;
+    registers->ax = bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__mov_dl(Registers *registers)
@@ -58,7 +71,7 @@ void mnemonic__int(Registers *registers)
     }
 }
 // отсутствует или свободный
-void mnemonic__unknown(Registers *registers) { registers->ip ++; }
+void mnemonic__unknown(Registers *registers) { exit(EXIT_FAILURE); }
 int main(void)
 {
     setlocale(0x00, "");
@@ -67,6 +80,8 @@ int main(void)
     opcode_table[0xB0] = mnemonic__mov_al;
     opcode_table[0xB2] = mnemonic__mov_dl;
     opcode_table[0xB4] = mnemonic__mov_ah;
+    opcode_table[0xB6] = mnemonic__mov_dh;
+    opcode_table[0xB8] = mnemonic__mov_ax;
     opcode_table[0xCD] = mnemonic__int;
     /*
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
@@ -84,6 +99,9 @@ int main(void)
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
     registers.ax = 0x0000;
+    registers.bx = 0x0000;
+    registers.cx = 0x0000;
+    registers.dx = 0x0000;
     //registers.ah = 0x00, registers.al = 0x00;
     registers.dl = 0x00;
     registers.ip = 0x00;
@@ -97,7 +115,9 @@ int main(void)
         // информация для отладки кода
         printf("     H L\n");
         printf("AX:[%02X|%02X]\n", (registers.ax >> 8) & 0xFF, registers.ax & 0xFF);
-        printf("DX:[--|%02X]\n", registers.dl);
+        printf("BX:[%02X|%02X]\n", (registers.bx >> 8) & 0xFF, registers.bx & 0xFF);
+        printf("CX:[%02X|%02X]\n", (registers.cx >> 8) & 0xFF, registers.cx & 0xFF);
+        printf("DX:[%02X|%02X]\n", (registers.dx >> 8) & 0xFF, registers.dx & 0xFF);
         printf("IP:[%04X]\n", registers.ip);
         opcode_table[bytecode[registers.ip]](&registers);
     }
