@@ -46,10 +46,9 @@ void mnemonic__int(Registers *registers)
 {
     registers->ip ++;
     unsigned char interrupt_number = bytecode[registers->ip];
+    // Обработка прерывания 21h
     if (interrupt_number == 0x21)
     {
-        //printf("interrupt_number = %02X", interrupt_number);
-        // Обработка прерывания 21h
         switch (registers->ah) runb
         case 0x02: printf("%c\n", registers->dl);
         case 0x4C: exit(EXIT_SUCCESS); break;
