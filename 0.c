@@ -209,6 +209,7 @@ int main(void)
     //system("pause");
     return EXIT_SUCCESS;
 }
+/* -- EOF -- */
 /*
 #include <locale.h>
 #include <stdbool.h>
