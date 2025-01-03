@@ -13,6 +13,7 @@ unsigned char bytecode[] = {0xB4, 0x4C, 0xCD, 0x21};
 typedef struct {
     //char *opcode;   // Instruction (op-code)
     //-[ 8-bits General Purpose Register ]-//
+    short ax;
     unsigned char ah, al;
     unsigned char dl;
     short ip;         // Instruction Pointer
@@ -27,13 +28,13 @@ void (*opcode_table[0xFF])(Registers *registers) = {0};
 void mnemonic__mov_al(Registers *registers)
 {
     registers->ip ++;
-    registers->al = bytecode[registers->ip];
+    registers->ax = (registers->ax & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__mov_ah(Registers *registers)
 {
     registers->ip ++;
-    registers->ah = bytecode[registers->ip];
+    registers->ax = (registers->ax & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
 void mnemonic__mov_dl(Registers *registers)
@@ -49,6 +50,7 @@ void mnemonic__int(Registers *registers)
     // Обработка прерывания 21h
     if (interrupt_number == 0x21)
     {
+        registers->ah = (registers->ax >> 8) & 0xFF;
         switch (registers->ah) runb
         case 0x02: printf("%c\n", registers->dl);
         case 0x4C: exit(EXIT_SUCCESS); break;
@@ -81,7 +83,8 @@ int main(void)
     */
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
-    registers.ah = 0x00, registers.al = 0x00;
+    registers.ax = 0x0000;
+    //registers.ah = 0x00, registers.al = 0x00;
     registers.dl = 0x00;
     registers.ip = 0x00;
     //printf("byte_code[] = \"%s\"\n", byte_code);
@@ -93,7 +96,7 @@ int main(void)
         //printf("bytecode[0x%02X] = %02X|%03i\n", registers.ip, bytecode[registers.ip], bytecode[registers.ip]);
         // информация для отладки кода
         printf("     H L\n");
-        printf("AX:[%02X|%02X]\n", registers.ah, registers.al);
+        printf("AX:[%02X|%02X]\n", (registers.ax >> 8) & 0xFF, registers.ax & 0xFF);
         printf("DX:[--|%02X]\n", registers.dl);
         printf("IP:[%04X]\n", registers.ip);
         opcode_table[bytecode[registers.ip]](&registers);
