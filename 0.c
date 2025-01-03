@@ -142,8 +142,8 @@ int main(void)
     /*
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
     for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__unknown;
-    opcode_table[0xCD] = mnemonic__int;
     for (unsigned char i = 0xCE; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
+    
     // Убедимся, что все указатели на функции проинициализированы
     for (unsigned char i = 0x00; i < 0xFF; i ++) opcode_table[i];
     */
