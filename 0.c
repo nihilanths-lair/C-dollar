@@ -63,6 +63,12 @@ void mnemonic__mov_cx(Registers *registers)
     registers->cx = bytecode[registers->ip];
     registers->ip ++;
 }
+void mnemonic__mov_dx(Registers *registers)
+{
+    registers->ip ++;
+    registers->dx = bytecode[registers->ip];
+    registers->ip ++;
+}
 void mnemonic__mov_dl(Registers *registers)
 {
     registers->ip ++;
@@ -94,16 +100,21 @@ void mnemonic__unknown(Registers *registers) { exit(EXIT_FAILURE); }
 int main(void)
 {
     setlocale(0x00, "");
+
     // Инициализация указателей на функции
     for (unsigned char i = 0x00; i < 0xFF; i++) opcode_table[i] = mnemonic__unknown;
     opcode_table[0xB0] = mnemonic__mov_al;
     opcode_table[0xB1] = mnemonic__mov_cl;
     opcode_table[0xB2] = mnemonic__mov_dl;
     opcode_table[0xB3] = mnemonic__mov_bl;
+
     opcode_table[0xB4] = mnemonic__mov_ah;
     opcode_table[0xB6] = mnemonic__mov_dh;
+
     opcode_table[0xB8] = mnemonic__mov_ax;
     opcode_table[0xB9] = mnemonic__mov_cx;
+    opcode_table[0xBA] = mnemonic__mov_dx;
+
     opcode_table[0xCD] = mnemonic__int;
     /*
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
