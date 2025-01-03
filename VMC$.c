@@ -9,23 +9,13 @@
 #define runb {
 #define endb }
 
-// Г‘Г·ГЁГІГ Г­Г­Г»Г© ГЎГ Г©ГІ-ГЄГ®Г¤ Г± ГґГ Г©Г«Г 
-unsigned char bytecode[65536]; /*=
-{
-    0xB4, 0x02, // MOV AH, 02h
-    0xB2, 0x43, // MOV DL, 'C'
-    0xCD, 0x21, // INT 21h
-    0xB4, 0x02, // MOV AH, 02h
-    0xB2, 0x24, // MOV DL, '$'
-    0xCD, 0x21, // INT 21h
-    0xB4, 0x4C, // MOV AH, 4Ch
-    0xCD, 0x21  // INT 21h
-};
-*/
+// Считанный байт-код с файла
+unsigned char bytecode[0xFFFF];
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*  ГќГ¬ГіГ«ГїГ¶ГЁГї Г Г°ГµГЁГІГҐГЄГІГіГ°Г» ГЇГ°Г®Г¶ГҐГ±Г±Г®Г°Г  x86 (16 bits)  */
+/*  Эмуляция архитектуры процессора x86 (16 bits)  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-// ГђГҐГЈГЁГ±ГІГ°Г» ГўГЁГ°ГІГіГ Г«ГјГ­Г®Г© Г¬Г ГёГЁГ­Г»
+// Регистры виртуальной машины
 typedef struct {
   uint16_t ax;
   uint16_t bx;
@@ -34,7 +24,7 @@ typedef struct {
   uint16_t ip;
 } RegistersCPUx86;
 
-// ГЏГ°Г®ГІГ®ГІГЁГЇГ» ГґГіГ­ГЄГ¶ГЁГ© Г¤Г«Гї ГІГ ГЎГ«ГЁГ¶Г» Г®ГЇГЄГ®Г¤Г®Гў
+// Прототипы функций для таблицы опкодов
 void mnc__mov_al(RegistersCPUx86 *registers);
 void mnc__mov_cl(RegistersCPUx86 *registers);
 void mnc__mov_dl(RegistersCPUx86 *registers);
@@ -54,10 +44,10 @@ void mnc__unknown(RegistersCPUx86 *registers);
 void mnc__dos_exit(RegistersCPUx86 *registers);
 void mnc__dos_print_char(RegistersCPUx86 *registers);
 
-// ГЊГ Г±Г±ГЁГў ГіГЄГ Г§Г ГІГҐГ«ГҐГ© Г­Г  ГґГіГ­ГЄГ¶ГЁГЁ
+// Массив указателей на функции
 void (*opcode_table[0xFF])(RegistersCPUx86 *registers) = {0};
 
-// ГђГҐГ Г«ГЁГ§Г Г¶ГЁГї ГґГіГ­ГЄГ¶ГЁГ©, ГўГ»ГЇГ®Г«Г­ГїГѕГ№ГЁГҐ ГЄГ®Г¬Г Г­Г¤Г»
+// Реализация функций, выполняющие команды
 void mnc__mov_al(RegistersCPUx86 *registers) 
 {
     registers->ip++;
@@ -142,7 +132,7 @@ void mnc__int(RegistersCPUx86 *registers)
         case 0x4C: // Exit
             mnc__dos_exit(registers);
             break;
-        case 0x02: // Г‚Г»ГўГ®Г¤ Г±ГЁГ¬ГўГ®Г«Г 
+        case 0x02: // Вывод символа
             mnc__dos_print_char(registers);
             break;
         default:
@@ -158,20 +148,20 @@ void mnc__unknown(RegistersCPUx86 *registers)
     registers->ip++;
 }
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*  Г‘ГўГ®Г© Г±Г®ГЎГ±ГІГўГҐГ­Г­Г»Г© Г­Г ГЎГ®Г° ГЄГ®Г¬Г Г­Г¤ ГЁ Г°ГҐГЈГЁГ±ГІГ°Г®Гў ГўГЁГ°ГІГіГ Г«ГјГ­Г®Г© Г¬Г ГёГЁГ­Г»  */
+/*  Свой собственный набор команд и регистров виртуальной машины  */
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-// -- Г‚ Г°Г Г§Г°Г ГЎГ®ГІГЄГҐ -- //
-// ГђГҐГЈГЁГ±ГІГ°Г» ГўГЁГ°ГІГіГ Г«ГјГ­Г®Г© Г¬Г ГёГЁГ­Г»
+// -- В разработке -- //
+// Регистры виртуальной машины
 typedef struct {
   uint16_t r16b;
   uint16_t ip;
 } Registers;
-// -- Г‚ Г°Г Г§Г°Г ГЎГ®ГІГЄГҐ -- //
+// -- В разработке -- //
 //
 int main(void)
 {
     setlocale(0, "");
-    // Г€Г­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї ГіГЄГ Г§Г ГІГҐГ«ГҐГ© Г­Г  ГґГіГ­ГЄГ¶ГЁГЁ
+    // Инициализация указателей на функции
     for (unsigned char i = 0x00; i < 0xFF; i++) { opcode_table[i] = mnc__unknown; }
 
     opcode_table[0xB0] = mnc__mov_al;
@@ -191,7 +181,7 @@ int main(void)
 
     opcode_table[0xCD] = mnc__int;
 
-    // Г€Г­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї Г°ГҐГЈГЁГ±ГІГ°Г®Гў ГЁ ГіГ±ГІГ Г­Г®ГўГЄГ  ГЇГҐГ°ГўГ®Г­Г Г·Г Г«ГјГ­Г»Гµ Г§Г­Г Г·ГҐГ­ГЁГ©
+    // Инициализация регистров и установка первоначальных значений
     RegistersCPUx86 registers;
     
     registers.ax = 0x0000;
@@ -200,26 +190,29 @@ int main(void)
     registers.dx = 0x0000;
     registers.ip = 0x0000;
     
-    FILE* h = fopen("0.bin", "rb");
-    if (h == NULL) return EXIT_FAILURE;
-    
-    fseek(h, 0, SEEK_END);
-    int fsize = ftell(h);
-    printf("ГЉГ®Г«-ГўГ® ГЎГ Г©ГІ Гў ГґГ Г©Г«ГҐ: %lld.\n", fsize);
-    fseek(h, 0, SEEK_SET);
-    
-    int i = -1;
-    while (++i < fsize) { bytecode[i] = fgetc(h); printf("%02X ", bytecode[i]); }
-    printf("\n\n");
-    fclose(h);
+    FILE* h = fopen("0.bccdlr", "rb");
+	if (h == NULL) return EXIT_FAILURE;
+	
+	fseek(h, 0, SEEK_END);
+	int fsize = ftell(h);
+	fseek(h, 0, SEEK_SET);
+	
+	int i = -1;
+	while (++i < fsize)
+    {
+        bytecode[i] = fgetc(h);
+        printf("%02X ", bytecode[i]);
+    }
+    printf("\nКол-во байт в файле: %lld.\n", fsize);
+	fclose(h);
 
-    // ГЁГ­ГґГ®Г°Г¬Г Г¶ГЁГї Г¤Г«Гї Г®ГІГ«Г Г¤ГЄГЁ ГЄГ®Г¤Г 
+    // информация для отладки кода
     //printf("\n- 16-bits registers -\n");
 
-    // Г‚Г»ГЇГ®Г«Г­ГҐГ­ГЁГҐ ГЄГ®Г¤Г  ГўГЁГ°ГІГіГ Г«ГјГ­Г®Г© Г¬Г ГёГЁГ­Г»
+    // Выполнение кода виртуальной машины
     while (registers.ip < sizeof (bytecode))
     {
-        // ГЁГ­ГґГ®Г°Г¬Г Г¶ГЁГї Г¤Г«Гї Г®ГІГ«Г Г¤ГЄГЁ ГЄГ®Г¤Г 
+        // информация для отладки кода
         /*
         printf("\n");
         printf("     H L\n");
@@ -232,6 +225,5 @@ int main(void)
         if (registers.ip >= sizeof(bytecode)) break;
         opcode_table[bytecode[registers.ip]](&registers);
     }
-    //system("pause");
     return EXIT_SUCCESS;
 }
