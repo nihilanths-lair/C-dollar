@@ -42,13 +42,13 @@ void mnemonic__mov_cl(Registers *registers)
 void mnemonic__mov_dl(Registers *registers)
 {
     registers->ip ++;
-    registers->dl = bytecode[registers->ip];
+    registers->dx = (registers->dx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__mov_bl(Registers *registers)
 {
     registers->ip ++;
-    registers->bl = bytecode[registers->ip];
+    registers->bx = (registers->bx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__mov_ah(Registers *registers)
