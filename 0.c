@@ -11,13 +11,14 @@ unsigned char bytecode[] = {0xB4, 0x4C, 0xCD, 0x21};
 
 // Регистры виртуальной машины
 typedef struct {
-    //char *opcode;   // Instruction (op-code)
-    //-[ 8-bits General Purpose Register ]-//
+    //char *opcode; // Instruction (op-code)
+    //-[ 16/8-bits General Purpose Register ]-//
     short ax; unsigned char ah, al;
     short bx; unsigned char bh, bl;
     short cx; unsigned char ch, cl;
     short dx; unsigned char dh, dl;
-    short ip;         // Instruction Pointer
+    //-[ 16-bits General Purpose Register ]-//
+    short ip; // Instruction Pointer
 } Registers;
 
 // Номер прерывания
