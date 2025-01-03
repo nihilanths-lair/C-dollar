@@ -81,6 +81,12 @@ void mnemonic__mov_dx(Registers *registers)
     registers->dx = bytecode[registers->ip];
     registers->ip ++;
 }
+void mnemonic__mov_bx(Registers *registers)
+{
+    registers->ip ++;
+    registers->bx = bytecode[registers->ip];
+    registers->ip ++;
+}
 void mnemonic__mov_dl(Registers *registers)
 {
     registers->ip ++;
@@ -97,6 +103,7 @@ void mnemonic__int(Registers *registers)
 {
     registers->ip ++;
     unsigned char interrupt_number = bytecode[registers->ip];
+
     // Обработка прерывания 21h
     if (interrupt_number == 0x21)
     {
@@ -115,6 +122,7 @@ int main(void)
 
     // Инициализация указателей на функции
     for (unsigned char i = 0x00; i < 0xFF; i++) opcode_table[i] = mnemonic__unknown;
+
     opcode_table[0xB0] = mnemonic__mov_al;
     opcode_table[0xB1] = mnemonic__mov_cl;
     opcode_table[0xB2] = mnemonic__mov_dl;
@@ -128,6 +136,7 @@ int main(void)
     opcode_table[0xB8] = mnemonic__mov_ax;
     opcode_table[0xB9] = mnemonic__mov_cx;
     opcode_table[0xBA] = mnemonic__mov_dx;
+    opcode_table[0xBB] = mnemonic__mov_bx;
 
     opcode_table[0xCD] = mnemonic__int;
     /*
