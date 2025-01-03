@@ -107,7 +107,7 @@ int main(void)
     registers.ip = 0x00;
     //printf("byte_code[] = \"%s\"\n", byte_code);
     // информация для отладки кода
-    printf("- 8-bits registers -\n");
+    printf("- 16-bits registers -\n");
     // Выполнение кода виртуальной машины
     while (true)
     {
