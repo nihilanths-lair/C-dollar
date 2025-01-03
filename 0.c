@@ -33,6 +33,12 @@ void mnemonic__mov_al(Registers *registers)
     registers->ax = (registers->ax & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
+void mnemonic__mov_cl(Registers *registers)
+{
+    registers->ip ++;
+    registers->cx = (registers->cx & 0xFF00) | bytecode[registers->ip];
+    registers->ip ++;
+}
 void mnemonic__mov_ah(Registers *registers)
 {
     registers->ip ++;
@@ -51,10 +57,22 @@ void mnemonic__mov_ax(Registers *registers)
     registers->ax = bytecode[registers->ip];
     registers->ip ++;
 }
+void mnemonic__mov_cx(Registers *registers)
+{
+    registers->ip ++;
+    registers->cx = bytecode[registers->ip];
+    registers->ip ++;
+}
 void mnemonic__mov_dl(Registers *registers)
 {
     registers->ip ++;
     registers->dl = bytecode[registers->ip];
+    registers->ip ++;
+}
+void mnemonic__mov_bl(Registers *registers)
+{
+    registers->ip ++;
+    registers->bl = bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__int(Registers *registers)
@@ -79,10 +97,13 @@ int main(void)
     // Инициализация указателей на функции
     for (unsigned char i = 0x00; i < 0xFF; i++) opcode_table[i] = mnemonic__unknown;
     opcode_table[0xB0] = mnemonic__mov_al;
+    opcode_table[0xB1] = mnemonic__mov_cl;
     opcode_table[0xB2] = mnemonic__mov_dl;
+    opcode_table[0xB3] = mnemonic__mov_bl;
     opcode_table[0xB4] = mnemonic__mov_ah;
     opcode_table[0xB6] = mnemonic__mov_dh;
     opcode_table[0xB8] = mnemonic__mov_ax;
+    opcode_table[0xB9] = mnemonic__mov_cx;
     opcode_table[0xCD] = mnemonic__int;
     /*
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
@@ -105,7 +126,7 @@ int main(void)
     registers.cx = 0x0000; //registers.ch = 0x00, registers.cl = 0x00;
     registers.dx = 0x0000; //registers.dh = 0x00, registers.dl = 0x00;
     registers.ip = 0x0000;
-    //printf("byte_code[] = \"%s\"\n", byte_code);
+    
     // информация для отладки кода
     printf("- 16-bits registers -\n");
     // Выполнение кода виртуальной машины
@@ -113,6 +134,7 @@ int main(void)
     {
         //printf("bytecode[0x%02X] = %02X|%03i\n", registers.ip, bytecode[registers.ip], bytecode[registers.ip]);
         // информация для отладки кода
+        printf("\n");
         printf("     H L\n");
         printf("AX:[%02X|%02X]\n", (registers.ax >> 8) & 0xFF, registers.ax & 0xFF);
         printf("BX:[%02X|%02X]\n", (registers.bx >> 8) & 0xFF, registers.bx & 0xFF);
