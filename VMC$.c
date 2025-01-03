@@ -1,3 +1,5 @@
+/*! Windows-1251 encoding is used! */
+
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
