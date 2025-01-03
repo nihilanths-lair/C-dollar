@@ -39,6 +39,18 @@ void mnemonic__mov_cl(Registers *registers)
     registers->cx = (registers->cx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
+void mnemonic__mov_dl(Registers *registers)
+{
+    registers->ip ++;
+    registers->dl = bytecode[registers->ip];
+    registers->ip ++;
+}
+void mnemonic__mov_bl(Registers *registers)
+{
+    registers->ip ++;
+    registers->bl = bytecode[registers->ip];
+    registers->ip ++;
+}
 void mnemonic__mov_ah(Registers *registers)
 {
     registers->ip ++;
@@ -85,18 +97,6 @@ void mnemonic__mov_bx(Registers *registers)
 {
     registers->ip ++;
     registers->bx = bytecode[registers->ip];
-    registers->ip ++;
-}
-void mnemonic__mov_dl(Registers *registers)
-{
-    registers->ip ++;
-    registers->dl = bytecode[registers->ip];
-    registers->ip ++;
-}
-void mnemonic__mov_bl(Registers *registers)
-{
-    registers->ip ++;
-    registers->bl = bytecode[registers->ip];
     registers->ip ++;
 }
 void mnemonic__int(Registers *registers)
