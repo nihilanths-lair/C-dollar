@@ -98,13 +98,12 @@ int main(void)
     */
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
-    registers.ax = 0x0000;
-    registers.bx = 0x0000;
-    registers.cx = 0x0000;
-    registers.dx = 0x0000;
-    //registers.ah = 0x00, registers.al = 0x00;
-    registers.dl = 0x00;
-    registers.ip = 0x00;
+    
+    registers.ax = 0x0000; //registers.ah = 0x00, registers.al = 0x00;
+    registers.bx = 0x0000; //registers.bh = 0x00, registers.bl = 0x00;
+    registers.cx = 0x0000; //registers.ch = 0x00, registers.cl = 0x00;
+    registers.dx = 0x0000; //registers.dh = 0x00, registers.dl = 0x00;
+    registers.ip = 0x0000;
     //printf("byte_code[] = \"%s\"\n", byte_code);
     // информация для отладки кода
     printf("- 16-bits registers -\n");
