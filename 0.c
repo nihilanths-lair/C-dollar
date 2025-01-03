@@ -141,11 +141,6 @@ int main(void)
     opcode_table[0xCD] = mnemonic__int;
     /*
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
-    opcode_table[0xB0] = mnemonic__mov_al;
-    opcode_table[0xB1] = mnemonic__unknown;
-    opcode_table[0xB2] = mnemonic__mov_dl;
-    opcode_table[0xB3] = mnemonic__unknown;
-    opcode_table[0xB4] = mnemonic__mov_ah;
     for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__unknown;
     opcode_table[0xCD] = mnemonic__int;
     for (unsigned char i = 0xCE; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
