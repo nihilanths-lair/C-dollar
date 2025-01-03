@@ -51,7 +51,7 @@ void mnemonic__int(Registers *registers)
         //printf("interrupt_number = %02X", interrupt_number);
         // Обработка прерывания 21h
         switch (registers->ah) runb
-        case 0x4C: exit(0); break;
+        case 0x4C: exit(EXIT_SUCCESS); break;
         endb
     }
     //if (registers->ah == 0x4C) exit(0);
