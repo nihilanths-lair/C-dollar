@@ -45,10 +45,22 @@ void mnemonic__mov_ah(Registers *registers)
     registers->ax = (registers->ax & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
+void mnemonic__mov_ch(Registers *registers)
+{
+    registers->ip ++;
+    registers->cx = (registers->cx & 0x00FF) | (bytecode[registers->ip] << 8);
+    registers->ip ++;
+}
 void mnemonic__mov_dh(Registers *registers)
 {
     registers->ip ++;
     registers->dx = (registers->dx & 0x00FF) | (bytecode[registers->ip] << 8);
+    registers->ip ++;
+}
+void mnemonic__mov_bh(Registers *registers)
+{
+    registers->ip ++;
+    registers->bx = (registers->bx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
 void mnemonic__mov_ax(Registers *registers)
@@ -109,7 +121,9 @@ int main(void)
     opcode_table[0xB3] = mnemonic__mov_bl;
 
     opcode_table[0xB4] = mnemonic__mov_ah;
+    opcode_table[0xB5] = mnemonic__mov_ch;
     opcode_table[0xB6] = mnemonic__mov_dh;
+    opcode_table[0xB7] = mnemonic__mov_bh;
 
     opcode_table[0xB8] = mnemonic__mov_ax;
     opcode_table[0xB9] = mnemonic__mov_cx;
