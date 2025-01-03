@@ -64,9 +64,9 @@
 | код на английском | код на русском |
 |-|-|
 ```1``` ```$ Below is an example of inline one-line comments.``` | ```1``` ```$ Ниже приведен пример встроенных однострочных комментариев```<br>
-```2``` ```call function SetVehicleParams(<$is the engine running=false, <$are the doors open=true)``` | ```2``` ```вызвать функцию УстановитьТранспортуПараметры(<$двигатель работает=ложь, <$двери открыты=истина)```<br>
+```2``` ```call function SetVehicleParams($is the engine running=false, $are the doors open=true)``` | ```2``` ```вызвать функцию УстановитьТранспортуПараметры($двигатель работает=ложь, $двери открыты=истина)```<br>
 ```3``` ```$ It is possible this way . . .``` | ```3``` ```$ Можно таким способом . . .```<br>
-```4``` ```call function SetVehicleParams(<$is the engine running:false, <$are the doors open:true)``` | ```4``` ```вызвать функцию УстановитьТранспортуПараметры(<$двигатель работает:ложь, <$двери открыты:истина)```<br>
+```4``` ```call function SetVehicleParams($is the engine running:false, $are the doors open:true)``` | ```4``` ```вызвать функцию УстановитьТранспортуПараметры($двигатель работает:ложь, $двери открыты:истина)```<br>
 <br>
 
 < Тема: ```Многострочные комментарии```, файл: ```0.cdlr``` (исходный код на языке ```C$```)>
