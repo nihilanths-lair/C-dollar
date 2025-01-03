@@ -29,107 +29,107 @@ typedef struct {
 } Registers;
 
 // Прототипы функций для таблицы опкодов
-void mnemonic__mov_al(Registers *registers);
-void mnemonic__mov_cl(Registers *registers);
-void mnemonic__mov_dl(Registers *registers);
-void mnemonic__mov_bl(Registers *registers);
-void mnemonic__mov_ah(Registers *registers);
-void mnemonic__mov_ch(Registers *registers);
-void mnemonic__mov_dh(Registers *registers);
-void mnemonic__mov_bh(Registers *registers);
+void mnc__mov_al(Registers *registers);
+void mnc__mov_cl(Registers *registers);
+void mnc__mov_dl(Registers *registers);
+void mnc__mov_bl(Registers *registers);
+void mnc__mov_ah(Registers *registers);
+void mnc__mov_ch(Registers *registers);
+void mnc__mov_dh(Registers *registers);
+void mnc__mov_bh(Registers *registers);
 
-void mnemonic__mov_ax(Registers *registers);
-void mnemonic__mov_cx(Registers *registers);
-void mnemonic__mov_dx(Registers *registers);
-void mnemonic__mov_bx(Registers *registers);
+void mnc__mov_ax(Registers *registers);
+void mnc__mov_cx(Registers *registers);
+void mnc__mov_dx(Registers *registers);
+void mnc__mov_bx(Registers *registers);
 
-void mnemonic__int(Registers *registers);
-void mnemonic__unknown(Registers *registers);
-void mnemonic__dos_exit(Registers *registers);
-void mnemonic__dos_print_char(Registers *registers);
+void mnc__int(Registers *registers);
+void mnc__unknown(Registers *registers);
+void mnc__dos_exit(Registers *registers);
+void mnc__dos_print_char(Registers *registers);
 
 // Массив указателей на функции
 void (*opcode_table[0xFF])(Registers *registers) = {0};
 
 // Реализация функций, выполняющие команды
-void mnemonic__mov_al(Registers *registers) 
+void mnc__mov_al(Registers *registers) 
 {
     registers->ip++;
     registers->ax = (registers->ax & 0xFF00) | (bytecode[registers->ip]);
     registers->ip++;
 }
-void mnemonic__mov_cl(Registers *registers)
+void mnc__mov_cl(Registers *registers)
 {
     registers->ip++;
     registers->cx = (registers->cx & 0xFF00) | (bytecode[registers->ip]);
     registers->ip++;
 }
-void mnemonic__mov_dl(Registers *registers)
+void mnc__mov_dl(Registers *registers)
 {
     registers->ip++;
     registers->dx = (registers->dx & 0xFF00) | (bytecode[registers->ip]);
     registers->ip++;
 }
-void mnemonic__mov_bl(Registers *registers)
+void mnc__mov_bl(Registers *registers)
 {
     registers->ip++;
     registers->bx = (registers->bx & 0xFF00) | (bytecode[registers->ip]);
     registers->ip++;
 }
-void mnemonic__mov_ah(Registers *registers)
+void mnc__mov_ah(Registers *registers)
 {
     registers->ip++;
     registers->ax = (registers->ax & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip++;
 }
-void mnemonic__mov_ch(Registers *registers)
+void mnc__mov_ch(Registers *registers)
 {
     registers->ip++;
     registers->cx = (registers->cx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip++;
 }
-void mnemonic__mov_dh(Registers *registers)
+void mnc__mov_dh(Registers *registers)
 {
     registers->ip++;
     registers->dx = (registers->dx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip++;
 }
-void mnemonic__mov_bh(Registers *registers)
+void mnc__mov_bh(Registers *registers)
 {
     registers->ip++;
     registers->bx = (registers->bx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip++;
 }
 
-void mnemonic__mov_ax(Registers *registers)
+void mnc__mov_ax(Registers *registers)
 {
     registers->ip++;
     registers->ax = (bytecode[registers->ip]) | (bytecode[registers->ip + 1] << 8);
     registers->ip += 2;
 }
 
-void mnemonic__mov_cx(Registers *registers)
+void mnc__mov_cx(Registers *registers)
 {
     registers->ip++;
     registers->cx = (bytecode[registers->ip]) | (bytecode[registers->ip + 1] << 8);
     registers->ip += 2;
 }
-void mnemonic__mov_dx(Registers *registers)
+void mnc__mov_dx(Registers *registers)
 {
     registers->ip++;
     registers->dx = (bytecode[registers->ip]) | (bytecode[registers->ip + 1] << 8);
     registers->ip += 2;
 }
-void mnemonic__mov_bx(Registers *registers)
+void mnc__mov_bx(Registers *registers)
 {
     registers->ip++;
     registers->bx = (bytecode[registers->ip]) | (bytecode[registers->ip + 1] << 8);
     registers->ip += 2;
 }
-void mnemonic__dos_exit(Registers *registers) { exit(EXIT_SUCCESS); }
-void mnemonic__dos_print_char(Registers *registers) { printf("%c\n", registers->dx & 0xFF); }
+void mnc__dos_exit(Registers *registers) { exit(EXIT_SUCCESS); }
+void mnc__dos_print_char(Registers *registers) { putchar(registers->dx & 0xFF); }
 
-void mnemonic__int(Registers *registers)
+void mnc__int(Registers *registers)
 {
     registers->ip++;
     unsigned char int_number = bytecode[registers->ip];
@@ -137,10 +137,10 @@ void mnemonic__int(Registers *registers)
     {
         switch (registers->ax >> 8 & 0xFF) runb
         case 0x4C: // Exit
-            mnemonic__dos_exit(registers);
+            mnc__dos_exit(registers);
             break;
         case 0x02: // Вывод символа
-            mnemonic__dos_print_char(registers);
+            mnc__dos_print_char(registers);
             break;
         default:
             printf("Unknown DOS interrupt function: AH=0x%02X\n", registers->ax >> 8 & 0xFF);
@@ -149,9 +149,9 @@ void mnemonic__int(Registers *registers)
     } else { printf("Unhandled interrupt 0x%02X\n", int_number); }
     registers->ip++;
 }
-void mnemonic__unknown(Registers *registers)
+void mnc__unknown(Registers *registers)
 { 
-    printf("mnemonic__unknown();\n");
+    printf("mnc__unknown();\n");
     registers->ip++;
 }
 
@@ -159,24 +159,24 @@ int main(void)
 {
     setlocale(0x00, "");
     // Инициализация указателей на функции
-    for (unsigned char i = 0x00; i < 0xFF; i++) { opcode_table[i] = mnemonic__unknown; }
+    for (unsigned char i = 0x00; i < 0xFF; i++) { opcode_table[i] = mnc__unknown; }
 
-    opcode_table[0xB0] = mnemonic__mov_al;
-    opcode_table[0xB1] = mnemonic__mov_cl;
-    opcode_table[0xB2] = mnemonic__mov_dl;
-    opcode_table[0xB3] = mnemonic__mov_bl;
+    opcode_table[0xB0] = mnc__mov_al;
+    opcode_table[0xB1] = mnc__mov_cl;
+    opcode_table[0xB2] = mnc__mov_dl;
+    opcode_table[0xB3] = mnc__mov_bl;
 
-    opcode_table[0xB4] = mnemonic__mov_ah;
-    opcode_table[0xB5] = mnemonic__mov_ch;
-    opcode_table[0xB6] = mnemonic__mov_dh;
-    opcode_table[0xB7] = mnemonic__mov_bh;
+    opcode_table[0xB4] = mnc__mov_ah;
+    opcode_table[0xB5] = mnc__mov_ch;
+    opcode_table[0xB6] = mnc__mov_dh;
+    opcode_table[0xB7] = mnc__mov_bh;
 
-    opcode_table[0xB8] = mnemonic__mov_ax;
-    opcode_table[0xB9] = mnemonic__mov_cx;
-    opcode_table[0xBA] = mnemonic__mov_dx;
-    opcode_table[0xBB] = mnemonic__mov_bx;
+    opcode_table[0xB8] = mnc__mov_ax;
+    opcode_table[0xB9] = mnc__mov_cx;
+    opcode_table[0xBA] = mnc__mov_dx;
+    opcode_table[0xBB] = mnc__mov_bx;
 
-    opcode_table[0xCD] = mnemonic__int;
+    opcode_table[0xCD] = mnc__int;
    
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
@@ -270,79 +270,79 @@ typedef struct {
 void (*opcode_table[0xFF])(Registers *registers) = {0};
 
 // Реализация функций, выполняющие команды
-void mnemonic__mov_al(Registers *registers)
+void mnc__mov_al(Registers *registers)
 {
     registers->ip ++;
     registers->ax = (registers->ax & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_cl(Registers *registers)
+void mnc__mov_cl(Registers *registers)
 {
     registers->ip ++;
     registers->cx = (registers->cx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_dl(Registers *registers)
+void mnc__mov_dl(Registers *registers)
 {
     registers->ip ++;
     registers->dx = (registers->dx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_bl(Registers *registers)
+void mnc__mov_bl(Registers *registers)
 {
     registers->ip ++;
     registers->bx = (registers->bx & 0xFF00) | bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_ah(Registers *registers)
+void mnc__mov_ah(Registers *registers)
 {
     registers->ip ++;
     registers->ax = (registers->ax & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
-void mnemonic__mov_ch(Registers *registers)
+void mnc__mov_ch(Registers *registers)
 {
     registers->ip ++;
     registers->cx = (registers->cx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
-void mnemonic__mov_dh(Registers *registers)
+void mnc__mov_dh(Registers *registers)
 {
     registers->ip ++;
     registers->dx = (registers->dx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
-void mnemonic__mov_bh(Registers *registers)
+void mnc__mov_bh(Registers *registers)
 {
     registers->ip ++;
     registers->bx = (registers->bx & 0x00FF) | (bytecode[registers->ip] << 8);
     registers->ip ++;
 }
-void mnemonic__mov_ax(Registers *registers)
+void mnc__mov_ax(Registers *registers)
 {
     registers->ip ++;
     registers->ax = bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_cx(Registers *registers)
+void mnc__mov_cx(Registers *registers)
 {
     registers->ip ++;
     registers->cx = bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_dx(Registers *registers)
+void mnc__mov_dx(Registers *registers)
 {
     registers->ip ++;
     registers->dx = bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__mov_bx(Registers *registers)
+void mnc__mov_bx(Registers *registers)
 {
     registers->ip ++;
     registers->bx = bytecode[registers->ip];
     registers->ip ++;
 }
-void mnemonic__int(Registers *registers)
+void mnc__int(Registers *registers)
 {
     registers->ip ++;
     unsigned char interrupt_number = bytecode[registers->ip];
@@ -358,30 +358,30 @@ void mnemonic__int(Registers *registers)
     }
 }
 // отсутствует или свободный
-void mnemonic__unknown(Registers *registers) { exit(EXIT_FAILURE); }
+void mnc__unknown(Registers *registers) { exit(EXIT_FAILURE); }
 int main(void)
 {
     setlocale(0x00, "");
 
     // Инициализация указателей на функции
-    for (unsigned char i = 0x00; i < 0xFF; i++) opcode_table[i] = mnemonic__unknown;
+    for (unsigned char i = 0x00; i < 0xFF; i++) opcode_table[i] = mnc__unknown;
 
-    opcode_table[0xB0] = mnemonic__mov_al;
-    opcode_table[0xB1] = mnemonic__mov_cl;
-    opcode_table[0xB2] = mnemonic__mov_dl;
-    opcode_table[0xB3] = mnemonic__mov_bl;
+    opcode_table[0xB0] = mnc__mov_al;
+    opcode_table[0xB1] = mnc__mov_cl;
+    opcode_table[0xB2] = mnc__mov_dl;
+    opcode_table[0xB3] = mnc__mov_bl;
 
-    opcode_table[0xB4] = mnemonic__mov_ah;
-    opcode_table[0xB5] = mnemonic__mov_ch;
-    opcode_table[0xB6] = mnemonic__mov_dh;
-    opcode_table[0xB7] = mnemonic__mov_bh;
+    opcode_table[0xB4] = mnc__mov_ah;
+    opcode_table[0xB5] = mnc__mov_ch;
+    opcode_table[0xB6] = mnc__mov_dh;
+    opcode_table[0xB7] = mnc__mov_bh;
 
-    opcode_table[0xB8] = mnemonic__mov_ax;
-    opcode_table[0xB9] = mnemonic__mov_cx;
-    opcode_table[0xBA] = mnemonic__mov_dx;
-    opcode_table[0xBB] = mnemonic__mov_bx;
+    opcode_table[0xB8] = mnc__mov_ax;
+    opcode_table[0xB9] = mnc__mov_cx;
+    opcode_table[0xBA] = mnc__mov_dx;
+    opcode_table[0xBB] = mnc__mov_bx;
 
-    opcode_table[0xCD] = mnemonic__int;
+    opcode_table[0xCD] = mnc__int;
 
     // Инициализация регистров и установка первоначальных значений
     Registers registers;
