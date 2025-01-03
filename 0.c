@@ -7,7 +7,38 @@
 #define endb }
 
 // Считанный байт-код с файла
-unsigned char bytecode[] = {0xB4, 0x4C, 0xCD, 0x21};
+unsigned char bytecode[] =
+{
+    // Поместить код символа из таблицы ASCII в регистр DL
+    0xB2, 'C',
+    // Выводим символ на экран
+    0xB4, 0x02,
+    0xCD, 0x21,
+    // Поместить код символа из таблицы ASCII в регистр DL
+    0xB2, '$',
+    // Выводим символ на экран
+    0xB4, 0x02,
+    0xCD, 0x21,
+    // Завершение
+    0xB4, 0x4C
+};
+
+// Поместить код символа из таблицы ASCII в регистр DL
+// mov dl, 0x43 или 'C' | B2 43
+
+// Выводим символ на экран
+// mov ah, 02h | B4 02
+// int 21h     | CD 21
+
+// Поместить код символа из таблицы ASCII в регистр DL
+// mov dl, 0x24 или '$' | B2 24
+
+// Выводим символ на экран
+// mov ah, 02h | B4 02
+// int 21h     | CD 21
+
+// Завершение
+// mov ah, 4Ch | B4 4C
 
 // Регистры виртуальной машины
 typedef struct {
@@ -109,7 +140,7 @@ void mnemonic__int(Registers *registers)
     {
         registers->ah = (registers->ax >> 8) & 0xFF;
         switch (registers->ah) runb
-        case 0x02: printf("%c\n", registers->dl);
+        case 0x02: printf("%c\n", registers->dx & 0xFF);
         case 0x4C: exit(EXIT_SUCCESS); break;
         endb
     }
@@ -143,7 +174,7 @@ int main(void)
     for (unsigned char i = 0x00; i < 0xB0; i ++) opcode_table[i] = mnemonic__unknown;
     for (unsigned char i = 0xB5; i < 0xCD; i ++) opcode_table[i] = mnemonic__unknown;
     for (unsigned char i = 0xCE; i < 0xFF; i ++) opcode_table[i] = mnemonic__unknown;
-    
+
     // Убедимся, что все указатели на функции проинициализированы
     for (unsigned char i = 0x00; i < 0xFF; i ++) opcode_table[i];
     */
@@ -157,7 +188,8 @@ int main(void)
     registers.ip = 0x0000;
     
     // информация для отладки кода
-    printf("- 16-bits registers -\n");
+    printf("\n- 16-bits registers -\n");
+
     // Выполнение кода виртуальной машины
     while (true)
     {
@@ -169,7 +201,7 @@ int main(void)
         printf("BX:[%02X|%02X]\n", (registers.bx >> 8) & 0xFF, registers.bx & 0xFF);
         printf("CX:[%02X|%02X]\n", (registers.cx >> 8) & 0xFF, registers.cx & 0xFF);
         printf("DX:[%02X|%02X]\n", (registers.dx >> 8) & 0xFF, registers.dx & 0xFF);
-        printf("IP:[%04X]\n", registers.ip);
+        printf("IP:[%04X]\n\n", registers.ip);
         opcode_table[bytecode[registers.ip]](&registers);
     }
     return EXIT_SUCCESS;
