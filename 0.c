@@ -151,7 +151,6 @@ void mnc__unknown(Registers *registers)
     printf("mnc__unknown();\n");
     registers->ip++;
 }
-
 int main(void)
 {
     setlocale(0x00, "");
