@@ -31,7 +31,6 @@
 |-|-|-
 ``` 1 ``` | ``` call function ExecuteScript(); ``` | ``` вызвать функцию ExecuteScript(); ``` <br>
 ``` 1 ``` | ``` ExecuteScript(); ``` | ``` ExecuteScript(); ```
-``` 1 ``` | ``` call function addr(); ``` | ```вызвать функцию addr();``` <br>
 
 | № | код |
 |-|-
