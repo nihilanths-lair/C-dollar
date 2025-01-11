@@ -35,7 +35,7 @@
 |-|-|
 ```1``` ```call function ExecuteScript();``` | ```1``` ```вызвать функцию ExecuteScript();```<br>
 ```1``` ```ExecuteScript();``` | ```1``` ```ExecuteScript();```
-```2``` ```call function ();``` | ```2``` ```вызвать функцию ();```<br>
+```2``` ```call function addr();``` | ```2``` ```вызвать функцию addr();```<br>
 ```2``` ```addr();``` | ```2``` ```addr();```<br>
 
 #
