@@ -2,10 +2,10 @@
     Данная директива задействует 5 байт статической памяти под весь скрипт
     Из неё же будет доступно выделение динамической памяти (в т.ч. для служебной информации менеджера памяти)
 $>
-# reserve memory 5b .. после компиляции будет создан массив на 5 ячеек типа byte (он же char)
+# reserve_memory 5b .. после компиляции будет создан массив на 5 ячеек типа byte (он же char)
 .. << use memory, allocate memory, engage memory, free up memory, request memory, occupy memory >>
 
-Execute script ()
+ExecuteScript()
 {
-    use memory 5b;
+    use_memory 5b;
 }
