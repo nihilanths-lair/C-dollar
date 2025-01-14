@@ -3,4 +3,5 @@
     Из неё же будет доступно выделение динамической памяти (в т.ч. для служебной информации менеджера памяти)
 $>
 # reserve memory 5b .. после компиляции будет создан массив на 5 ячеек типа byte (он же char)
-.. выделить/задействовать память, освободить память (allocate memory, engage memory, free up memory, request memory, occupy memory)
+.. << use memory, allocate memory, engage memory, free up memory, request memory, occupy memory >>
+use memory 5b;
