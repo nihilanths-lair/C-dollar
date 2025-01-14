@@ -4,4 +4,8 @@
 $>
 # reserve memory 5b .. после компиляции будет создан массив на 5 ячеек типа byte (он же char)
 .. << use memory, allocate memory, engage memory, free up memory, request memory, occupy memory >>
-use memory 5b;
+
+Execute script ()
+{
+    use memory 5b;
+}
