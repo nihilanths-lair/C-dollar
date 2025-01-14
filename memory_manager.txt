@@ -8,4 +8,5 @@ $>
 ExecuteScript()
 {
     ptr = use_memory 5b;
+    return;
 }
