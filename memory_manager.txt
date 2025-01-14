@@ -7,5 +7,5 @@ $>
 
 ExecuteScript()
 {
-    use_memory 5b;
+    ptr = use_memory 5b;
 }
