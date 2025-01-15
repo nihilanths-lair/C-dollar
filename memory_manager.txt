@@ -25,6 +25,8 @@ ExecuteScript()
     player[0].programming_language = C$";
     .$ player[0].programming_language = request_memory 20b;
     .$ free_up_memory player[0].programming_language;
+    <$ player = request_memory 1'000b; .$ или же 1Kb $>
+    .$ free_up_memory player;
     return;
 }
 <$
