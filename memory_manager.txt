@@ -13,7 +13,7 @@ struct Player или sample Player
     <$ programming_language[?]  .$ количество байт переменной длины $>
 };
 Player player[1'000];  .$ количество байт фиксированной длины
-<$ Player player[?];  .$ количество байт переменной длины $>
+<$ Player player[?];   .$ количество байт переменной длины $>
 
 ExecuteScript()
 {
