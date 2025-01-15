@@ -9,7 +9,7 @@ $>
 
 .. << use memory, allocate memory, engage memory, free up memory, request memory, occupy memory >>
 
-struct Player  или  sample Player
+struct Player или sample Player
 {
     login[20]    .$ количество байт фиксированной длины
     <$ login[?]  .$ количество байт переменной длины $>
