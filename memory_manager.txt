@@ -9,6 +9,15 @@ $>
 
 .. << use memory, allocate memory, engage memory, free up memory, request memory, occupy memory >>
 
+struct Player  или  sample Player
+{
+    login[20]  .$ количество байт фиксированной длины
+    <$ login[?]  .$ количество байт переменной длины $>
+};
+Player player[1000];  .$ количество байт фиксированной длины
+<$ Player player[?];  .$ количество байт переменной длины $>
+player[0].login = "Infiniminer";
+
 ExecuteScript()
 {
     ptr = request_memory 3b;
@@ -18,7 +27,6 @@ ExecuteScript()
     free_up_memory ptr;
     return;
 }
-
 <$
     << 1. Использование оператора request_memory приводит к тому что, менеджер памяти создаёт в таблице служебную информацию. >>
     << 2. В первую очередь, создаётся виртуальный регистр, который может работать с ячейками памяти равными 3 байта.  >>
