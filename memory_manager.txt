@@ -11,8 +11,8 @@ $>
 
 struct Player или sample Player
 {
-    login[20]    .$ количество байт фиксированной длины
-    <$ login[?]  .$ количество байт переменной длины $>
+    programming_language[20]    .$ количество байт фиксированной длины
+    <$ programming_language[?]  .$ количество байт переменной длины $>
 };
 Player player[1000];  .$ количество байт фиксированной длины
 <$ Player player[?];  .$ количество байт переменной длины $>
@@ -24,7 +24,7 @@ ExecuteScript()
     ptr[1] = $; .. равносильно *(ptr+1)
     ptr[2] = '\0'; .. можно просто EOS, макрос который преобразуется в '\0', равносильно *(ptr+2)
     free_up_memory ptr;
-    player[0].login = "Infiniminer";
+    player[0].programming_language = C$";
     return;
 }
 <$
