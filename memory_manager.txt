@@ -18,9 +18,9 @@ Player player[1'000];  .$ количество байт фиксированно
 ExecuteScript()
 {
     ptr = request_memory 3b;
-    ptr[0] = C; .. равносильно *(ptr+0), он же ptr
-    ptr[1] = $; .. равносильно *(ptr+1)
-    ptr[2] = '\0'; .. можно просто EOS, макрос который преобразуется в '\0', равносильно *(ptr+2)
+    ptr[0] = C;  .$ равносильно *(ptr+0), он же ptr
+    ptr[1] = $;  .$ равносильно *(ptr+1)
+    ptr[2] = '\0';  .$ можно просто EOS, макрос который преобразуется в '\0', равносильно *(ptr+2)
     free_up_memory ptr;
     player[0].programming_language = C$";
     .$ player[0].programming_language = request_memory 20b;
