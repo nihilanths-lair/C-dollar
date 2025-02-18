@@ -54,10 +54,10 @@ int IncrementalProcessing(FILE *handle)
 int NotIncrementalProcessing(FILE *handle)
 {
     fseek(handle, 0, SEEK_END);
-    unsigned long fsize = ftell(handle);
+	unsigned long fsize = ftell(handle);
 
     #if defined DEBUG_CODE
-    printf("Размер файла (в байтах): %zu.\n", fsize);
+	printf("Размер файла (в байтах): %zu.\n", fsize);
     #endif
 
     __buffer = malloc(fsize+1);
@@ -67,9 +67,11 @@ int NotIncrementalProcessing(FILE *handle)
         return 3;
     }
     fseek(handle, 0, SEEK_SET);
-    int i = -1;
-    for (;(__buffer[++ i] = getc(handle)) != EOF;);
-    __buffer[i] = EOS;
+    {;
+        int i = -1;
+        while ((__buffer[++ i] = getc(handle)) != EOF);
+        __buffer[i] = EOS;
+    ;}
     fclose(handle);
     if (__buffer[0] == EOF)
     {
