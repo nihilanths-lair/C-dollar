@@ -21,8 +21,8 @@ unsigned char source_code_processing[] = "Целиком"; // Целиком / �
 int main(int argc, unsigned char *argv[])
 {
     setlocale(0, "");
-    printf("Количество переданных аргументов: %d.", argc);
-    for (int i = 0; i < argc; i ++) printf("\nАргумент %d: \"%s\".", i+1, argv[i]);
+    //printf("Количество переданных аргументов: %d.", argc);
+    //for (int i = 0; i < argc; i ++) printf("\nАргумент %d: \"%s\".", i+1, argv[i]);
     unsigned char *strptr = strfind(argv[1], ".cdlr");
     unsigned char *strptr_2 = strfind(argv[1], ".sccdlr");
     if (strptr == NULL && strptr_2 == NULL)
@@ -48,19 +48,28 @@ int main(int argc, unsigned char *argv[])
 }
 int IncrementalProcessing(FILE *handle)
 {
+    fclose(handle);
     return 0;
 }
 int NotIncrementalProcessing(FILE *handle)
 {
+    fseek(handle, 0, SEEK_END);
+	unsigned long fsize = ftell(handle);
+
+    #if defined DEBUG_CODE
+	printf("Размер файла (в байтах): %zu.\n", fsize);
+    #endif
+
+    fseek(handle, 0, SEEK_SET);
     for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;);
     fclose(handle);
     if (__buffer[0] == EOF)
     {
-        printf("\nВ файле нет данных.");
+        printf("В файле нет данных.");
         return 3;
     }
     #if defined DEBUG_CODE
-    printf("\n__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
+    printf("__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
     #endif
     return 0;
 }
