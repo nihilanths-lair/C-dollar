@@ -27,7 +27,7 @@ int main(int argc, unsigned char *argv[])
         printf("\nНе удалось открыть файл на чтение.");
         return 2;
     }
-    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;)
+    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;){;}
     fclose(handle);
     if (__buffer[0] == EOF)
     {
