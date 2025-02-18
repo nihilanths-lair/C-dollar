@@ -2,13 +2,11 @@
 #include <stdio.h>
 #include <locale.h>
 #include <string.h>
+
 #define MAXIMUM_BUFFER_SIZE 1024
 unsigned char __buffer[MAXIMUM_BUFFER_SIZE];
 
 #define strfind strstr
-
-//extracting substring from string // извлечение подстроки из строки
-//searching for substring in string // поиск подстроки в строке // strfind
 
 int main(int argc, unsigned char *argv[])
 {
