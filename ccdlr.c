@@ -4,10 +4,10 @@
 #include <string.h>
 
 #define MAXIMUM_BUFFER_SIZE 1024
-unsigned char __buffer[MAXIMUM_BUFFER_SIZE];
+#define EOS 0
+char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
 
 #define strfind strstr
-//#define EOS 0
 
 int main(int argc, unsigned char *argv[])
 {
@@ -21,13 +21,18 @@ int main(int argc, unsigned char *argv[])
         printf("Неверное расширение файла...");
         return 1;
     }
-    FILE *handle = fopen(argv[1], "rb+"); // .cdlr или .sccdlr
-    if (handle == NULL)
+    FILE *handle = fopen(argv[1], "rb"); // .cdlr или .sccdlr
+    if (!handle)
     {
         printf("\nНе удалось открыть файл на чтение.");
         return 2;
     }
-    for (int i = 0; (__buffer[i] = getc(handle)) != EOF; i ++)
+    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;)
     fclose(handle);
+    if (__buffer[0] == EOF)
+    {
+        printf("\nВ файле нет данных.");
+    }
+    //printf("__buffer[] = \"%s\".", __buffer);
     return 0;
 }
