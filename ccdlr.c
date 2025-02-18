@@ -15,6 +15,25 @@ bool incremental_processing = false;
 #define strfind strstr
 #define DEBUG_CODE
 
+int NotIncrementalProcessing(FILE *handle)
+{
+    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;);
+    fclose(handle);
+    if (__buffer[0] == EOF)
+    {
+        printf("\nВ файле нет данных.");
+        return 3;
+    }
+    #if defined DEBUG_CODE
+    printf("\n__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
+    #endif
+    return 0;
+}
+int IncrementalProcessing(FILE *handle)
+{
+    return 0;
+}
+
 int main(int argc, unsigned char *argv[])
 {
     setlocale(0, "");
@@ -33,18 +52,9 @@ int main(int argc, unsigned char *argv[])
         printf("\nНе удалось открыть файл на чтение.");
         return 2;
     }
-    if (incremental_processing) goto incremental_processing;
-    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;);
-    fclose(handle);
-    if (__buffer[0] == EOF)
-    {
-        printf("\nВ файле нет данных.");
-        return 3;
-    }
-    #if defined DEBUG_CODE
-    printf("\n__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
-    #endif
-    goto end_of_program;
+    if (incremental_processing) IncrementalProcessing(handle); //goto incremental_processing;
+    else NotIncrementalProcessing(handle);
+    //goto end_of_program;
     incremental_processing:
     // код инкрементной обработки
     end_of_program:
