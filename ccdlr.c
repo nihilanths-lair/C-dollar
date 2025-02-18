@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <locale.h>
 #include <string.h>
+#include <stdlib.h>
 //#include <stdbool.h>
 
 #define MAXIMUM_BUFFER_SIZE 1024
 #define EOS 0
-char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
+//char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
+char *__buffer; // = NULL
 
 // Прочитать все данные полностью
 //bool read_all_data_completely = true;
@@ -54,22 +56,31 @@ int IncrementalProcessing(FILE *handle)
 int NotIncrementalProcessing(FILE *handle)
 {
     fseek(handle, 0, SEEK_END);
-    unsigned long fsize = ftell(handle);
-    
+	unsigned long fsize = ftell(handle);
+
     #if defined DEBUG_CODE
-    printf("Размер файла (в байтах): %zu.\n", fsize);
+	printf("Размер файла (в байтах): %zu.\n", fsize);
     #endif
-    
+
+    __buffer = malloc(fsize+1);
+    if (__buffer == NULL)
+    {
+        printf("Динамическая память не была выделена.");
+        return 3;
+    }
     fseek(handle, 0, SEEK_SET);
     for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;);
     fclose(handle);
     if (__buffer[0] == EOF)
     {
         printf("В файле нет данных.");
-        return 3;
+        return 4;
     }
+
     #if defined DEBUG_CODE
     printf("__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
     #endif
+
+    free(__buffer);
     return 0;
 }
