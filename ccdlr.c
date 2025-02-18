@@ -33,6 +33,7 @@ int main(int argc, unsigned char *argv[])
     if (__buffer[0] == EOF)
     {
         printf("\nВ файле нет данных.");
+        return 3;
     }
     #if defined DEBUG_CODE
     printf("\n__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
