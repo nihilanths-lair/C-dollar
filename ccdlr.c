@@ -8,6 +8,7 @@
 char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
 
 #define strfind strstr
+#define DEBUG_CODE
 
 int main(int argc, unsigned char *argv[])
 {
@@ -27,12 +28,14 @@ int main(int argc, unsigned char *argv[])
         printf("\nНе удалось открыть файл на чтение.");
         return 2;
     }
-    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;){;}
+    for (int i = -1; (__buffer[++ i] = getc(handle)) != EOF;);
     fclose(handle);
     if (__buffer[0] == EOF)
     {
         printf("\nВ файле нет данных.");
     }
-    //printf("__buffer[] = \"%s\".", __buffer);
+    #if defined DEBUG_CODE
+    printf("\n__buffer[0] = 0x%X.", __buffer[0] & 0xFF);
+    #endif
     return 0;
 }
