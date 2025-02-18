@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include <string.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #define MAXIMUM_BUFFER_SIZE 1024
 #define EOS 0
@@ -10,7 +10,9 @@ char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
 // Прочитать все данные полностью
 //bool read_all_data_completely = true;
 // Инкрементная обработка
-bool incremental_processing = false;
+//bool incremental_processing = false;
+// Обработка исходного кода
+unsigned char source_code_processing[] = "Целиком"; // Целиком / Частями
 
 #define strfind strstr
 #define DEBUG_CODE
@@ -34,8 +36,10 @@ int main(int argc, unsigned char *argv[])
         printf("\nНе удалось открыть файл на чтение.");
         return 2;
     }
-    if (incremental_processing) IncrementalProcessing(handle); //goto incremental_processing;
-    else NotIncrementalProcessing(handle);
+    if (!strcmp(source_code_processing, "Частями")) IncrementalProcessing(handle);
+    else if (!strcmp(source_code_processing, "Целиком")) NotIncrementalProcessing(handle);
+    //if (incremental_processing) IncrementalProcessing(handle); //goto incremental_processing;
+    //else NotIncrementalProcessing(handle);
     //goto end_of_program;
     incremental_processing:
     // код инкрементной обработки
