@@ -9,10 +9,8 @@
 //char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
 char *__buffer; // = NULL
 
-// Прочитать все данные полностью
-//bool read_all_data_completely = true;
-// Инкрементная обработка
-//bool incremental_processing = false;
+//bool read_all_data_completely = true; // Прочитать все данные полностью
+//bool incremental_processing = false; // Инкрементная обработка
 // Обработка исходного кода
 unsigned char source_code_processing[] = "Целиком"; // Целиком / Частями
 
@@ -56,10 +54,10 @@ int IncrementalProcessing(FILE *handle)
 int NotIncrementalProcessing(FILE *handle)
 {
     fseek(handle, 0, SEEK_END);
-    unsigned long fsize = ftell(handle);
+	unsigned long fsize = ftell(handle);
 
     #if defined DEBUG_CODE
-    printf("Размер файла (в байтах): %zu.\n", fsize);
+	printf("Размер файла (в байтах): %zu.\n", fsize);
     #endif
 
     __buffer = malloc(fsize+1);
@@ -84,3 +82,7 @@ int NotIncrementalProcessing(FILE *handle)
     free(__buffer);
     return 0;
 }
+// Синтаксический анализатор
+// Семантический анализатор
+// Оптимизатор - ?
+// Генератор байт-кода (переносимого кода)
