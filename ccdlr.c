@@ -25,12 +25,16 @@ int main(int argc, unsigned char *argv[])
     //for (int i = 0; i < argc; i ++) printf("\nАргумент %d: \"%s\".", i+1, argv[i]);
     unsigned char *strptr = strfind(argv[1], ".cdlr");
     unsigned char *strptr_2 = strfind(argv[1], ".sccdlr");
-    if (strptr == NULL && strptr_2 == NULL)
+
+    unsigned char *strptr_3 = strfind(argv[1], ".avmcdlr");
+    unsigned char *strptr_4 = strfind(argv[1], ".scavmcdlr");
+
+    if (strptr == NULL && strptr_2 == NULL && strptr_3 == NULL && strptr_4 == NULL)
     {
         printf("Неверное расширение файла...");
         return 1;
     }
-    FILE *handle = fopen(argv[1], "rb"); // .cdlr или .sccdlr
+    FILE *handle = fopen(argv[1], "rb"); // *.cdlr или *.sccdlr или *.avmcdlr или *.scavmcdlr
     if (!handle)
     {
         printf("\nНе удалось открыть файл на чтение.");
@@ -54,10 +58,10 @@ int IncrementalProcessing(FILE *handle)
 int NotIncrementalProcessing(FILE *handle)
 {
     fseek(handle, 0, SEEK_END);
-    unsigned long fsize = ftell(handle);
+	unsigned long fsize = ftell(handle);
 
     #if defined DEBUG_CODE
-    printf("Размер файла (в байтах): %zu.\n", fsize);
+	printf("Размер файла (в байтах): %zu.\n", fsize);
     #endif
 
     __buffer = malloc(fsize+1);
@@ -86,7 +90,11 @@ int NotIncrementalProcessing(FILE *handle)
     free(__buffer);
     return 0;
 }
+// Генератор байт-кода (переносимого кода)
+int BytecodeGenerator()
+{
+    return 0;
+}
 // Синтаксический анализатор
 // Семантический анализатор
 // Оптимизатор кода - ?
-// Генератор байт-кода (переносимого кода)
