@@ -61,7 +61,7 @@ int NotIncrementalProcessing(FILE *handle)
 	unsigned long fsize = ftell(handle);
 
     #if defined DEBUG_CODE
-	printf("Размер файла (в байтах): %zu.\n", fsize);
+	printf("\nРазмер файла (в байтах): %zu.", fsize);
     #endif
 
     __buffer = malloc(fsize+1);
@@ -82,12 +82,19 @@ int NotIncrementalProcessing(FILE *handle)
         printf("В файле нет данных.");
         return 4;
     }
-
-    #if defined DEBUG_CODE
-    printf("__buffer[] = \"%s\".", __buffer);
-    #endif
-
+    LexicalAnalyzer();
     free(__buffer);
+    return 0;
+}
+// Лексический анализатор
+int LexicalAnalyzer()
+{
+    for (int i = 0; __buffer[i] != EOS; i ++)
+    {
+        #if defined DEBUG_CODE
+        printf("\n__buffer[%d] = '%c'.", i, __buffer[i]);
+        #endif
+    }
     return 0;
 }
 // Генератор байт-кода (переносимого кода)
