@@ -89,12 +89,33 @@ int NotIncrementalProcessing(FILE *handle)
 // Лексический анализатор
 int LexicalAnalyzer()
 {
+    unsigned char token[64+1];
     for (int i = 0; __buffer[i] != EOS; i ++)
     {
-        #if defined DEBUG_CODE
-        printf("\n__buffer[%d] = '%c'.", i, __buffer[i]);
+        #if !defined DEBUG_CODE
+        if (__buffer[i] == 0x0A) printf("\n__buffer[%02d] = '\\n'", i, __buffer[i]);
+        else if (__buffer[i] == 0x0D) printf("\n__buffer[%02d] = '\\r'", i, __buffer[i]);
+        else printf("\n__buffer[%02d] = '%c'", i, __buffer[i]);
         #endif
+        if (__buffer[i] != ':' && __buffer[i] != ',')
+        {
+            token[i] = __buffer[i];
+        }
     }
+    #if defined DEBUG_CODE
+    printf("\ntoken[] = \"%s\".", token);
+    #endif
+    SyntacticAnalyzer();
+    return 0;
+}
+// Синтаксический анализатор
+int SyntacticAnalyzer()
+{
+    return 0;
+}
+// Семантический анализатор
+int SemanticAnalyzer()
+{
     return 0;
 }
 // Генератор байт-кода (переносимого кода)
@@ -102,6 +123,5 @@ int BytecodeGenerator()
 {
     return 0;
 }
-// Синтаксический анализатор
 // Семантический анализатор
 // Оптимизатор кода - ?
