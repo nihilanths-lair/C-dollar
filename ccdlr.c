@@ -10,6 +10,12 @@
 char *__source_code; // = NULL
 int __offset = 0x0;
 
+// вертикальное положение
+int __vertical_position = 0; // расположение элемента по вертикали
+
+// горизонтальное положение
+int __horizontal_position = 0; // расположение элемента по горизонтали
+
 //bool read_all_data_completely = true; // Прочитать все данные полностью
 //bool incremental_processing = false; // Инкрементная обработка
 // Обработка исходного кода
