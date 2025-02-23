@@ -112,23 +112,23 @@ int LexicalAnalyzer()
 int SyntacticAnalyzer(const unsigned char *token)
 {
     if (strcmp(token, "mov ax")) return 5;
-    SemanticAnalyzer();
+    SemanticAnalyzer(token);
     return 0;
 }
 // Семантический анализатор
-int SemanticAnalyzer()
+int SemanticAnalyzer(const unsigned char *token)
 {
-    BytecodeGenerator();
+    BytecodeGenerator(token);
     return 0;
 }
 // Генератор байт-кода (переносимого кода)
-int BytecodeGenerator() // int PortableCodeGenerator() {}
+int BytecodeGenerator(const unsigned char *token) // int PortableCodeGenerator() {}
 {
     printf("\nCompilation complete.");
     return 0;
 }
 // Генератор машинного (нативного) кода
-int MachineCodeGenerator() // int NativeCodeGenerator() {}
+int MachineCodeGenerator(const unsigned char *token) // int NativeCodeGenerator() {}
 {
     printf("\nCompilation complete.");
     return 0;
