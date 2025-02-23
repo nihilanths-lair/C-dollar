@@ -18,7 +18,7 @@ unsigned char token[2][64+1]; // лексемы
 #define strfind strstr
 #define DEBUG_CODE
 
-#include "native.h"
+#include "declaration.h"
 int main(int argc, unsigned char *argv[])
 {
     setlocale(0, "");
