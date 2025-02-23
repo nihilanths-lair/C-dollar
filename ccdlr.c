@@ -13,6 +13,7 @@ char *__buffer; // = NULL
 //bool incremental_processing = false; // Инкрементная обработка
 // Обработка исходного кода
 unsigned char source_code_processing[] = "Целиком"; // Целиком / Частями
+unsigned char token[2][64+1]; // лексемы
 
 #define strfind strstr
 #define DEBUG_CODE
@@ -73,7 +74,7 @@ int NotIncrementalProcessing(FILE *handle)
     fseek(handle, 0, SEEK_SET);
     {;
         int i = -1;
-        while ((__buffer[++ i] = getc(handle)) != EOF);
+        while ((__buffer[++ i] = getc(handle)) != EOF){;}
         __buffer[i] = EOS;
     ;}
     fclose(handle);
@@ -89,7 +90,6 @@ int NotIncrementalProcessing(FILE *handle)
 // Лексический анализатор
 int LexicalAnalyzer()
 {
-    unsigned char token[64+1];
     for (int i = 0; __buffer[i] != EOS; i ++)
     {
         #if !defined DEBUG_CODE
@@ -97,38 +97,47 @@ int LexicalAnalyzer()
         else if (__buffer[i] == 0x0D) printf("\n__buffer[%02d] = '\\r'", i, __buffer[i]);
         else printf("\n__buffer[%02d] = '%c'", i, __buffer[i]);
         #endif
-        if (__buffer[i] != ':' && __buffer[i] != ',')
+        if (__buffer[i] != ',')
         {
-            token[i] = __buffer[i];
+            token[0][i] = __buffer[i];
         }
     }
     #if defined DEBUG_CODE
-    printf("\ntoken[] = \"%s\".", token);
+    printf("\ntoken[0] = \"%s\".", token[0]);
+    printf("\ntoken[1] = \"%s\".", token[1]);
     #endif
-    SyntacticAnalyzer(token);
+    SyntacticAnalyzer();
     return 0;
 }
 // Синтаксический анализатор
-int SyntacticAnalyzer(const unsigned char *token)
+int SyntacticAnalyzer()
 {
-    if (strcmp(token, "mov ax")) return 5;
-    SemanticAnalyzer(token);
+    if (strcmp(token[0], "mov ax")) return 5;
+    SemanticAnalyzer();
     return 0;
 }
 // Семантический анализатор
-int SemanticAnalyzer(const unsigned char *token)
+int SemanticAnalyzer()
 {
-    BytecodeGenerator(token);
+    BytecodeGenerator();
     return 0;
 }
 // Генератор байт-кода (переносимого кода)
-int BytecodeGenerator(const unsigned char *token) // int PortableCodeGenerator() {}
+int BytecodeGenerator() // int PortableCodeGenerator() {}
 {
+    unsigned char bytecode[2];
+    if (!strcmp(token[0], "mov ax"))
+    {
+        bytecode[0] = 0xB8;
+        bytecode[1] = token[1][0];
+    }
+    printf("\n0x%02X", bytecode[0]);
+    printf("\n0x%02X", bytecode[1]);
     printf("\nCompilation complete.");
     return 0;
 }
 // Генератор машинного (нативного) кода
-int MachineCodeGenerator(const unsigned char *token) // int NativeCodeGenerator() {}
+int MachineCodeGenerator() // int NativeCodeGenerator() {}
 {
     printf("\nCompilation complete.");
     return 0;
