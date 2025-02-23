@@ -8,6 +8,7 @@
 #define EOS 0
 //char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
 char *__source_code; // = NULL
+int __offset = 0x0;
 
 //bool read_all_data_completely = true; // Прочитать все данные полностью
 //bool incremental_processing = false; // Инкрементная обработка
@@ -83,7 +84,7 @@ int NotIncrementalProcessing(FILE *handle)
         printf("В файле нет данных.");
         return 4;
     }
-    LexicalAnalyzer();
+    LexicalAnalyzer(); // if (var == 6) { printf("попал"); }
     free(__source_code);
     return 0;
 }
@@ -100,6 +101,11 @@ int LexicalAnalyzer()
         if (__source_code[i] != ',')
         {
             __token[0][i] = __source_code[i];
+        }
+        else
+        {
+            static int iter = -1;
+            __token[1][++ iter] = __source_code[i];
         }
     }
     #if defined DEBUG_CODE
@@ -119,11 +125,18 @@ int SyntacticAnalyzer()
 // Семантический анализатор
 int SemanticAnalyzer()
 {
-    BytecodeGenerator();
+    CodeOptimizer();
     return 0;
 }
-// Генератор байт-кода (переносимого кода)
-int BytecodeGenerator() // int PortableCodeGenerator() {}
+// Оптимизатор кода
+int CodeOptimizer()
+{
+    //BytecodeGenerator();
+    CodeGenerator();
+    return 0;
+}
+// Генератор кода
+int CodeGenerator()
 {
     unsigned char bytecode[2];
     if (!strcmp(__token[0], "mov ax"))
@@ -136,10 +149,16 @@ int BytecodeGenerator() // int PortableCodeGenerator() {}
     printf("\nCompilation complete.");
     return 0;
 }
+/*
+// Генератор байт-кода (переносимого кода)
+int BytecodeGenerator() // int PortableCodeGenerator() {}
+{
+    return 0;
+}
 // Генератор машинного (нативного) кода
 int MachineCodeGenerator() // int NativeCodeGenerator() {}
 {
-    printf("\nCompilation complete.");
     return 0;
 }
+*/
 // Оптимизатор кода - ?
