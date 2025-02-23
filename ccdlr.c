@@ -4,10 +4,10 @@
 #include <stdlib.h>
 //#include <stdbool.h>
 
-#define MAXIMUM_BUFFER_SIZE 1024
+//#define MAXIMUM_BUFFER_SIZE 1024
 #define EOS 0
 //char __buffer[MAXIMUM_BUFFER_SIZE] = {EOS};
-char *__buffer; // = NULL
+char *__source_code; // = NULL
 
 //bool read_all_data_completely = true; // Прочитать все данные полностью
 //bool incremental_processing = false; // Инкрементная обработка
@@ -65,8 +65,8 @@ int NotIncrementalProcessing(FILE *handle)
 	printf("Размер файла (в байтах): %zu.", fsize);
     #endif
 
-    __buffer = malloc(fsize+1);
-    if (__buffer == NULL)
+    __source_code = malloc(fsize+1);
+    if (__source_code == NULL)
     {
         printf("Динамическая память не была выделена.");
         return 3;
@@ -74,32 +74,32 @@ int NotIncrementalProcessing(FILE *handle)
     fseek(handle, 0, SEEK_SET);
     {;
         int i = -1;
-        while ((__buffer[++ i] = getc(handle)) != EOF){;}
-        __buffer[i] = EOS;
+        while ((__source_code[++ i] = getc(handle)) != EOF){;}
+        __source_code[i] = EOS;
     ;}
     fclose(handle);
-    if (__buffer[0] == EOF)
+    if (__source_code[0] == EOF)
     {
         printf("В файле нет данных.");
         return 4;
     }
     LexicalAnalyzer();
-    free(__buffer);
+    free(__source_code);
     return 0;
 }
 // Лексический анализатор
 int LexicalAnalyzer()
 {
-    for (int i = 0; __buffer[i] != EOS; i ++)
+    for (int i = 0; __source_code[i] != EOS; i ++)
     {
         #if !defined DEBUG_CODE
-        if (__buffer[i] == 0x0A) printf("\n__buffer[%02d] = '\\n'", i, __buffer[i]);
-        else if (__buffer[i] == 0x0D) printf("\n__buffer[%02d] = '\\r'", i, __buffer[i]);
-        else printf("\n__buffer[%02d] = '%c'", i, __buffer[i]);
+        if (__source_code[i] == 0x0A) printf("\n__source_code[%02d] = '\\n'", i, __source_code[i]);
+        else if (__source_code[i] == 0x0D) printf("\n__source_code[%02d] = '\\r'", i, __source_code[i]);
+        else printf("\n__source_code[%02d] = '%c'", i, __source_code[i]);
         #endif
-        if (__buffer[i] != ',')
+        if (__source_code[i] != ',')
         {
-            __token[0][i] = __buffer[i];
+            __token[0][i] = __source_code[i];
         }
     }
     #if defined DEBUG_CODE
