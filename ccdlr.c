@@ -13,7 +13,7 @@ char *__buffer; // = NULL
 //bool incremental_processing = false; // Инкрементная обработка
 // Обработка исходного кода
 unsigned char source_code_processing[] = "Целиком"; // Целиком / Частями
-unsigned char token[2][64+1]; // лексемы
+unsigned char __token[2][64+1]; // лексемы
 
 #define strfind strstr
 #define DEBUG_CODE
@@ -99,12 +99,12 @@ int LexicalAnalyzer()
         #endif
         if (__buffer[i] != ',')
         {
-            token[0][i] = __buffer[i];
+            __token[0][i] = __buffer[i];
         }
     }
     #if defined DEBUG_CODE
-    printf("\ntoken[0] = \"%s\".", token[0]);
-    printf("\ntoken[1] = \"%s\".", token[1]);
+    printf("\n__token[0] = \"%s\".", __token[0]);
+    printf("\n__token[1] = \"%s\".", __token[1]);
     #endif
     SyntacticAnalyzer();
     return 0;
@@ -112,7 +112,7 @@ int LexicalAnalyzer()
 // Синтаксический анализатор
 int SyntacticAnalyzer()
 {
-    if (strcmp(token[0], "mov ax")) return 5;
+    if (strcmp(__token[0], "mov ax")) return 5;
     SemanticAnalyzer();
     return 0;
 }
@@ -126,10 +126,10 @@ int SemanticAnalyzer()
 int BytecodeGenerator() // int PortableCodeGenerator() {}
 {
     unsigned char bytecode[2];
-    if (!strcmp(token[0], "mov ax"))
+    if (!strcmp(__token[0], "mov ax"))
     {
         bytecode[0] = 0xB8;
-        bytecode[1] = token[1][0];
+        bytecode[1] = __token[1][0];
     }
     printf("\n0x%02X", bytecode[0]);
     printf("\n0x%02X", bytecode[1]);
