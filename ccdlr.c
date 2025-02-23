@@ -61,7 +61,7 @@ int NotIncrementalProcessing(FILE *handle)
 	unsigned long fsize = ftell(handle);
 
     #if defined DEBUG_CODE
-	printf("\nРазмер файла (в байтах): %zu.", fsize);
+	printf("Размер файла (в байтах): %zu.", fsize);
     #endif
 
     __buffer = malloc(fsize+1);
@@ -105,22 +105,32 @@ int LexicalAnalyzer()
     #if defined DEBUG_CODE
     printf("\ntoken[] = \"%s\".", token);
     #endif
-    SyntacticAnalyzer();
+    SyntacticAnalyzer(token);
     return 0;
 }
 // Синтаксический анализатор
-int SyntacticAnalyzer()
+int SyntacticAnalyzer(const unsigned char *token)
 {
+    if (strcmp(token, "mov ax")) return 5;
+    SemanticAnalyzer();
     return 0;
 }
 // Семантический анализатор
 int SemanticAnalyzer()
 {
+    BytecodeGenerator();
     return 0;
 }
 // Генератор байт-кода (переносимого кода)
-int BytecodeGenerator()
+int BytecodeGenerator() // int PortableCodeGenerator() {}
 {
+    printf("\nCompilation complete.");
+    return 0;
+}
+// Генератор машинного (нативного) кода
+int MachineCodeGenerator() // int NativeCodeGenerator() {}
+{
+    printf("\nCompilation complete.");
     return 0;
 }
 // Оптимизатор кода - ?
