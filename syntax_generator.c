@@ -43,8 +43,7 @@ int main(int argc, unsigned char *argv[])
 	printf("\n Размер файла (в байтах): %zu.", fsize);
     #endif
 
-    __source_code = malloc(fsize + 1);
-    if (__source_code == NULL)
+    if ((__source_code = malloc(fsize + 1)) == NULL)
     {
         puts(" Динамическая память не была выделена.");
         // тогда, здесь работаем с фиксированной (статической) длины памятью
@@ -80,7 +79,6 @@ int main(int argc, unsigned char *argv[])
         else printf(" %c \\%02X %d\n", i, i, i);
     }
     */
-    printf("\n");
     //for (unsigned char i = -1; ++ i < 256; ) putchar(i);
     //printf("\n");
     //char x=5;
