@@ -12,7 +12,7 @@
 char *__source;
 char *__source_code;
 short __iter;
-char SetSource(const char input[]);
+
 char RunCheck(const char source_code[]);
 
 int main(int argc, unsigned char *argv[])
@@ -26,13 +26,13 @@ int main(int argc, unsigned char *argv[])
 
     if (strptr == NULL && strptr_2 == NULL)// && strptr_3 == NULL && strptr_4 == NULL)
     {
-        printf(" Неверное расширение файла...");
+        printf(" РќРµРІРµСЂРЅРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р°...");
         return 1;
     }
-    FILE *handle = fopen(argv[1], "rb"); // *.cdlr или *.sccdlr или *.avmcdlr или *.scavmcdlr
+    FILE *handle = fopen(argv[1], "rb"); // *.cdlr РёР»Рё *.sccdlr РёР»Рё *.avmcdlr РёР»Рё *.scavmcdlr
     if (!handle)
     {
-        printf("\nНе удалось открыть файл на чтение.");
+        printf("\nРќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» РЅР° С‡С‚РµРЅРёРµ.");
         return 2;
     }
     fseek(handle, 0, SEEK_END);
@@ -40,18 +40,18 @@ int main(int argc, unsigned char *argv[])
     fseek(handle, 0, SEEK_SET);
 
     #if defined DEBUG_CODE
-	printf("\n Размер файла (в байтах): %zu.", fsize);
+	printf("\n Р Р°Р·РјРµСЂ С„Р°Р№Р»Р° (РІ Р±Р°Р№С‚Р°С…): %zu.", fsize);
     #endif
 
     __source_code = malloc(fsize + 1);
     if (__source_code == NULL)
     {
-        puts(" Динамическая память не была выделена.");
-        // тогда, здесь работаем с фиксированной (статической) длины памятью
+        puts(" Р”РёРЅР°РјРёС‡РµСЃРєР°СЏ РїР°РјСЏС‚СЊ РЅРµ Р±С‹Р»Р° РІС‹РґРµР»РµРЅР°.");
+        // С‚РѕРіРґР°, Р·РґРµСЃСЊ СЂР°Р±РѕС‚Р°РµРј СЃ С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕР№ (СЃС‚Р°С‚РёС‡РµСЃРєРѕР№) РґР»РёРЅС‹ РїР°РјСЏС‚СЊСЋ
         fclose(handle);
-        return 3; // не забываем выйти (прервать процесс)
+        return 3; // РЅРµ Р·Р°Р±С‹РІР°РµРј РІС‹Р№С‚Рё (РїСЂРµСЂРІР°С‚СЊ РїСЂРѕС†РµСЃСЃ)
     }
-    // иначе (в противном случае), работаем с переменной (динамической) длины памятью
+    // РёРЅР°С‡Рµ (РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ), СЂР°Р±РѕС‚Р°РµРј СЃ РїРµСЂРµРјРµРЅРЅРѕР№ (РґРёРЅР°РјРёС‡РµСЃРєРѕР№) РґР»РёРЅС‹ РїР°РјСЏС‚СЊСЋ
     //{;
     __iter = -1;
     while ((__source_code[++__iter] = getc(handle)) != EOF){;}
@@ -60,7 +60,7 @@ int main(int argc, unsigned char *argv[])
     fclose(handle);
     if (__source_code[0] == EOF)
     {
-        puts(" В файле нет данных.");
+        puts(" Р’ С„Р°Р№Р»Рµ РЅРµС‚ РґР°РЅРЅС‹С….");
         return 4;
     }
     //printf("\n");
@@ -68,8 +68,8 @@ int main(int argc, unsigned char *argv[])
      *  '0' - '9'    \30 - \39    048 - 057    0011 0000 - 0011 1001
      *  'A' - 'Z'    \41 - \5A    065 - 090    0100 0001 - 0101 1010
      *  'a' - 'z'    \61 - \7A    097 - 122    0110 0001 - 0111 1010
-     *  'А' - 'Я'    \C0 - \DF    192 - 223    1100 0000 - 1101 1111
-     *  'а' - 'я'    \E0 - \FF    224 - 255    1110 0000 - 1111 1111
+     *  'Рђ' - 'РЇ'    \C0 - \DF    192 - 223    1100 0000 - 1101 1111
+     *  'Р°' - 'СЏ'    \E0 - \FF    224 - 255    1110 0000 - 1111 1111
      */
     /*
     for (short i = -1; ++ i < 256; )
@@ -86,28 +86,29 @@ int main(int argc, unsigned char *argv[])
     //char x=5;
     //printf(" x = %d\n", x);
 
-    char ret = RunCheck(__source_code); // Запустить проверку
+    char ret = RunCheck(__source_code); // Р—Р°РїСѓСЃС‚РёС‚СЊ РїСЂРѕРІРµСЂРєСѓ
+    free(__source_code);
     printf("\n");
     switch (ret) then
     case 0: printf(" Syntax -> [Done]\n"); break;
     case 1: printf(" Syntax -> [Error]\n"); break;
     default:
     {
-        printf(" Код возврата: %d.\n", ret);
+        printf(" РљРѕРґ РІРѕР·РІСЂР°С‚Р°: %d.\n", ret);
         return ret;
     }
     end
     return 0;
 }
-// Разрешенные символы
+// Р Р°Р·СЂРµС€РµРЅРЅС‹Рµ СЃРёРјРІРѕР»С‹
 char allowed_characters[0xFF];
-// Установить разрешенные символы
+// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ СЃРёРјРІРѕР»С‹
 char SetAllowedCharacters()
 {
     return 0;
 }
-short row = 1; // строка
-short column = 1; // столбец
+short row = 1; // СЃС‚СЂРѕРєР°
+short column = 1; // СЃС‚РѕР»Р±РµС†
 char RunCheck(const char source_code[]) //feed()
 {
     printf("\n (string) source_code[] = \"%s\"\n", source_code);
@@ -116,7 +117,7 @@ char RunCheck(const char source_code[]) //feed()
     for (; source_code[++ i] != '\0'; ) printf("\\%02X", source_code[i]);
     printf("\\%02X\n", source_code[i]);
 
-    if (source_code[0] == '\0') { printf(" Синтаксическая ошибка - строка %d, столбец %d: Не найдено ни одной инструкции.\n", row, column); return 1; }
+    if (source_code[0] == '\0') { printf(" РЎРёРЅС‚Р°РєСЃРёС‡РµСЃРєР°СЏ РѕС€РёР±РєР° - СЃС‚СЂРѕРєР° %d, СЃС‚РѕР»Р±РµС† %d: РќРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕР№ РёРЅСЃС‚СЂСѓРєС†РёРё.\n", row, column); return 1; }
     i = 0;
     while (source_code[++ i] != '\0')
     {
@@ -127,15 +128,4 @@ char RunCheck(const char source_code[]) //feed()
     //printf(" ..(byte) source_code[] = %X", source_code[0]);
     //for (short i = 0; source_code[++ i] != '\0'; ) printf(",%X", source_code[i]);
     return 2;
-}
-char SetSource(const char input[])
-{
-    __source = malloc(1024);
-    if (__source == NULL) return 1;
-    puts("В вашем распоряжении 1'024 байт ячеек памяти.");
-    //__source[0] = '\0';
-    for (short i = -1; ++i < 1024; i++) __source[i] = '\0';
-    printf("*__source = \"%s\"\n", __source);
-    printf("input[] = \"%s\"", input);
-    return 0;
 }
