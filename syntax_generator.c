@@ -53,16 +53,17 @@ int main(int argc, unsigned char *argv[])
     }
     // иначе (в противном случае), работаем с переменной (динамической) длины памятью
     //{;
-    __iter = -1;
-    while ((__source_code[++__iter] = getc(handle)) != EOF){;}
-    __source_code[__iter] = EOS;
-    //;}
-    fclose(handle);
+    __source_code[0] = getc(handle);
     if (__source_code[0] == EOF)
     {
         puts(" В файле нет данных.");
         return 4;
     }
+    __iter = EOS;
+    while ((__source_code[++__iter] = getc(handle)) != EOF){;}
+    __source_code[__iter] = EOS;
+    //;}
+    fclose(handle);
     //printf("\n");
     /**    char    |    hex     |    dec     |          bin
      *  '0' - '9'    \30 - \39    048 - 057    0011 0000 - 0011 1001
