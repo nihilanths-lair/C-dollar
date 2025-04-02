@@ -53,8 +53,7 @@ int main(int argc, unsigned char *argv[])
     }
     // иначе (в противном случае), работаем с переменной (динамической) длины памятью
     //{;
-    __source_code[0] = getc(handle);
-    if (__source_code[0] == EOF)
+    if ((__source_code[0] = getc(handle)) == EOF)
     {
         puts(" В файле нет данных.");
         return 4;
