@@ -63,13 +63,6 @@ int main(int argc, unsigned char *argv[])
     //;}
     fclose(handle);
     //printf("\n");
-    /**    char    |    hex     |    dec     |          bin
-     *  '0' - '9'    \30 - \39    048 - 057    0011 0000 - 0011 1001
-     *  'A' - 'Z'    \41 - \5A    065 - 090    0100 0001 - 0101 1010
-     *  'a' - 'z'    \61 - \7A    097 - 122    0110 0001 - 0111 1010
-     *  'А' - 'Я'    \C0 - \DF    192 - 223    1100 0000 - 1101 1111
-     *  'а' - 'я'    \E0 - \FF    224 - 255    1110 0000 - 1111 1111
-     */
     /*
     for (short i = -1; ++ i < 256; )
     {
@@ -98,6 +91,12 @@ int main(int argc, unsigned char *argv[])
     end
     return 0;
 }
+// Добавить конструкцию
+char AddConstruction()
+{
+    return 0;
+}
+/// @brief
 // Разрешенные символы
 char allowed_characters[0xFF];
 // Установить разрешенные символы
@@ -105,6 +104,7 @@ char SetAllowedCharacters()
 {
     return 0;
 }
+/// @brief
 short row = 1; // строка
 short column = 1; // столбец
 char RunCheck(const char source_code[]) //feed()
@@ -127,3 +127,10 @@ char RunCheck(const char source_code[]) //feed()
     //for (short i = 0; source_code[++ i] != '\0'; ) printf(",%X", source_code[i]);
     return 2;
 }
+/**    char    |    hex     |    dec     |          bin
+ *  '0' - '9'    \30 - \39    048 - 057    0011 0000 - 0011 1001
+ *  'A' - 'Z'    \41 - \5A    065 - 090    0100 0001 - 0101 1010
+ *  'a' - 'z'    \61 - \7A    097 - 122    0110 0001 - 0111 1010
+ *  'А' - 'Я'    \C0 - \DF    192 - 223    1100 0000 - 1101 1111
+ *  'а' - 'я'    \E0 - \FF    224 - 255    1110 0000 - 1111 1111
+ */
