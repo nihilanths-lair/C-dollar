@@ -125,14 +125,11 @@ int main(int argc, char *argv[])
     print(">---------------------------------------------------------------------------------<");
     print("|                                   __________                                    |");
     print(">----------------------------------/ DOS STUB \\-----------------------------------<");
-    //putchar('\n');
     fseek(file, 0x40, SEEK_SET);
     char _0x40[80+1] = {0}; // _0x40[80] = '\0';
 
     _0x40[0] = getc(file);
     fprint("| %03d=%02X | %02X                                              | PUSH CS              |\n", offset += 4, offset, _0x40[0]&255);
-
-    //fprint("| %02X                                   | PUSH CS              |\n", _0x40[0]&255);
     _0x40[1] = getc(file);
     fprint("|        | %02X                                              | POP DS               |\n", _0x40[1]&255);
     _0x40[2] = getc(file), _0x40[3] = getc(file), _0x40[4] = getc(file);
