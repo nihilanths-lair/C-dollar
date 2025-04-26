@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
     machine[1] = getc(file);
     fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset, machine[0]&255, machine[1]&255, machine);
 
-    char number_of_sections[2+1] = {0};
+    char number_of_sections[2+1] = {0}; // Количество секций
     number_of_sections[0] = getc(file);
     number_of_sections[1] = getc(file);
     fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
@@ -215,6 +215,49 @@ int main(int argc, char *argv[])
      time_date_stamp[3]&255,
      time_date_stamp
     );
+    char pointer_to_symbol_table[4+1] = {0}; // Таблица символов
+    pointer_to_symbol_table[0] = getc(file);
+    pointer_to_symbol_table[1] = getc(file);
+    pointer_to_symbol_table[2] = getc(file);
+    pointer_to_symbol_table[3] = getc(file);
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     pointer_to_symbol_table[0]&255,
+     pointer_to_symbol_table[1]&255,
+     pointer_to_symbol_table[2]&255,
+     pointer_to_symbol_table[3]&255,
+     pointer_to_symbol_table
+    );
+    char number_of_symbols[4+1] = {0}; // Количество символов
+    number_of_symbols[0] = getc(file);
+    number_of_symbols[1] = getc(file);
+    number_of_symbols[2] = getc(file);
+    number_of_symbols[3] = getc(file);
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 4, offset,
+     number_of_symbols[0]&255,
+     number_of_symbols[1]&255,
+     number_of_symbols[2]&255,
+     number_of_symbols[3]&255,
+     number_of_symbols
+    );
+    char size_of_optional_header[2+1] = {0}; // Размер следующего подзаголовка
+    size_of_optional_header[0] = getc(file);
+    size_of_optional_header[1] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 4, offset,
+     size_of_optional_header[0]&255,
+     size_of_optional_header[1]&255,
+     size_of_optional_header
+    );
+    char characteristics[2+1] = {0}; // Характеристики файла
+    characteristics[0] = getc(file);
+    characteristics[1] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
+     characteristics[0]&255,
+     characteristics[1]&255,
+     characteristics
+    );
+    print("|-----------------------------------------------------------------------------|");
+    print("|                              _________________           |                  |");
+    print("|-----------------------------/ OPTIONAL HEADER \\-----------------------------|");
     print("|-----------------------------------------------------------------------------|");
     return 0;
 }
