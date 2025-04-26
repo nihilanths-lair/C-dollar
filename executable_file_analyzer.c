@@ -122,46 +122,60 @@ int main(int argc, char *argv[])
     e_lfanew[0] = getc(file), e_lfanew[1] = getc(file), e_lfanew[2] = getc(file), e_lfanew[3] = getc(file);
     fprint("| %03d=%02X | %02X %02X %02X %02X                                  | %s                      |\n", offset += 20, offset, e_lfanew[0]&255, e_lfanew[1]&255, e_lfanew[2]&255, e_lfanew[3]&255, e_lfanew);
 
-    print(">--------------------------------------------------------------------------------<");
-    print("|                                    __________                                  |");
-    print(">-----------------------------------/ DOS STUB \\---------------------------------<");
+    print(">---------------------------------------------------------------------------------<");
+    print("|                                    __________                                   |");
+    print(">-----------------------------------/ DOS STUB \\----------------------------------<");
     //putchar('\n');
     fseek(file, 0x40, SEEK_SET);
     char _0x40[80+1] = {0}; // _0x40[80] = '\0';
 
-    for (int i = -1; ++i < 16;) _0x40[i] = getc(file);
-    fprint("| x40 | ");
-    for (int i = -1; ++i < 16;) fprint("%02X ", _0x40[i] & 255);
-    fprint("| ");
-    for (int i = -1; ++i < 16;) fprint("%c", _0x40[i]);
-    fprint(" |");
+    for (int i = -1; ++i < 5;) _0x40[i] = getc(file);
+    fprint("| %03d=%02X | ", offset += 4, offset);
+    for (int i = -1; ++i < 5;) fprint("%02X ", _0x40[i] & 255);
+    fprint("                                 | ");
+    for (int i = -1; ++i < 5;) fprint("%c", _0x40[i]);
+    print("                |");
+
+    _0x40[5] = getc(file), _0x40[6] = getc(file);
+    fprint("|        | %02X %02X                                           | MOV AH, 09h          |\n", _0x40[5]&255, _0x40[6]&255);
+    _0x40[7] = getc(file), _0x40[8] = getc(file);
+    fprint("|        | %02X %02X                                           | INT 21h              |\n", _0x40[7]&255, _0x40[8]&255);
+    _0x40[9] = getc(file), _0x40[10] = getc(file), _0x40[11] = getc(file);
+    fprint("|        | %02X %02X %02X                                        | MOV AX, 4C01         |\n", _0x40[9]&255, _0x40[10]&255, _0x40[11]&255);
+    _0x40[12] = getc(file), _0x40[13] = getc(file);
+    fprint("|        | %02X %02X                                           | INT 21h              |", _0x40[12]&255, _0x40[13]&255);
 
     for (int i = 15; ++i < 32;) _0x40[i] = getc(file);
-    fprint("\n| x50 | ");
+    fprint("\n| %03d=%02X | ", offset += 16, offset);
     for (int i = 15; ++i < 32;) fprint("%02X ", _0x40[i] & 255);
     fprint("| ");
     for (int i = 15; ++i < 32;) fprint("%c", _0x40[i]);
-    fprint("        |");
+    fprint("     |");
 
     for (int i = 31; ++i < 48;) _0x40[i] = getc(file);
-    fprint("\n| x60 | ");
+    fprint("\n| %03d=%02X | ", offset += 16, offset);
     for (int i = 31; ++i < 48;) fprint("%02X ", _0x40[i] & 255);
     fprint("| ");
     for (int i = 31; ++i < 48;) fprint("%c", _0x40[i]);
-    fprint("        |");
+    fprint("     |");
 
     for (int i = 47; ++i < 64;) _0x40[i] = getc(file);
-    fprint("\n| x70 | ");
+    fprint("\n| %03d=%02X | ", offset += 16, offset);
     for (int i = 47; ++i < 64;) fprint("%02X ", _0x40[i] & 255);
     fprint("| ");
-    for (int i = 47; ++i < 64;) fprint("%c", _0x40[i]);
+    for (int i = 47; ++i < 64;)
+    {
+        if (_0x40[i] == 13 || _0x40[i] == 10) continue;
+        fprint("%c", _0x40[i]);
+    }
+    fprint("        |");
     
     for (int i = 63; ++i < 80;) _0x40[i] = getc(file);
-    fprint("\n| x80 | ");
+    fprint("\n| %03d=%02X | ", offset += 16, offset);
     for (int i = 63; ++i < 80;) fprint("%02X ", _0x40[i] & 255);
     fprint("| ");
     for (int i = 63; ++i < 80;) fprint("%c", _0x40[i]);
-    print("        |");
+    print("     |");
     print(">---------------------------------------------------------------------------------<");
     print("|                                   ___________                                   |");
     print(">----------------------------------/ NT HEADER \\----------------------------------<");
