@@ -123,27 +123,28 @@ int main(int argc, char *argv[])
     fprint("| %03d=%02X | %02X %02X %02X %02X                                  | %s                      |\n", offset += 20, offset, e_lfanew[0]&255, e_lfanew[1]&255, e_lfanew[2]&255, e_lfanew[3]&255, e_lfanew);
 
     print(">---------------------------------------------------------------------------------<");
-    print("|                                    __________                                   |");
-    print(">-----------------------------------/ DOS STUB \\----------------------------------<");
+    print("|                                   __________                                    |");
+    print(">----------------------------------/ DOS STUB \\-----------------------------------<");
     //putchar('\n');
     fseek(file, 0x40, SEEK_SET);
     char _0x40[80+1] = {0}; // _0x40[80] = '\0';
 
-    for (int i = -1; ++i < 5;) _0x40[i] = getc(file);
-    fprint("| %03d=%02X | ", offset += 4, offset);
-    for (int i = -1; ++i < 5;) fprint("%02X ", _0x40[i] & 255);
-    fprint("                                 | ");
-    for (int i = -1; ++i < 5;) fprint("%c", _0x40[i]);
-    print("                |");
+    _0x40[0] = getc(file);
+    fprint("| %03d=%02X | %02X                                              | PUSH CS              |\n", offset += 4, offset, _0x40[0]&255);
 
+    //fprint("| %02X                                   | PUSH CS              |\n", _0x40[0]&255);
+    _0x40[1] = getc(file);
+    fprint("|        | %02X                                              | POP DS               |\n", _0x40[1]&255);
+    _0x40[2] = getc(file), _0x40[3] = getc(file), _0x40[4] = getc(file);
+    fprint("|        | %02X %02X %02X                                        | MOV DX, h= 00 0E     |\n", _0x40[2]&255, _0x40[3]&255, _0x40[4]&255);
     _0x40[5] = getc(file), _0x40[6] = getc(file);
-    fprint("|        | %02X %02X                                           | MOV AH, 09h          |\n", _0x40[5]&255, _0x40[6]&255);
+    fprint("|        | %02X %02X                                           | MOV AH, h=09         |\n", _0x40[5]&255, _0x40[6]&255);
     _0x40[7] = getc(file), _0x40[8] = getc(file);
-    fprint("|        | %02X %02X                                           | INT 21h              |\n", _0x40[7]&255, _0x40[8]&255);
+    fprint("|        | %02X %02X                                           | INT %d ; %02Xh         |\n", _0x40[7]&255, _0x40[8]&255, _0x40[8], _0x40[8]&255);
     _0x40[9] = getc(file), _0x40[10] = getc(file), _0x40[11] = getc(file);
-    fprint("|        | %02X %02X %02X                                        | MOV AX, 4C01         |\n", _0x40[9]&255, _0x40[10]&255, _0x40[11]&255);
+    fprint("|        | %02X %02X %02X                                        | MOV AX, h= 4C 01     |\n", _0x40[9]&255, _0x40[10]&255, _0x40[11]&255);
     _0x40[12] = getc(file), _0x40[13] = getc(file);
-    fprint("|        | %02X %02X                                           | INT 21h              |", _0x40[12]&255, _0x40[13]&255);
+    fprint("|        | %02X %02X                                           | INT %d ; %02Xh         |", _0x40[12]&255, _0x40[13]&255, _0x40[13], _0x40[13]&255);
 
     for (int i = 15; ++i < 32;) _0x40[i] = getc(file);
     fprint("\n| %03d=%02X | ", offset += 16, offset);
