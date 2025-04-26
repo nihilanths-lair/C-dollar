@@ -16,8 +16,9 @@ int main(int argc, char *argv[])
     int offset = 0;
     print("                                 ____________");
     print("|-------------------------------/ DOS HEADER \\--------------------------------|");
-    char e_magic[2+1] = {0}; // h=00 | 4D 5A | MZ
-    e_magic[0] = getc(file), e_magic[1] = getc(file);
+    char e_magic[2+1] = {0}; // MZ
+    e_magic[0] = getc(file); // M
+    e_magic[1] = getc(file); // Z
     fprint("| %03d=%02X | %02X %02X                                        | %s                  |\n", offset, offset, e_magic[0]&255, e_magic[1]&255, e_magic);
     
     char e_cblp[2+1] = {0};  // h=02
@@ -174,17 +175,45 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                                 ___________                                 |");
     print("|--------------------------------/ NT HEADER \\--------------------------------|");
-    char signature[4+1] = {0};
-    signature[0] = getc(file);
-    signature[1] = getc(file);
-    signature[2] = getc(file);
-    signature[3] = getc(file);
+    char signature[4+1] = {0}; // PE\0\0
+    signature[0] = getc(file); // P
+    signature[1] = getc(file); // E
+    signature[2] = getc(file); // \0
+    signature[3] = getc(file); // \0
     fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 2, offset,
      signature[0]&255,
      signature[1]&255,
      signature[2]&255,
      signature[3]&255,
      signature
+    );
+    print("|-----------------------------------------------------------------------------|");
+    print("|                                _____________             |                  |");
+    print("|-------------------------------/ FILE HEADER \\-------------------------------|");
+    char machine[2+1] = {0}; // Архитектура
+    machine[0] = getc(file);
+    machine[1] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset, machine[0]&255, machine[1]&255, machine);
+
+    char number_of_sections[2+1] = {0};
+    number_of_sections[0] = getc(file);
+    number_of_sections[1] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
+     number_of_sections[0]&255,
+     number_of_sections[1]&255,
+     number_of_sections
+    );
+    char time_date_stamp[4+1] = {0}; // Дата и время создания файла
+    time_date_stamp[0] = getc(file);
+    time_date_stamp[1] = getc(file);
+    time_date_stamp[2] = getc(file);
+    time_date_stamp[3] = getc(file);
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s             |\n", offset += 2, offset,
+     time_date_stamp[0]&255,
+     time_date_stamp[1]&255,
+     time_date_stamp[2]&255,
+     time_date_stamp[3]&255,
+     time_date_stamp
     );
     print("|-----------------------------------------------------------------------------|");
     return 0;
