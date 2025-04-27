@@ -258,64 +258,31 @@ int main(int argc, char *argv[])
     print("|                                 ___________                                 |");
     print("|--------------------------------/ NT HEADER \\--------------------------------|");
     // Сигнатура PE
-    unsigned char signature[4+1] =
-    {
-        getc(file),
-        getc(file),
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 2, offset,
-     signature[0],
-     signature[1],
-     signature[2],
-     signature[3],
+    unsigned char signature[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Signature: %02X %02X %02X %02X                          | %s               |\n", offset += 2, offset,
+     signature[0], signature[1], signature[2], signature[3],
      signature
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                                _____________             |                  |");
     print("|-------------------------------/ FILE HEADER \\-------------------------------|");
     // Архитектура
-    unsigned char machine[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset,
-     machine[0],
-     machine[1],
+    unsigned char machine[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Machine: %02X %02X                                  | %s               |\n", offset += 2, offset,
+     machine[0], machine[1],
      machine
     );
     // Количество секций
-    unsigned char number_of_sections[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X                                           | %c%c               |\n", offset += 2, offset,
-     number_of_sections[0],
-     number_of_sections[1],
+    unsigned char number_of_sections[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Number of sections: %02X %02X                       | %c%c               |\n", offset += 2, offset,
+     number_of_sections[0], number_of_sections[1],
 
-     number_of_sections[0],
-     number_of_sections[1]
+     number_of_sections[0], number_of_sections[1]
     );
     // Дата и время создания файла
-    unsigned char time_date_stamp[4+1] =
-    {
-        getc(file),
-        getc(file),
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %c%c%c%c             |\n", offset += 2, offset,
-     time_date_stamp[0],
-     time_date_stamp[1],
-     time_date_stamp[2],
-     time_date_stamp[3],
+    unsigned char time_date_stamp[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Time date stamp: %02X %02X %02X %02X                    | %c%c%c%c             |\n", offset += 2, offset,
+     time_date_stamp[0], time_date_stamp[1], time_date_stamp[2], time_date_stamp[3],
 
      (time_date_stamp[0] == 0x0D) ? ' ' : time_date_stamp[0],
      (time_date_stamp[1] == 0x0D) ? ' ' : time_date_stamp[1],
@@ -323,111 +290,76 @@ int main(int argc, char *argv[])
      (time_date_stamp[3] == 0x0D) ? ' ' : time_date_stamp[3]
     );
     // Таблица символов
-    unsigned char pointer_to_symbol_table[4+1] =
-    {
-        getc(file),
-        getc(file),
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
-     pointer_to_symbol_table[0],
-     pointer_to_symbol_table[1],
-     pointer_to_symbol_table[2],
-     pointer_to_symbol_table[3],
+    unsigned char pointer_to_symbol_table[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Pointer to symbol table: %02X %02X %02X %02X            | %s                 |\n", offset += 4, offset,
+     pointer_to_symbol_table[0], pointer_to_symbol_table[1], pointer_to_symbol_table[2], pointer_to_symbol_table[3],
      pointer_to_symbol_table
     );
     // Количество символов
-    unsigned char number_of_symbols[4+1] =
-    {
-        getc(file),
-        getc(file),
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 4, offset,
-     number_of_symbols[0],
-     number_of_symbols[1],
-     number_of_symbols[2],
-     number_of_symbols[3],
+    unsigned char number_of_symbols[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Number of symbols: %02X %02X %02X %02X                  | %s               |\n", offset += 4, offset,
+     number_of_symbols[0], number_of_symbols[1], number_of_symbols[2], number_of_symbols[3],
      number_of_symbols
     );
     // Размер следующего подзаголовка
-    unsigned char size_of_optional_header[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 4, offset,
-     size_of_optional_header[0],
-     size_of_optional_header[1],
+    unsigned char size_of_optional_header[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of optional header: %02X %02X                  | %s                |\n", offset += 4, offset,
+     size_of_optional_header[0], size_of_optional_header[1],
      size_of_optional_header
     );
     // Характеристики файла
-    unsigned char characteristics[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
-     characteristics[0],
-     characteristics[1],
+    unsigned char characteristics[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Characteristics: %02X %02X                          | %s                |\n", offset += 2, offset,
+     characteristics[0], characteristics[1],
      characteristics
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                              _________________           |                  |");
     print("|-----------------------------/ OPTIONAL HEADER \\-----------------------------|");
-    unsigned char magic[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset,
+    unsigned char magic[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Magic: %02X %02X                                    | %s               |\n", offset += 2, offset,
      magic[0],
      magic[1],
      magic
     );
     unsigned char major_linker_version = getc(file);
-    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 2, offset,
-     major_linker_version,
-     major_linker_version
+    fprint("| %03d=%02X | Major linker version: %02X                        | %c                |\n", offset += 2, offset,
+     major_linker_version, major_linker_version
     );
     unsigned char minor_linker_version = getc(file);
-    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 1, offset,
-     minor_linker_version,
-     minor_linker_version
+    fprint("| %03d=%02X | Minor linker version: %02X                        | %c                |\n", offset += 1, offset,
+     minor_linker_version, minor_linker_version
     );
+    // Размер секций кода
     unsigned char size_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 1, offset,
+    fprint("| %03d=%02X | Size of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 1, offset,
      size_of_code[0],
      size_of_code[1],
      size_of_code[2],
      size_of_code[3],
      size_of_code
     );
+    // Размер секций иниц. данных
     unsigned char size_of_initialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Size of initialized data: %02X %02X %02X %02X           | %s                 |\n", offset += 4, offset,
      size_of_initialized_data[0],
      size_of_initialized_data[1],
      size_of_initialized_data[2],
      size_of_initialized_data[3],
      size_of_initialized_data
     );
+    // Размер секций не иниц. данных
     unsigned char size_of_unininitialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Size of unininitialized data: %02X %02X %02X %02X       | %s                 |\n", offset += 4, offset,
      size_of_unininitialized_data[0],
      size_of_unininitialized_data[1],
      size_of_unininitialized_data[2],
      size_of_unininitialized_data[3],
      size_of_unininitialized_data
     );
+    // RVA точки входа в программу
     unsigned char address_of_entry_point[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Address of entry point: %02X %02X %02X %02X             | %s               |\n", offset += 4, offset,
      address_of_entry_point[0],
      address_of_entry_point[1],
      address_of_entry_point[2],
@@ -436,7 +368,7 @@ int main(int argc, char *argv[])
     );
     // RVA секции с кодом
     unsigned char base_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Base of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
      base_of_code[0],
      base_of_code[1],
      base_of_code[2],
@@ -445,7 +377,7 @@ int main(int argc, char *argv[])
     );
     // RVA секции с данными
     unsigned char base_of_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Base of data: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
      base_of_data[0],
      base_of_data[1],
      base_of_data[2],
@@ -454,7 +386,7 @@ int main(int argc, char *argv[])
     );
     // Кратно 64 Кб. (4 Мб.)
     unsigned char image_base[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Image base: %02X %02X %02X %02X                         | %s                |\n", offset += 4, offset,
      image_base[0],
      image_base[1],
      image_base[2],
@@ -463,15 +395,16 @@ int main(int argc, char *argv[])
     );
     // Выравнивание в вирт. памяти (4 Кб.)
     unsigned char section_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | Section alignment: %02X %02X %02X %02X                  | %s                 |\n", offset += 4, offset,
      section_alignment[0],
      section_alignment[1],
      section_alignment[2],
      section_alignment[3],
      section_alignment
     );
+    // Выравнивание в exe файле (512 б.)
     unsigned char file_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+    fprint("| %03d=%02X | File alignment: %02X %02X %02X %02X                     | %s                 |\n", offset += 4, offset,
      file_alignment[0],
      file_alignment[1],
      file_alignment[2],
@@ -479,17 +412,58 @@ int main(int argc, char *argv[])
      file_alignment
     );
     unsigned char major_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
+    fprint("| %03d=%02X | Major operating system version: %02X %02X           | %s                |\n", offset += 2, offset,
      major_operating_system_version[0],
      major_operating_system_version[1],
      major_operating_system_version
     );
     unsigned char minor_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                           | %s                 |\n", offset += 2, offset,
+    fprint("| %03d=%02X | Minor operating system version: %02X %02X           | %s                 |\n", offset += 2, offset,
      minor_operating_system_version[0],
      minor_operating_system_version[1],
      minor_operating_system_version
     );
+    unsigned char major_image_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Major image version: %02X %02X                      | %s                 |\n", offset += 2, offset,
+     major_image_version[0],
+     major_image_version[1],
+     major_image_version
+    );
+    unsigned char minor_image_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Minor image version: %02X %02X                      | %s                 |\n", offset += 2, offset,
+     minor_image_version[0],
+     minor_image_version[1],
+     minor_image_version
+    );
+    unsigned char major_subsystem_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Major subsystem version: %02X %02X                  | %s                |\n", offset += 2, offset,
+     major_subsystem_version[0],
+     major_subsystem_version[1],
+     major_subsystem_version
+    );
+    unsigned char minor_subsystem_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Minor subsystem version: %02X %02X                  | %s                |\n", offset += 2, offset,
+     minor_subsystem_version[0],
+     minor_subsystem_version[1],
+     minor_subsystem_version
+    );
+    unsigned char win32_version_value[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Win32 version value: %02X %02X %02X %02X                | %s                 |\n", offset += 2, offset,
+     win32_version_value[0],
+     win32_version_value[1],
+     win32_version_value[2],
+     win32_version_value[3],
+     win32_version_value
+    );
+    unsigned char size_of_image[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of image: %02X %02X %02X %02X                      | %s                 |\n", offset += 4, offset,
+     size_of_image[0],
+     size_of_image[1],
+     size_of_image[2],
+     size_of_image[3],
+     size_of_image
+    );
     print("|-----------------------------------------------------------------------------|");
+    print("|_____________________________________________________________________________|");
     return 0;
 }
