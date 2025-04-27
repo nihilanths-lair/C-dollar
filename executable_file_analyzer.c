@@ -402,6 +402,94 @@ int main(int argc, char *argv[])
      minor_linker_version,
      minor_linker_version
     );
+    unsigned char size_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 1, offset,
+     size_of_code[0],
+     size_of_code[1],
+     size_of_code[2],
+     size_of_code[3],
+     size_of_code
+    );
+    unsigned char size_of_initialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     size_of_initialized_data[0],
+     size_of_initialized_data[1],
+     size_of_initialized_data[2],
+     size_of_initialized_data[3],
+     size_of_initialized_data
+    );
+    unsigned char size_of_unininitialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     size_of_unininitialized_data[0],
+     size_of_unininitialized_data[1],
+     size_of_unininitialized_data[2],
+     size_of_unininitialized_data[3],
+     size_of_unininitialized_data
+    );
+    unsigned char address_of_entry_point[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 4, offset,
+     address_of_entry_point[0],
+     address_of_entry_point[1],
+     address_of_entry_point[2],
+     address_of_entry_point[3],
+     address_of_entry_point
+    );
+    // RVA секции с кодом
+    unsigned char base_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     base_of_code[0],
+     base_of_code[1],
+     base_of_code[2],
+     base_of_code[3],
+     base_of_code
+    );
+    // RVA секции с данными
+    unsigned char base_of_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     base_of_data[0],
+     base_of_data[1],
+     base_of_data[2],
+     base_of_data[3],
+     base_of_data
+    );
+    // Кратно 64 Кб. (4 Мб.)
+    unsigned char image_base[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                |\n", offset += 4, offset,
+     image_base[0],
+     image_base[1],
+     image_base[2],
+     image_base[3],
+     image_base
+    );
+    // Выравнивание в вирт. памяти (4 Кб.)
+    unsigned char section_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     section_alignment[0],
+     section_alignment[1],
+     section_alignment[2],
+     section_alignment[3],
+     section_alignment
+    );
+    unsigned char file_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
+     file_alignment[0],
+     file_alignment[1],
+     file_alignment[2],
+     file_alignment[3],
+     file_alignment
+    );
+    unsigned char major_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
+     major_operating_system_version[0],
+     major_operating_system_version[1],
+     major_operating_system_version
+    );
+    unsigned char minor_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | %02X %02X                                           | %s                 |\n", offset += 2, offset,
+     minor_operating_system_version[0],
+     minor_operating_system_version[1],
+     minor_operating_system_version
+    );
     print("|-----------------------------------------------------------------------------|");
     return 0;
 }
