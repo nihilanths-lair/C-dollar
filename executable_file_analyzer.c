@@ -78,9 +78,9 @@ int main(int argc, char *argv[])
     );
     unsigned char e_csum[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-        e_csum[0],
-        e_csum[1],
-        e_csum
+     e_csum[0],
+     e_csum[1],
+     e_csum
     );
     // ”казатель команд
     unsigned char e_ip[2+1] = {getc(file), getc(file), '\0'};
@@ -112,7 +112,8 @@ int main(int argc, char *argv[])
         getc(file), getc(file),
         getc(file), getc(file),
         getc(file), getc(file),
-        getc(file), getc(file)
+        getc(file), getc(file),
+        '\0'
     };
     fprint("| %03d=%02X | %02X %02X %02X %02X %02X %02X %02X %02X                      | %s                    |\n", offset += 2, offset,
      e_res_4_[0],
@@ -158,7 +159,8 @@ int main(int argc, char *argv[])
         getc(file), getc(file), //  7  00 00
         getc(file), getc(file), //  8  00 00
         getc(file), getc(file), //  9  00 00
-        getc(file), getc(file)  // 10  00 00
+        getc(file), getc(file), // 10  00 00
+        '\0'
     };
     fprint("| %03d=%02X | %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X |                     |\n|\
         | %02X %02X %02X %02X %02X                               | %s                    |\n", offset += 2, offset,
