@@ -264,14 +264,16 @@ int main(int argc, char *argv[])
      signature
     );
     print("|-----------------------------------------------------------------------------|");
-    print("|                                _____________             |                  |");
-    print("|-------------------------------/ FILE HEADER \\-------------------------------|");
+    print("|                          _________________________                          |");
+    print("|-------------------------/ NT HEADER / FILE HEADER \\-------------------------|");
     // Архитектура
     unsigned char machine[2+1] = {getc(file), getc(file), '\0'};
+    print("|        |-------------------------------------------------|                  |");
     fprint("| %03d=%02X | Machine: %02X %02X                                  | %s               |\n", offset += 2, offset,
      machine[0], machine[1],
      machine
     );
+    print("|        |-------------------------------------------------|                  |");
     // Количество секций
     unsigned char number_of_sections[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Number of sections: %02X %02X                       | %c%c               |\n", offset += 2, offset,
@@ -279,6 +281,7 @@ int main(int argc, char *argv[])
 
      number_of_sections[0], number_of_sections[1]
     );
+    print("|        |-------------------------------------------------|                  |");
     // Дата и время создания файла
     unsigned char time_date_stamp[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Time date stamp: %02X %02X %02X %02X                    | %c%c%c%c             |\n", offset += 2, offset,
@@ -289,24 +292,28 @@ int main(int argc, char *argv[])
      (time_date_stamp[2] == 0x0D) ? ' ' : time_date_stamp[2],
      (time_date_stamp[3] == 0x0D) ? ' ' : time_date_stamp[3]
     );
+    print("|        |-------------------------------------------------|                  |");
     // Таблица символов
     unsigned char pointer_to_symbol_table[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Pointer to symbol table: %02X %02X %02X %02X            | %s                 |\n", offset += 4, offset,
      pointer_to_symbol_table[0], pointer_to_symbol_table[1], pointer_to_symbol_table[2], pointer_to_symbol_table[3],
      pointer_to_symbol_table
     );
+    print("|        |-------------------------------------------------|                  |");
     // Количество символов
     unsigned char number_of_symbols[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Number of symbols: %02X %02X %02X %02X                  | %s               |\n", offset += 4, offset,
      number_of_symbols[0], number_of_symbols[1], number_of_symbols[2], number_of_symbols[3],
      number_of_symbols
     );
+    print("|        |-------------------------------------------------|                  |");
     // Размер следующего подзаголовка
     unsigned char size_of_optional_header[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of optional header: %02X %02X                  | %s                |\n", offset += 4, offset,
      size_of_optional_header[0], size_of_optional_header[1],
      size_of_optional_header
     );
+    print("|        |-------------------------------------------------|                  |");
     // Характеристики файла
     unsigned char characteristics[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Characteristics: %02X %02X                          | %s                |\n", offset += 2, offset,
@@ -314,8 +321,8 @@ int main(int argc, char *argv[])
      characteristics
     );
     print("|-----------------------------------------------------------------------------|");
-    print("|                              _________________           |                  |");
-    print("|-----------------------------/ OPTIONAL HEADER \\-----------------------------|");
+    print("|                        _____________________________                        |");
+    print("|-----------------------/ NT HEADER / OPTIONAL HEADER \\-----------------------|");
     // Название формата (PE32)
     unsigned char magic[2+1] = {getc(file), getc(file), '\0'};
     print("|        |-------------------------------------------------|                  |");
@@ -486,6 +493,7 @@ int main(int argc, char *argv[])
      size_of_image
     );
     print("|        |-------------------------------------------------|                  |");
+    // Размер всех заголовков
     unsigned char size_of_headers[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of headers: %02X %02X %02X %02X                    | %s                 |\n", offset += 4, offset,
      size_of_headers[0],
@@ -579,6 +587,9 @@ int main(int argc, char *argv[])
      number_of_rva_and_sizes[3],
      number_of_rva_and_sizes
     );
+    print("|-----------------------------------------------------------------------------|");
+    print("|               ______________________________________________                |");
+    print("|--------------/ NT HEADER / OPTIONAL HEADER / DATA DIRECTORY \\---------------|");
     print("|-----------------------------------------------------------------------------|");
     print("|                              ________________                               |");
     print("|-----------------------------/ SECTION HEADER \\------------------------------|");
