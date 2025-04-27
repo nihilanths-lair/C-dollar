@@ -316,20 +316,25 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                              _________________           |                  |");
     print("|-----------------------------/ OPTIONAL HEADER \\-----------------------------|");
+    // Название формата (PE32)
     unsigned char magic[2+1] = {getc(file), getc(file), '\0'};
+    print("|        |-------------------------------------------------|                  |");
     fprint("| %03d=%02X | Magic: %02X %02X                                    | %s               |\n", offset += 2, offset,
      magic[0],
      magic[1],
      magic
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char major_linker_version = getc(file);
     fprint("| %03d=%02X | Major linker version: %02X                        | %c                |\n", offset += 2, offset,
      major_linker_version, major_linker_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char minor_linker_version = getc(file);
     fprint("| %03d=%02X | Minor linker version: %02X                        | %c                |\n", offset += 1, offset,
      minor_linker_version, minor_linker_version
     );
+    print("|        |-------------------------------------------------|                  |");
     // Размер секций кода
     unsigned char size_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 1, offset,
@@ -339,6 +344,7 @@ int main(int argc, char *argv[])
      size_of_code[3],
      size_of_code
     );
+    print("|        |-------------------------------------------------|                  |");
     // Размер секций иниц. данных
     unsigned char size_of_initialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of initialized data: %02X %02X %02X %02X           | %s                 |\n", offset += 4, offset,
@@ -348,6 +354,7 @@ int main(int argc, char *argv[])
      size_of_initialized_data[3],
      size_of_initialized_data
     );
+    print("|        |-------------------------------------------------|                  |");
     // Размер секций не иниц. данных
     unsigned char size_of_unininitialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of unininitialized data: %02X %02X %02X %02X       | %s                 |\n", offset += 4, offset,
@@ -357,6 +364,7 @@ int main(int argc, char *argv[])
      size_of_unininitialized_data[3],
      size_of_unininitialized_data
     );
+    print("|        |-------------------------------------------------|                  |");
     // RVA точки входа в программу
     unsigned char address_of_entry_point[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Address of entry point: %02X %02X %02X %02X             | %s               |\n", offset += 4, offset,
@@ -366,6 +374,7 @@ int main(int argc, char *argv[])
      address_of_entry_point[3],
      address_of_entry_point
     );
+    print("|        |-------------------------------------------------|                  |");
     // RVA секции с кодом
     unsigned char base_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Base of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
@@ -375,6 +384,7 @@ int main(int argc, char *argv[])
      base_of_code[3],
      base_of_code
     );
+    print("|        |-------------------------------------------------|                  |");
     // RVA секции с данными
     unsigned char base_of_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Base of data: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
@@ -384,6 +394,7 @@ int main(int argc, char *argv[])
      base_of_data[3],
      base_of_data
     );
+    print("|        |-------------------------------------------------|                  |");
     // Кратно 64 Кб. (4 Мб.)
     unsigned char image_base[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Image base: %02X %02X %02X %02X                         | %s                |\n", offset += 4, offset,
@@ -393,6 +404,7 @@ int main(int argc, char *argv[])
      image_base[3],
      image_base
     );
+    print("|        |-------------------------------------------------|                  |");
     // Выравнивание в вирт. памяти (4 Кб.)
     unsigned char section_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Section alignment: %02X %02X %02X %02X                  | %s                 |\n", offset += 4, offset,
@@ -402,6 +414,7 @@ int main(int argc, char *argv[])
      section_alignment[3],
      section_alignment
     );
+    print("|        |-------------------------------------------------|                  |");
     // Выравнивание в exe файле (512 б.)
     unsigned char file_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | File alignment: %02X %02X %02X %02X                     | %s                 |\n", offset += 4, offset,
@@ -411,42 +424,50 @@ int main(int argc, char *argv[])
      file_alignment[3],
      file_alignment
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char major_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Major operating system version: %02X %02X           | %s                |\n", offset += 2, offset,
      major_operating_system_version[0],
      major_operating_system_version[1],
      major_operating_system_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char minor_operating_system_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Minor operating system version: %02X %02X           | %s                 |\n", offset += 2, offset,
      minor_operating_system_version[0],
      minor_operating_system_version[1],
      minor_operating_system_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char major_image_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Major image version: %02X %02X                      | %s                 |\n", offset += 2, offset,
      major_image_version[0],
      major_image_version[1],
      major_image_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char minor_image_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Minor image version: %02X %02X                      | %s                 |\n", offset += 2, offset,
      minor_image_version[0],
      minor_image_version[1],
      minor_image_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char major_subsystem_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Major subsystem version: %02X %02X                  | %s                |\n", offset += 2, offset,
      major_subsystem_version[0],
      major_subsystem_version[1],
      major_subsystem_version
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char minor_subsystem_version[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Minor subsystem version: %02X %02X                  | %s                |\n", offset += 2, offset,
      minor_subsystem_version[0],
      minor_subsystem_version[1],
      minor_subsystem_version
     );
+    print("|        |-------------------------------------------------|                  |");
+    // Зарезервировано
     unsigned char win32_version_value[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Win32 version value: %02X %02X %02X %02X                | %s                 |\n", offset += 2, offset,
      win32_version_value[0],
@@ -455,6 +476,7 @@ int main(int argc, char *argv[])
      win32_version_value[3],
      win32_version_value
     );
+    print("|        |-------------------------------------------------|                  |");
     unsigned char size_of_image[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of image: %02X %02X %02X %02X                      | %s                 |\n", offset += 4, offset,
      size_of_image[0],
@@ -463,6 +485,103 @@ int main(int argc, char *argv[])
      size_of_image[3],
      size_of_image
     );
+    print("|        |-------------------------------------------------|                  |");
+    unsigned char size_of_headers[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of headers: %02X %02X %02X %02X                    | %s                 |\n", offset += 4, offset,
+     size_of_headers[0],
+     size_of_headers[1],
+     size_of_headers[2],
+     size_of_headers[3],
+     size_of_headers
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Контрольная сумма
+    unsigned char check_sum[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Check sum: %02X %02X %02X %02X                          | %s              |\n", offset += 4, offset,
+     check_sum[0],
+     check_sum[1],
+     check_sum[2],
+     check_sum[3],
+     check_sum
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Тип программы
+    unsigned char subsystem[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Subsystem: %02X %02X                                | %s                |\n", offset += 4, offset,
+     subsystem[0],
+     subsystem[1],
+     subsystem
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Хар-ки DLL-файла
+    unsigned char dll_characteristics[2+1] = {getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Dll characteristics: %02X %02X                      | %s               |\n", offset += 2, offset,
+     dll_characteristics[0],
+     dll_characteristics[1],
+     dll_characteristics
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Зарезерв. место под стек (1 Мб.)
+    unsigned char size_of_stack_reserve[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of stack reserve: %02X %02X %02X %02X              | %s                 |\n", offset += 2, offset,
+     size_of_stack_reserve[0],
+     size_of_stack_reserve[1],
+     size_of_stack_reserve[2],
+     size_of_stack_reserve[3],
+     size_of_stack_reserve
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Изначальный размер стека (4 Кб.)
+    unsigned char size_of_stack_commit[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of stack commit: %02X %02X %02X %02X               | %s                 |\n", offset += 4, offset,
+     size_of_stack_commit[0],
+     size_of_stack_commit[1],
+     size_of_stack_commit[2],
+     size_of_stack_commit[3],
+     size_of_stack_commit
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Зарезерв. место под кучу (1 Мб.)
+    unsigned char size_of_heap_reserve[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of heap reserve: %02X %02X %02X %02X               | %s                 |\n", offset += 4, offset,
+     size_of_heap_reserve[0],
+     size_of_heap_reserve[1],
+     size_of_heap_reserve[2],
+     size_of_heap_reserve[3],
+     size_of_heap_reserve
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Изначальный размер кучи (4 Кб.)
+    unsigned char size_of_heap_commit[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Size of heap commit: %02X %02X %02X %02X                | %s                 |\n", offset += 4, offset,
+     size_of_heap_commit[0],
+     size_of_heap_commit[1],
+     size_of_heap_commit[2],
+     size_of_heap_commit[3],
+     size_of_heap_commit
+    );
+    print("|        |-------------------------------------------------|                  |");
+    // Не используется
+    unsigned char loader_flags[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Loader flags: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
+     loader_flags[0],
+     loader_flags[1],
+     loader_flags[2],
+     loader_flags[3],
+     loader_flags
+    );
+    print("|        |-------------------------------------------------|                  |");
+    unsigned char number_of_rva_and_sizes[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
+    fprint("| %03d=%02X | Number of RVA and sizes: %02X %02X %02X %02X            | %s                 |\n", offset += 4, offset,
+     number_of_rva_and_sizes[0],
+     number_of_rva_and_sizes[1],
+     number_of_rva_and_sizes[2],
+     number_of_rva_and_sizes[3],
+     number_of_rva_and_sizes
+    );
+    print("|-----------------------------------------------------------------------------|");
+    print("|                              ________________                               |");
+    print("|-----------------------------/ SECTION HEADER \\------------------------------|");
     print("|-----------------------------------------------------------------------------|");
     print("|_____________________________________________________________________________|");
     return 0;
