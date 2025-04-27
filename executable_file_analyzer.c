@@ -118,31 +118,55 @@ int main(int argc, char *argv[])
      e_res2_10_[18]&255, e_res2_10_[19]&255, // 10  00 00
      e_res2_10_
     );
-
-    char e_lfanew[4+1] = {0}; // Смещение PE-заголовка от начала
-    e_lfanew[0] = getc(file), e_lfanew[1] = getc(file), e_lfanew[2] = getc(file), e_lfanew[3] = getc(file);
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                  | %s                   |\n", offset += 20, offset, e_lfanew[0]&255, e_lfanew[1]&255, e_lfanew[2]&255, e_lfanew[3]&255, e_lfanew);
-
+    // Смещение PE-заголовка от начала
+    unsigned char e_lfanew[4+1] =
+    {
+        getc(file),
+        getc(file),
+        getc(file),
+        getc(file),
+        '\0'
+    };
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                  | %s                   |\n", offset += 20, offset,
+     e_lfanew[0],
+     e_lfanew[1],
+     e_lfanew[2],
+     e_lfanew[3],
+     e_lfanew
+    );
     print("|-----------------------------------------------------------------------------|");
     print("|                                 __________                                  |");
     print("|--------------------------------/ DOS STUB \\---------------------------------|");
     fseek(file, 0x40, SEEK_SET);
-    char _0x40[80+1] = {0}; // _0x40[80] = '\0';
+    unsigned char _0x40[80+1] = {0}; // _0x40[80] = '\0';
 
     _0x40[0] = getc(file);
-    fprint("| %03d=%02X | %02X                                              | PUSH CS          |\n", offset += 4, offset, _0x40[0]&255);
+    fprint("| %03d=%02X | %02X                                              | PUSH CS          |\n", offset += 4, offset, _0x40[0]);
+    
     _0x40[1] = getc(file);
-    fprint("| %03d=%02X | %02X                                              | POP DS           |\n", offset += 1, offset, _0x40[1]&255);
-    _0x40[2] = getc(file), _0x40[3] = getc(file), _0x40[4] = getc(file);
-    fprint("| %03d=%02X | %02X %02X %02X                                        | MOV DX, %02X|%02X (h)|\n", offset += 1, offset, _0x40[2]&255, _0x40[3]&255, _0x40[4]&255, _0x40[3]&255, _0x40[4]&255);
-    _0x40[5] = getc(file), _0x40[6] = getc(file);
-    fprint("| %03d=%02X | %02X %02X                                           | MOV AH, %02X (h)   |\n", offset += 3, offset, _0x40[5]&255, _0x40[6]&255, _0x40[6]&255);
-    _0x40[7] = getc(file), _0x40[8] = getc(file);
-    fprint("| %03d=%02X | %02X %02X                                           | INT %d # %02X (h)  |\n", offset += 2, offset, _0x40[7]&255, _0x40[8]&255, _0x40[8], _0x40[8]&255);
-    _0x40[9] = getc(file), _0x40[10] = getc(file), _0x40[11] = getc(file);
-    fprint("| %03d=%02X | %02X %02X %02X                                        | MOV AX, %02X|%02X (h)|\n", offset += 2, offset, _0x40[9]&255, _0x40[10]&255, _0x40[11]&255, _0x40[10]&255, _0x40[11]&255);
-    _0x40[12] = getc(file), _0x40[13] = getc(file);
-    fprint("| %03d=%02X | %02X %02X                                           | INT %d # %02X (h)  |\n", offset += 3, offset, _0x40[12]&255, _0x40[13]&255, _0x40[13], _0x40[13]&255);
+    fprint("| %03d=%02X | %02X                                              | POP DS           |\n", offset += 1, offset, _0x40[1]);
+    
+    _0x40[2] = getc(file),
+    _0x40[3] = getc(file),
+    _0x40[4] = getc(file);
+    fprint("| %03d=%02X | %02X %02X %02X                                        | MOV DX, %02X|%02X (h)|\n", offset += 1, offset, _0x40[2], _0x40[3], _0x40[4], _0x40[3], _0x40[4]);
+    
+    _0x40[5] = getc(file),
+    _0x40[6] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | MOV AH, %02X (h)   |\n", offset += 3, offset, _0x40[5], _0x40[6], _0x40[6]);
+    
+    _0x40[7] = getc(file),
+    _0x40[8] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | INT %d # %02X (h)  |\n", offset += 2, offset, _0x40[7], _0x40[8], _0x40[8], _0x40[8]);
+    
+    _0x40[9] = getc(file),
+    _0x40[10] = getc(file),
+    _0x40[11] = getc(file);
+    fprint("| %03d=%02X | %02X %02X %02X                                        | MOV AX, %02X|%02X (h)|\n", offset += 2, offset, _0x40[9], _0x40[10], _0x40[11], _0x40[10], _0x40[11]);
+    
+    _0x40[12] = getc(file),
+    _0x40[13] = getc(file);
+    fprint("| %03d=%02X | %02X %02X                                           | INT %d # %02X (h)  |\n", offset += 3, offset, _0x40[12], _0x40[13], _0x40[13], _0x40[13]);
     print("|        |-------------------------------------------------|------------------|");
 
     for (int i = 13; ++i < 30;) _0x40[i] = getc(file);
@@ -165,7 +189,7 @@ int main(int argc, char *argv[])
     fprint("| ");
     for (int i = 45; ++i < 62;)
     {
-        if (_0x40[i] == 13 || _0x40[i] == 10) continue;
+        if (_0x40[i] == 0x0D || _0x40[i] == 0x0A) continue;
         fprint("%c", _0x40[i]);
     }
     print("    |");
@@ -175,55 +199,151 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                                 ___________                                 |");
     print("|--------------------------------/ NT HEADER \\--------------------------------|");
-    char signature[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'}; // PE\0\0
+    // Сигнатура PE
+    unsigned char signature[4+1] =
+    {
+        getc(file),
+        getc(file),
+        getc(file),
+        getc(file),
+        '\0'
+    };
     fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 2, offset,
-     signature[0]&255, signature[1]&255, signature[2]&255, signature[3]&255,
+     signature[0],
+     signature[1],
+     signature[2],
+     signature[3],
      signature
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                                _____________             |                  |");
     print("|-------------------------------/ FILE HEADER \\-------------------------------|");
-    char machine[2+1] = {getc(file), getc(file), '\0'}; // Архитектура
-    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset, machine[0]&255, machine[1]&255, machine);
-    char number_of_sections[2+1] = {getc(file), getc(file), '\0'}; // Количество секций
-    fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
-     number_of_sections[0]&255, number_of_sections[1]&255,
-     number_of_sections
+    // Архитектура
+    unsigned char machine[2+1] =
+    {
+        getc(file),
+        getc(file),
+        '\0'
+    };
+    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset,
+     machine[0],
+     machine[1],
+     machine
     );
-    char time_date_stamp[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'}; // Дата и время создания файла
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s             |\n", offset += 2, offset,
-     time_date_stamp[0]&255, time_date_stamp[1]&255, time_date_stamp[2]&255, time_date_stamp[3]&255,
-     time_date_stamp
+    // Количество секций
+    unsigned char number_of_sections[2+1] =
+    {
+        getc(file),
+        getc(file),
+        '\0'
+    };
+    fprint("| %03d=%02X | %02X %02X                                           | %c%c               |\n", offset += 2, offset,
+     number_of_sections[0],
+     number_of_sections[1],
+
+     number_of_sections[0],
+     number_of_sections[1]
     );
-    char pointer_to_symbol_table[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'}; // Таблица символов
+    // Дата и время создания файла
+    unsigned char time_date_stamp[4+1] =
+    {
+        getc(file),
+        getc(file),
+        getc(file),
+        getc(file),
+        '\0'
+    };
+    fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %c%c%c%c             |\n", offset += 2, offset,
+     time_date_stamp[0],
+     time_date_stamp[1],
+     time_date_stamp[2],
+     time_date_stamp[3],
+
+     (time_date_stamp[0] == 0x0D) ? ' ' : time_date_stamp[0],
+     (time_date_stamp[1] == 0x0D) ? ' ' : time_date_stamp[1],
+     (time_date_stamp[2] == 0x0D) ? ' ' : time_date_stamp[2],
+     (time_date_stamp[3] == 0x0D) ? ' ' : time_date_stamp[3]
+    );
+    // Таблица символов
+    unsigned char pointer_to_symbol_table[4+1] =
+    {
+        getc(file),
+        getc(file),
+        getc(file),
+        getc(file),
+        '\0'
+    };
     fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s                 |\n", offset += 4, offset,
-     pointer_to_symbol_table[0]&255, pointer_to_symbol_table[1]&255, pointer_to_symbol_table[2]&255, pointer_to_symbol_table[3]&255,
+     pointer_to_symbol_table[0],
+     pointer_to_symbol_table[1],
+     pointer_to_symbol_table[2],
+     pointer_to_symbol_table[3],
      pointer_to_symbol_table
     );
-    char number_of_symbols[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'}; // Количество символов
+    // Количество символов
+    unsigned char number_of_symbols[4+1] =
+    {
+        getc(file),
+        getc(file),
+        getc(file),
+        getc(file),
+        '\0'
+    };
     fprint("| %03d=%02X | %02X %02X %02X %02X                                     | %s               |\n", offset += 4, offset,
-     number_of_symbols[0]&255, number_of_symbols[1]&255, number_of_symbols[2]&255, number_of_symbols[3]&255,
+     number_of_symbols[0],
+     number_of_symbols[1],
+     number_of_symbols[2],
+     number_of_symbols[3],
      number_of_symbols
     );
-    char size_of_optional_header[2+1] = {getc(file), getc(file), '\0'}; // Размер следующего подзаголовка
+    // Размер следующего подзаголовка
+    unsigned char size_of_optional_header[2+1] =
+    {
+        getc(file),
+        getc(file),
+        '\0'
+    };
     fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 4, offset,
-     size_of_optional_header[0]&255, size_of_optional_header[1]&255,
+     size_of_optional_header[0],
+     size_of_optional_header[1],
      size_of_optional_header
     );
-    char characteristics[2+1] = {getc(file), getc(file), '\0'}; // Характеристики файла
+    // Характеристики файла
+    unsigned char characteristics[2+1] =
+    {
+        getc(file),
+        getc(file),
+        '\0'
+    };
     fprint("| %03d=%02X | %02X %02X                                           | %s                |\n", offset += 2, offset,
-     characteristics[0]&255, characteristics[1]&255,
+     characteristics[0],
+     characteristics[1],
      characteristics
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                              _________________           |                  |");
     print("|-----------------------------/ OPTIONAL HEADER \\-----------------------------|");
-    char magic[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset, magic[0]&255, magic[1]&255, magic);
-    char major_linker_version = getc(file);
-    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 2, offset, major_linker_version&255, major_linker_version);
-    char minor_linker_version = getc(file);
-    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 1, offset, minor_linker_version&255, minor_linker_version);
+    unsigned char magic[2+1] =
+    {
+        getc(file),
+        getc(file),
+        '\0'
+    };
+    fprint("| %03d=%02X | %02X %02X                                           | %s               |\n", offset += 2, offset,
+     magic[0],
+     magic[1],
+     magic
+    );
+    unsigned char major_linker_version = getc(file);
+    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 2, offset,
+     major_linker_version,
+     major_linker_version
+    );
+    unsigned char minor_linker_version = getc(file);
+    fprint("| %03d=%02X | %02X                                              | %c                |\n", offset += 1, offset,
+     minor_linker_version,
+     minor_linker_version
+    );
     print("|-----------------------------------------------------------------------------|");
     return 0;
 }
