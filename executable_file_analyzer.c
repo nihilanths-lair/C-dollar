@@ -107,10 +107,10 @@ int main(int argc, char *argv[])
     );
     unsigned char e_res[4*2]/*8*/ =
     {
-        getc(file), getc(file), //  1  00 00
-        getc(file), getc(file), //  2  00 00
-        getc(file), getc(file), //  3  00 00
-        getc(file), getc(file), //  4  00 00
+        getc(file), getc(file), // 1  00 00
+        getc(file), getc(file), // 2  00 00
+        getc(file), getc(file), // 3  00 00
+        getc(file), getc(file), // 4  00 00
     };
     unsigned short short_e_res[4] = {0};
     // little-endian;
