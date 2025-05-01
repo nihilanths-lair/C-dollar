@@ -130,18 +130,27 @@ int main(int argc, char *argv[])
     );
     unsigned char e_res[4*2]/*8*/ =
     {
-        getc(file), getc(file),
-        getc(file), getc(file),
-        getc(file), getc(file),
-        getc(file), getc(file),
+        getc(file), getc(file), //  1  00 00
+        getc(file), getc(file), //  2  00 00
+        getc(file), getc(file), //  3  00 00
+        getc(file), getc(file), //  4  00 00
     };
-    unsigned short short_e_res = e_res[0] | (e_res[1] << 8); // little-endian;
+    unsigned short short_e_res[4] = {0};
+    // little-endian;
+    short_e_res[0] = e_res[0] | (e_res[1] << 8);
+    short_e_res[1] = e_res[2] | (e_res[3] << 8);
+    short_e_res[2] = e_res[4] | (e_res[5] << 8);
+    short_e_res[3] = e_res[6] | (e_res[7] << 8);
     print("|-----------------------------------------------------------------------------|");
-    fprint("| %03d=%02X | 8 | %02X %02X %02X %02X %02X %02X %02X %02X | %02X %02X %02X %02X %02X %02X %02X %02X = %d\t      |\n",
+    fprint("| %03d=%02X | 4x2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+              | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+              | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+              | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset,
-     e_res[0], e_res[1], e_res[2], e_res[3], e_res[4], e_res[5], e_res[6], e_res[7],
-     e_res[7], e_res[6], e_res[5], e_res[4], e_res[3], e_res[2], e_res[1], e_res[0],
-     short_e_res
+     e_res[0], e_res[1], e_res[1], e_res[0], short_e_res[0],
+     e_res[2], e_res[3], e_res[3], e_res[2], short_e_res[1],
+     e_res[4], e_res[5], e_res[5], e_res[4], short_e_res[2],
+     e_res[6], e_res[7], e_res[7], e_res[6], short_e_res[3]
     );
     print("|-----------------------------------------------------------------------------|");
     unsigned char e_oemid[2] = {getc(file), getc(file)};
@@ -167,7 +176,7 @@ int main(int argc, char *argv[])
         getc(file), getc(file), //  9  00 00
         getc(file), getc(file)  // 10  00 00
     };
-    unsigned short short_e_res2[11] = {0};
+    unsigned short short_e_res2[10] = {0};
     // little-endian;
     short_e_res2[0] = e_res2[0] | (e_res2[1] << 8);
     short_e_res2[1] = e_res2[2] | (e_res2[3] << 8);
