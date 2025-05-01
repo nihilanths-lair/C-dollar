@@ -136,23 +136,25 @@ int main(int argc, char *argv[])
         getc(file), getc(file),
     };
     unsigned short short_e_res = e_res[0] | (e_res[1] << 8); // little-endian;
+    print("|-----------------------------------------------------------------------------|");
     fprint("| %03d=%02X | 8 | %02X %02X %02X %02X %02X %02X %02X %02X | %02X %02X %02X %02X %02X %02X %02X %02X = %d\t      |\n",
      offset += 2, offset,
      e_res[0], e_res[1], e_res[2], e_res[3], e_res[4], e_res[5], e_res[6], e_res[7],
      e_res[7], e_res[6], e_res[5], e_res[4], e_res[3], e_res[2], e_res[1], e_res[0],
      short_e_res
     );
+    print("|-----------------------------------------------------------------------------|");
     unsigned char e_oemid[2] = {getc(file), getc(file)};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 8, offset,
-     e_oemid[0], e_oemid[1],
-     e_oemid
+    unsigned short short_e_oemid = e_oemid[0] | (e_oemid[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 8, offset, e_oemid[0], e_oemid[1], e_oemid[1], e_oemid[0], short_e_oemid
     );
     unsigned char e_oeminfo[2] = {getc(file), getc(file)};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_oeminfo[0], e_oeminfo[1],
-     e_oeminfo
+    unsigned short short_e_oeminfo = e_oeminfo[0] | (e_oeminfo[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_oeminfo[0], e_oeminfo[1], e_oeminfo[1], e_oeminfo[0], short_e_oeminfo
     );
-    unsigned char e_res2_10_[10*2+1]/*20*/ =
+    unsigned char e_res2[10*2]/*20*/ =
     {
         getc(file), getc(file), //  1  00 00
         getc(file), getc(file), //  2  00 00
@@ -163,38 +165,52 @@ int main(int argc, char *argv[])
         getc(file), getc(file), //  7  00 00
         getc(file), getc(file), //  8  00 00
         getc(file), getc(file), //  9  00 00
-        getc(file), getc(file), // 10  00 00
-        '\0'
+        getc(file), getc(file)  // 10  00 00
     };
-    fprint("| %03d=%02X | %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X |                     |\n|\
-        | %02X %02X %02X %02X %02X                               | %s                    |\n", offset += 2, offset,
-     e_res2_10_ [0], e_res2_10_ [1], //  1  00 00
-     e_res2_10_ [2], e_res2_10_ [3], //  2  00 00
-     e_res2_10_ [4], e_res2_10_ [5], //  3  00 00
-     e_res2_10_ [6], e_res2_10_ [7], //  4  00 00
-     e_res2_10_ [8], e_res2_10_ [9], //  5  00 00
-     e_res2_10_[10], e_res2_10_[11], //  6  00 00
-     e_res2_10_[12], e_res2_10_[13], //  7  00 00
-     e_res2_10_[14], e_res2_10_[15], //  8  00 00
-     e_res2_10_[16], e_res2_10_[17], //  9  00 00
-     e_res2_10_[18], e_res2_10_[19], // 10  00 00
-     e_res2_10_
+    unsigned short short_e_res2[11] = {0};
+    // little-endian;
+    short_e_res2[0] = e_res2[0] | (e_res2[1] << 8);
+    short_e_res2[1] = e_res2[2] | (e_res2[3] << 8);
+    short_e_res2[2] = e_res2[4] | (e_res2[5] << 8);
+    short_e_res2[3] = e_res2[6] | (e_res2[7] << 8);
+    short_e_res2[4] = e_res2[8] | (e_res2[9] << 8);
+    short_e_res2[5] = e_res2[10] | (e_res2[11] << 8);
+    short_e_res2[6] = e_res2[12] | (e_res2[13] << 8);
+    short_e_res2[7] = e_res2[14] | (e_res2[15] << 8);
+    short_e_res2[8] = e_res2[16] | (e_res2[17] << 8);
+    short_e_res2[9] = e_res2[18] | (e_res2[19] << 8);
+    print("|-----------------------------------------------------------------------------|");
+    fprint("| %03d=%02X | 10x2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n|\
+               | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset,
+     e_res2[0], e_res2[1], e_res2[1], e_res2[0], short_e_res2[0],
+     e_res2[2], e_res2[3], e_res2[3], e_res2[2], short_e_res2[1],
+     e_res2[4], e_res2[5], e_res2[5], e_res2[4], short_e_res2[2],
+     e_res2[6], e_res2[7], e_res2[7], e_res2[6], short_e_res2[3],
+     e_res2[8], e_res2[9], e_res2[9], e_res2[8], short_e_res2[4],
+     e_res2[10], e_res2[11], e_res2[11], e_res2[10], short_e_res2[5],
+     e_res2[12], e_res2[13], e_res2[13], e_res2[12], short_e_res2[6],
+     e_res2[14], e_res2[15], e_res2[15], e_res2[14], short_e_res2[7],
+     e_res2[16], e_res2[17], e_res2[17], e_res2[16], short_e_res2[8],
+     e_res2[18], e_res2[19], e_res2[19], e_res2[18], short_e_res2[9]
     );
+    print("|-----------------------------------------------------------------------------|");
     // Смещение PE-заголовка от начала
-    unsigned char e_lfanew[4+1] =
-    {
-        getc(file),
-        getc(file),
-        getc(file),
-        getc(file),
-        '\0'
-    };
-    fprint("| %03d=%02X | %02X %02X %02X %02X                                  | %s                   |\n", offset += 20, offset,
-     e_lfanew[0],
-     e_lfanew[1],
-     e_lfanew[2],
-     e_lfanew[3],
-     e_lfanew
+    unsigned char e_lfanew[4] = {getc(file), getc(file), getc(file), getc(file)};
+    unsigned short short_e_lfanew = e_lfanew[0] | (e_lfanew[1] << 8);
+    fprint("| %03d=%02X | 4 | %02X %02X %02X %02X | %02X %02X %02X %02X = %d\t\t\t\t      |\n",
+     offset += 20, offset,
+     e_lfanew[0], e_lfanew[1], e_lfanew[2], e_lfanew[3],
+     e_lfanew[3], e_lfanew[2], e_lfanew[1], e_lfanew[0],
+     short_e_lfanew
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                                 __________                                  |");
