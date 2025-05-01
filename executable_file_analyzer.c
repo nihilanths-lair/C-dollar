@@ -128,45 +128,28 @@ int main(int argc, char *argv[])
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_ovno[0], e_ovno[1], e_ovno[1], e_ovno[0], short_e_ovno
     );
-    unsigned char e_res_4_[4*2+1]/*8*/ =
+    unsigned char e_res[4*2]/*8*/ =
     {
         getc(file), getc(file),
         getc(file), getc(file),
         getc(file), getc(file),
         getc(file), getc(file),
-        '\0'
     };
-    fprint("| %03d=%02X | %02X %02X %02X %02X %02X %02X %02X %02X                      | %s                    |\n", offset += 2, offset,
-     e_res_4_[0],
-     e_res_4_[1],
-     e_res_4_[2],
-     e_res_4_[3],
-     e_res_4_[4],
-     e_res_4_[5],
-     e_res_4_[6],
-     e_res_4_[7],
-     e_res_4_
+    unsigned short short_e_res = e_res[0] | (e_res[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 8 | %02X %02X %02X %02X %02X %02X %02X %02X | %02X %02X %02X %02X %02X %02X %02X %02X = %d\t      |\n",
+     offset += 2, offset,
+     e_res[0], e_res[1], e_res[2], e_res[3], e_res[4], e_res[5], e_res[6], e_res[7],
+     e_res[7], e_res[6], e_res[5], e_res[4], e_res[3], e_res[2], e_res[1], e_res[0],
+     short_e_res
     );
-    unsigned char e_oemid[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
+    unsigned char e_oemid[2] = {getc(file), getc(file)};
     fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 8, offset,
-     e_oemid[0],
-     e_oemid[1],
+     e_oemid[0], e_oemid[1],
      e_oemid
     );
-    unsigned char e_oeminfo[2+1] =
-    {
-        getc(file),
-        getc(file),
-        '\0'
-    };
+    unsigned char e_oeminfo[2] = {getc(file), getc(file)};
     fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_oeminfo[0],
-     e_oeminfo[1],
+     e_oeminfo[0], e_oeminfo[1],
      e_oeminfo
     );
     unsigned char e_res2_10_[10*2+1]/*20*/ =
