@@ -34,96 +34,99 @@ int main(int argc, char *argv[])
     FILE *file = fopen(argv[1], "rb");
     if (file == NULL) { fprint(" #error -1\n"); return -1; }
     int offset = 0;
-    print("                                 ____________");
-    print("\14-------------------------------/ DOS HEADER \\--------------------------------\14");
-    unsigned char e_magic[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X | %02Xh,%02Xh = %03d,%03d                    | %s                  |\n", offset, offset,
-     e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic
+    print("");
+    print("\14-----------------------------------------------------------------------------\14");
+    print("|            |     Da\03ta                                                      |");
+    print("|            |   on  |   in                                                   |");
+    print("|            |  disk | memory                                                 |");
+    print("|-----------------------------------------------------------------------------|");
+    print("|                                ____________                                 |");
+    print("|-------------------------------/ DOS HEADER \\--------------------------------|");
+    unsigned char e_magic[2] = {0};
+    fread(&e_magic, sizeof (e_magic), 1, file);
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = \"%c%c\"\t\t\t\t\t      |\n", offset, offset,
+        e_magic[0],e_magic[1],  e_magic[1],e_magic[0],  e_magic[0],e_magic[1]
     );
-    unsigned char e_cblp[2+1] = {0};
-    e_cblp[1] = getc(file), e_cblp[0] = getc(file);
-    unsigned short short_e_cblp = e_cblp[1] | (e_cblp[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
-     e_cblp[1], e_cblp[0], short_e_cblp, short_e_cblp
+    /*
+    unsigned short e_magic = 0;
+    fread(&e_magic, sizeof (e_magic), 1, file);
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %c%c\t\t\t\t\t      |\n", offset, offset,
+     e_magic&0xFF, (e_magic>>8)&0xFF,
+     (e_magic>>8)&0xFF, e_magic&0xFF,
+     e_magic&0xFF, (e_magic>>8)&0xFF
+    );
+    */
+    unsigned char e_cblp[2] = {getc(file), getc(file)};
+    unsigned short short_e_cblp = e_cblp[0] | (e_cblp[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_cblp[0], e_cblp[1], e_cblp[1], e_cblp[0], short_e_cblp
     );
     // Длина образа (страниц)
-    unsigned char e_cp[2+1] = {0};
-    e_cp[1] = getc(file), e_cp[0] = getc(file);
-    unsigned short short_e_cp = e_cp[1] | (e_cp[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
-     e_cp[1], e_cp[0], short_e_cp, short_e_cp
+    unsigned char e_cp[2] = {getc(file), getc(file)};
+    unsigned short short_e_cp = e_cp[0] | (e_cp[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_cp[0], e_cp[1], e_cp[1], e_cp[0], short_e_cp
     );
-    unsigned char e_crlc[2+1] = {0};
-    e_crlc[1]= getc(file), e_crlc[0] = getc(file);
-    unsigned short short_e_crlc = e_crlc[1] | (e_crlc[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
-     e_crlc[1], e_crlc[0], short_e_crlc, short_e_crlc
+    unsigned char e_crlc[2] = {getc(file), getc(file)};
+    unsigned short short_e_crlc = e_crlc[0] | (e_crlc[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_crlc[0], e_crlc[1], e_crlc[1], e_crlc[0], short_e_crlc
     );
     // Длина заголовка в параграфах
-    unsigned char e_cparhdr[2+1] = {0};
-    e_cparhdr[1] = getc(file), e_cparhdr[0] = getc(file);
-    unsigned short short_e_cparhdr = e_cparhdr[1] | (e_cparhdr[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
-     e_cparhdr[1], e_cparhdr[0], short_e_cparhdr, short_e_cparhdr
+    unsigned char e_cparhdr[2] = {getc(file), getc(file)};
+    unsigned short short_e_cparhdr = e_cparhdr[0] | (e_cparhdr[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_cparhdr[0], e_cparhdr[1], e_cparhdr[1], e_cparhdr[0], short_e_cparhdr
     );
     // Минимум требуемой памяти
-    unsigned char e_minalloc[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_minalloc[0],
-     e_minalloc[1],
-     e_minalloc
+    unsigned char e_minalloc[2] = {getc(file), getc(file)};
+    unsigned short short_e_minalloc = e_minalloc[0] | (e_minalloc[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_minalloc[0], e_minalloc[1], e_minalloc[1], e_minalloc[0], short_e_minalloc
     );
     // Максимум требуемой памяти
-    unsigned char e_maxalloc[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                  |\n", offset += 2, offset,
-     e_maxalloc[0],
-     e_maxalloc[1],
-     e_maxalloc
+    unsigned char e_maxalloc[2] = {getc(file), getc(file)};
+    unsigned short short_e_maxalloc = e_maxalloc[0] | (e_maxalloc[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_maxalloc[0], e_maxalloc[1], e_maxalloc[1], e_maxalloc[0], short_e_maxalloc
     );
     // Сегмент стека
-    unsigned char e_ss[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_ss[0],
-     e_ss[1],
-     e_ss
+    unsigned char e_ss[2] = {getc(file), getc(file)};
+    unsigned short short_e_ss = e_ss[0] | (e_ss[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_ss[0], e_ss[1], e_ss[1], e_ss[0], short_e_ss
     );
     // Указатель стека
-    unsigned char e_sp[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                   |\n", offset += 2, offset,
-     e_sp[0],
-     e_sp[1],
-     e_sp
+    unsigned char e_sp[2] = {getc(file), getc(file)};
+    unsigned short short_e_sp = e_sp[0] | (e_sp[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_sp[0], e_sp[1], e_sp[1], e_sp[0], short_e_sp
     );
-    unsigned char e_csum[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_csum[0],
-     e_csum[1],
-     e_csum
+    unsigned char e_csum[2] = {getc(file), getc(file)};
+    unsigned short short_e_csum = e_csum[0] | (e_csum[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_csum[0], e_csum[1], e_csum[1], e_csum[0], short_e_csum
     );
     // Указатель команд
-    unsigned char e_ip[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_ip[0],
-     e_ip[1],
-     e_ip
+    unsigned char e_ip[2] = {getc(file), getc(file)};
+    unsigned short short_e_ip = e_ip[0] | (e_ip[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_ip[0], e_ip[1], e_ip[1], e_ip[0], short_e_ip
     );
-    unsigned char e_cs[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_cs[0],
-     e_cs[1],
-     e_cs
+    unsigned char e_cs[2] = {getc(file), getc(file)};
+    unsigned short short_e_cs = e_cs[0] | (e_cs[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_cs[0], e_cs[1], e_cs[1], e_cs[0], short_e_cs
     );
-    unsigned char e_lfarlc[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                   |\n", offset += 2, offset,
-     e_lfarlc[0],
-     e_lfarlc[1],
-     e_lfarlc
+    unsigned char e_lfarlc[2] = {getc(file), getc(file)};
+    unsigned short short_e_lfarlc = e_lfarlc[0] | (e_lfarlc[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_lfarlc[0], e_lfarlc[1], e_lfarlc[1], e_lfarlc[0], short_e_lfarlc
     );
-    unsigned char e_ovno[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_ovno[0],
-     e_ovno[1],
-     e_ovno
+    unsigned char e_ovno[2] = {getc(file), getc(file)};
+    unsigned short short_e_ovno = e_ovno[0] | (e_ovno[1] << 8); // little-endian;
+    fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
+     offset += 2, offset, e_ovno[0], e_ovno[1], e_ovno[1], e_ovno[0], short_e_ovno
     );
     unsigned char e_res_4_[4*2+1]/*8*/ =
     {
