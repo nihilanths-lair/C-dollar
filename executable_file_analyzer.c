@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     if (file == NULL) { fprint(" #error -1\n"); return -1; }
     int offset = 0;
     print("                                 ____________");
-    print("|-------------------------------/ DOS HEADER \\--------------------------------|");
+    print("\14-------------------------------/ DOS HEADER \\--------------------------------\14");
     unsigned char e_magic[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | %02X %02X | %02Xh,%02Xh = %03d,%03d                    | %s                  |\n", offset, offset,
      e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic
@@ -43,28 +43,28 @@ int main(int argc, char *argv[])
     unsigned char e_cblp[2+1] = {0};
     e_cblp[1] = getc(file), e_cblp[0] = getc(file);
     unsigned short short_e_cblp = e_cblp[1] | (e_cblp[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            |                     |\n", offset += 2, offset,
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
      e_cblp[1], e_cblp[0], short_e_cblp, short_e_cblp
     );
     // Длина образа (страниц)
     unsigned char e_cp[2+1] = {0};
     e_cp[1] = getc(file), e_cp[0] = getc(file);
     unsigned short short_e_cp = e_cp[1] | (e_cp[0] << 8); // little-endian;
-    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            |                     |\n", offset += 2, offset,
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
      e_cp[1], e_cp[0], short_e_cp, short_e_cp
     );
-    unsigned char e_crlc[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
-     e_crlc[0],
-     e_crlc[1],
-     e_crlc
+    unsigned char e_crlc[2+1] = {0};
+    e_crlc[1]= getc(file), e_crlc[0] = getc(file);
+    unsigned short short_e_crlc = e_crlc[1] | (e_crlc[0] << 8); // little-endian;
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
+     e_crlc[1], e_crlc[0], short_e_crlc, short_e_crlc
     );
     // Длина заголовка в параграфах
-    unsigned char e_cparhdr[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                   |\n", offset += 2, offset,
-     e_cparhdr[0],
-     e_cparhdr[1],
-     e_cparhdr
+    unsigned char e_cparhdr[2+1] = {0};
+    e_cparhdr[1] = getc(file), e_cparhdr[0] = getc(file);
+    unsigned short short_e_cparhdr = e_cparhdr[1] | (e_cparhdr[0] << 8); // little-endian;
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            | \22\22                  |\n", offset += 2, offset,
+     e_cparhdr[1], e_cparhdr[0], short_e_cparhdr, short_e_cparhdr
     );
     // Минимум требуемой памяти
     unsigned char e_minalloc[2+1] = {getc(file), getc(file), '\0'};
