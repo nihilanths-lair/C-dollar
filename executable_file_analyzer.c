@@ -3,30 +3,7 @@
 
 #define fprint printf
 #define print puts
-/*char *hex_to_str(const char *str)
-{
-    char new_str[(16*2)+1];
-    for (int i = -1; str[++i] != '\0';) new_str[i] = str[i];
-    return new_str;
-}*/
-//#include <stdlib.h>
-//#define strval atoi
-short strval(const char *str, const char *fmt)
-{
-    short val;
-    sscanf(str, fmt, &val);
-    return val;
-}
-short hex_to_short(const unsigned char *str)
-{
-    short val;
-    if (str[0] == '\0')
-    {
-        return str[1];
-    }
-    sscanf(str, "%d", &val);
-    return val;
-}
+
 int main(int argc, char *argv[])
 {
     fprint("\n argc = %d\n", argc);
