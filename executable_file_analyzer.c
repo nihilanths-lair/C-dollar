@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <locale.h>
+
 #define fprint printf
 #define print puts
 /*char *hex_to_str(const char *str)
@@ -7,6 +9,24 @@
     for (int i = -1; str[++i] != '\0';) new_str[i] = str[i];
     return new_str;
 }*/
+//#include <stdlib.h>
+//#define strval atoi
+short strval(const char *str, const char *fmt)
+{
+    short val;
+    sscanf(str, fmt, &val);
+    return val;
+}
+short hex_to_short(const unsigned char *str)
+{
+    short val;
+    if (str[0] == '\0')
+    {
+        return str[1];
+    }
+    sscanf(str, "%d", &val);
+    return val;
+}
 int main(int argc, char *argv[])
 {
     fprint("\n argc = %d\n", argc);
@@ -17,23 +37,21 @@ int main(int argc, char *argv[])
     print("                                 ____________");
     print("|-------------------------------/ DOS HEADER \\--------------------------------|");
     unsigned char e_magic[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                  |\n", offset, offset,
-     e_magic[0],
-     e_magic[1],
-     e_magic
+    fprint("| %03d=%02X | %02X %02X | %02Xh,%02Xh = %03d,%03d                    | %s                  |\n", offset, offset,
+     e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic[0], e_magic[1], e_magic
     );
-    unsigned char e_cblp[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                   |\n", offset += 2, offset,
-     e_cblp[0],
-     e_cblp[1],
-     e_cblp
+    unsigned char e_cblp[2+1] = {0};
+    e_cblp[1] = getc(file), e_cblp[0] = getc(file);
+    unsigned short short_e_cblp = e_cblp[1] | (e_cblp[0] << 8); // little-endian;
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            |                     |\n", offset += 2, offset,
+     e_cblp[1], e_cblp[0], short_e_cblp, short_e_cblp
     );
     // Длина образа (страниц)
-    unsigned char e_cp[2+1] = {getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | %02X %02X                                        | %s                   |\n", offset += 2, offset,
-     e_cp[0],
-     e_cp[1],
-     e_cp
+    unsigned char e_cp[2+1] = {0};
+    e_cp[1] = getc(file), e_cp[0] = getc(file);
+    unsigned short short_e_cp = e_cp[1] | (e_cp[0] << 8); // little-endian;
+    fprint("| %03d=%02X | %02X %02X | %02Xh = %03d                            |                     |\n", offset += 2, offset,
+     e_cp[1], e_cp[0], short_e_cp, short_e_cp
     );
     unsigned char e_crlc[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | %02X %02X                                        | %s                    |\n", offset += 2, offset,
@@ -269,7 +287,7 @@ int main(int argc, char *argv[])
     // Архитектура
     unsigned char machine[2+1] = {getc(file), getc(file), '\0'};
     print("|        |-------------------------------------------------|                  |");
-    fprint("| %03d=%02X | Machine: %02X %02X                                  | %s               |\n", offset += 2, offset,
+    fprint("| %03d=%02X | Machine: %02X %02X                                  | %s               |\n", offset += 4, offset,
      machine[0], machine[1],
      machine
     );
@@ -617,5 +635,18 @@ int main(int argc, char *argv[])
     print("|--------------------------------/ SECTIONS \\---------------------------------|");
     print("|-----------------------------------------------------------------------------|");
     print("|_____________________________________________________________________________|");
-    return 0;
+    
+    setlocale(0, "");
+    void *labels[] = {&&label0, &&label1, &&label2};
+    int i = 2;
+    goto *labels[i]; // переход по вычисляемой метке
+    label0:
+     printf("Это метка 0\n");
+     return 0;
+    label1:
+     printf("Это метка 1\n");
+     return 0;
+    label2:
+     printf("Это метка 2\n");
+     return 0;
 }
