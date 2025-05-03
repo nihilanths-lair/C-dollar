@@ -199,13 +199,16 @@ int main(int argc, char *argv[])
      short_e_lfanew
     );
     print("|-----------------------------------------------------------------------------|");
+    offset += 4; // 40h - 64
+    fprint("| %03d=%02X | ################################################################## |\n", offset, offset);
+    print("|-----------------------------------------------------------------------------|");
     print("|                                 __________                                  |");
     print("|--------------------------------/ DOS STUB \\---------------------------------|");
-    fseek(file, 0x40, SEEK_SET);
+    //fseek(file, 0x40, SEEK_SET);
     unsigned char _0x40[80+1] = {0}; // _0x40[80] = '\0';
 
     _0x40[0] = getc(file);
-    fprint("| %03d=%02X | %02X                                              | PUSH CS          |\n", offset += 4, offset, _0x40[0]);
+    fprint("| %03d=%02X | %02X                                              | PUSH CS          |\n", offset, offset, _0x40[0]);
     
     _0x40[1] = getc(file);
     fprint("| %03d=%02X | %02X                                              | POP DS           |\n", offset += 1, offset, _0x40[1]);
@@ -264,10 +267,12 @@ int main(int argc, char *argv[])
     print("|                                 ___________                                 |");
     print("|--------------------------------/ NT HEADER \\--------------------------------|");
     // Сигнатура PE
-    unsigned char signature[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
-    fprint("| %03d=%02X | Signature: %02X %02X %02X %02X                          | %s               |\n", offset += 2, offset,
+    unsigned char signature[4] = {getc(file), getc(file), getc(file), getc(file)};
+    //unsigned short short_signature = signature[0] | (signature[1] << 8);
+    fprint("| %03d=%02X | 4 | Signature | %02X %02X %02X %02X | %02X %02X %02X %02X | \"%c%c%s%s\"\t\t      |\n", offset += 2, offset,
      signature[0], signature[1], signature[2], signature[3],
-     signature
+     signature[0], signature[1], signature[2], signature[3],
+     signature[0], signature[1], (signature[2] == '\0') ? "\\0" : "", (signature[3] == '\0') ? "\\0" : ""
     );
     print("|-----------------------------------------------------------------------------|");
     print("|                          _________________________                          |");
