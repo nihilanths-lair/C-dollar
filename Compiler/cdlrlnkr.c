@@ -1,6 +1,6 @@
 /*/
- *    Компиляция: gcc -o cdlrlnkr.exe cdlrlnkr.c
- *    Использование: cdlrlnkr.exe hello.bin hello.exe
+ *    РљРѕРјРїРёР»СЏС†РёСЏ: gcc -o cdlrlnkr.exe cdlrlnkr.c
+ *    РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ: cdlrlnkr.exe hello.bin hello.exe
 /*/
 
 #include <windows.h>
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 
     fwrite(&pe, 1, sizeof (pe), out);
 
-    BYTE pad[512] = {0}; // для выравнивания
+    BYTE pad[512] = {0}; // РґР»СЏ РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ
     fwrite(pad, 1, 0x200 - sizeof (pe), out);
 
     fwrite(code, 1, size, out);
@@ -87,6 +87,6 @@ int main(int argc, char* argv[])
     fclose(out);
     free(code);
 
-    printf("Готово! %s создан.\n", argv[2]);
+    printf("Р“РѕС‚РѕРІРѕ! %s СЃРѕР·РґР°РЅ.\n", argv[2]);
     return 0;
 }
