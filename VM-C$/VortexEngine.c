@@ -1,5 +1,5 @@
 #include <locale.h>
-#include "VMWrapper.h"
+#include "VM-API.h"
 
 int main()
 {
