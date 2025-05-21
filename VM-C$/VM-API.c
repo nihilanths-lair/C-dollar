@@ -13,13 +13,13 @@ int VM_Init()
     hVM = LoadLibraryA("VM-C$.dll");
     if (!hVM)
     {
-        puts("Не удалось загрузить VM-C$.");
+        puts("РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ VM-C$.");
         return 0;
     }
     printMessage = (PrintMessageFunc) GetProcAddress(hVM, "PrintMessage");
     if (!printMessage)
     {
-        printf("Не удалось найти функцию PrintMessage\n");
+        printf("РќРµ СѓРґР°Р»РѕСЃСЊ РЅР°Р№С‚Рё С„СѓРЅРєС†РёСЋ PrintMessage\n");
         FreeLibrary(hVM);
         hVM = NULL;
         return 0;
@@ -38,5 +38,5 @@ void VM_Cleanup(void)
 void VM_PrintMessage(void)
 {
     if (printMessage) printMessage();
-    else printf("VM не инициализирована.\n");
+    else printf("VM РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°.\n");
 }
