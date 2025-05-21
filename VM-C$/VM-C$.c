@@ -4,5 +4,5 @@
 
 __declspec(dllexport)
 void PrintMessage() {
-    printf("Ты меня вызвал в EXE из под DLL.\n");
+    printf("РўС‹ РјРµРЅСЏ РІС‹Р·РІР°Р» РІ EXE РёР· РїРѕРґ DLL.\n");
 }
