@@ -8,12 +8,12 @@ typedef void (*PrintMessageFunc)();
 static HMODULE hVM = NULL;
 static PrintMessageFunc printMessage = NULL;
 
-int VM_Init(const char* dllPath)
+int VM_Init()
 {
-    hVM = LoadLibraryA(dllPath);
+    hVM = LoadLibraryA("VM-C$.dll");
     if (!hVM)
     {
-        printf("Не удалось загрузить DLL: %s\n", dllPath);
+        puts("Не удалось загрузить VM-C$.");
         return 0;
     }
     printMessage = (PrintMessageFunc) GetProcAddress(hVM, "PrintMessage");

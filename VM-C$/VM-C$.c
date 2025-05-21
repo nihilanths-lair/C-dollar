@@ -1,4 +1,4 @@
-// vm-c$.c
+// VM-C$.c
 #include <stdio.h>
 #include <windows.h>
 

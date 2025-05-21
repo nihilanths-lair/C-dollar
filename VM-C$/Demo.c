@@ -19,7 +19,7 @@
 int main()
 {
     setlocale(0, "");
-    if (!VM_Init("VM-C$.dll")) return 1;
+    if (!VM_Init()) return 1;
     VM_PrintMessage();
     VM_Cleanup();
     return 0;
