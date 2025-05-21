@@ -1,6 +1,6 @@
 /*/
  *    Компиляция: gcc -o cdlrlnkr.exe cdlrlnkr.c
- *    Использование: cdlrlnkr.exe hello.bin hello.exe
+ *    Использование: cdlrlnkr.exe main.bin main.exe
 /*/
 
 #include <windows.h>
