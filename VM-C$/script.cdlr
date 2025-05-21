@@ -1,2 +1,2 @@
 ;; Исходный код C$ -> [Компилятор C$] = Исходный код ASM VM-C$ -> [ASM VM-C$] = Байт-код C$ <- Интерпретатор VM-C$
-;; Source code C$ -> [Compiler C$] = Source code ASM VM-C$ -> [ASM VM-C$] = Byte-code C$ <- Interpreter VM-C$
+;;  Source code C$ ->  [Compiler C$]  =  Source code ASM VM-C$ -> [ASM VM-C$] = Bytecode C$ <- Interpreter VM-C$
