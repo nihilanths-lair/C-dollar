@@ -2,11 +2,9 @@
 
 int main()
 {
-    vmcs_test();
-    //system("pause");
-    vmcs_ln();
-    vmcs_ln();
-    vmcs_system("pause");
-    //vmcs_execute_command();
+    //vmcs_execute_command(argv[1]);
+    vmcs_start();
+    printf("\n");
+    system("pause");
     return 0;
 }
