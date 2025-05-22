@@ -2,7 +2,11 @@
 
 int main()
 {
-    test();
-    system("pause");
+    vmcs_test();
+    //system("pause");
+    vmcs_ln();
+    vmcs_ln();
+    vmcs_system("pause");
+    //vmcs_execute_command();
     return 0;
 }
