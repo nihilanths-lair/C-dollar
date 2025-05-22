@@ -1,2 +1,2 @@
-Virtual Machine API Functions
+Virtual Machine API Functions<br>
 Функции API виртуальной машины
