@@ -1,4 +1,4 @@
-```Virtual machine (VM) application programming interface (API) functions```<br>
-```Функции интерфейса прикладного программирования (ИПП) виртуальной машины (ВМ)```
+```Virtual machine (VM) application programming interface (API) functions<br>
+Функции интерфейса прикладного программирования (ИПП) виртуальной машины (ВМ)```
 
 ```vmcs_test();```
