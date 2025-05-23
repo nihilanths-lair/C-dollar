@@ -6,15 +6,15 @@ int main()
     void *ptr_label[] = {&&_1, &&_2, &&_3};
     for (char i = 0; i < 3; i++)
     {
-        goto *ptr_label[i]; // аналог *(ptr_label+i)
+        goto *ptr_label[i]; // Р°РЅР°Р»РѕРі *(ptr_label+i)
         _1:
-        puts("Я попал в метку 1.");
+        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 1.");
         continue;
         _2:
-        puts("Я попал в метку 2.");
+        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 2.");
         continue;
         _3:
-        puts("Я попал в метку 3.");
+        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 3.");
         continue;
     }
     return 0;
