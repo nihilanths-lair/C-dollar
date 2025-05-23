@@ -7,7 +7,9 @@
 #include <stdbool.h> // Для использования логических типов: false/true.
 
 char bytecode[] = {0x00, 0x00, 0x00, 0x01};
+
 short ip = 0x0000;
+short gpr = 0x0000; // general purpose register / регистр общего назначения
 
 void Start_vCPU()
 {
