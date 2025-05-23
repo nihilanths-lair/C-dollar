@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_cblp[0], e_cblp[1], e_cblp[1], e_cblp[0], short_e_cblp
     );
-    // Длина образа (страниц)
+    // Г„Г«ГЁГ­Г  Г®ГЎГ°Г Г§Г  (Г±ГІГ°Г Г­ГЁГ¶)
     unsigned char e_cp[2] = {getc(file), getc(file)};
     unsigned short short_e_cp = e_cp[0] | (e_cp[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
@@ -49,31 +49,31 @@ int main(int argc, char *argv[])
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_crlc[0], e_crlc[1], e_crlc[1], e_crlc[0], short_e_crlc
     );
-    // Длина заголовка в параграфах
+    // Г„Г«ГЁГ­Г  Г§Г ГЈГ®Г«Г®ГўГЄГ  Гў ГЇГ Г°Г ГЈГ°Г ГґГ Гµ
     unsigned char e_cparhdr[2] = {getc(file), getc(file)};
     unsigned short short_e_cparhdr = e_cparhdr[0] | (e_cparhdr[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_cparhdr[0], e_cparhdr[1], e_cparhdr[1], e_cparhdr[0], short_e_cparhdr
     );
-    // Минимум требуемой памяти
+    // ГЊГЁГ­ГЁГ¬ГіГ¬ ГІГ°ГҐГЎГіГҐГ¬Г®Г© ГЇГ Г¬ГїГІГЁ
     unsigned char e_minalloc[2] = {getc(file), getc(file)};
     unsigned short short_e_minalloc = e_minalloc[0] | (e_minalloc[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_minalloc[0], e_minalloc[1], e_minalloc[1], e_minalloc[0], short_e_minalloc
     );
-    // Максимум требуемой памяти
+    // ГЊГ ГЄГ±ГЁГ¬ГіГ¬ ГІГ°ГҐГЎГіГҐГ¬Г®Г© ГЇГ Г¬ГїГІГЁ
     unsigned char e_maxalloc[2] = {getc(file), getc(file)};
     unsigned short short_e_maxalloc = e_maxalloc[0] | (e_maxalloc[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_maxalloc[0], e_maxalloc[1], e_maxalloc[1], e_maxalloc[0], short_e_maxalloc
     );
-    // Сегмент стека
+    // Г‘ГҐГЈГ¬ГҐГ­ГІ Г±ГІГҐГЄГ 
     unsigned char e_ss[2] = {getc(file), getc(file)};
     unsigned short short_e_ss = e_ss[0] | (e_ss[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_ss[0], e_ss[1], e_ss[1], e_ss[0], short_e_ss
     );
-    // Указатель стека
+    // Г“ГЄГ Г§Г ГІГҐГ«Гј Г±ГІГҐГЄГ 
     unsigned char e_sp[2] = {getc(file), getc(file)};
     unsigned short short_e_sp = e_sp[0] | (e_sp[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
      offset += 2, offset, e_csum[0], e_csum[1], e_csum[1], e_csum[0], short_e_csum
     );
-    // Указатель команд
+    // Г“ГЄГ Г§Г ГІГҐГ«Гј ГЄГ®Г¬Г Г­Г¤
     unsigned char e_ip[2] = {getc(file), getc(file)};
     unsigned short short_e_ip = e_ip[0] | (e_ip[1] << 8); // little-endian;
     fprint("| %03d=%02X | 2 | %02X %02X | %02X %02X = %d\t\t\t\t\t      |\n",
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
      e_res2[18], e_res2[19], e_res2[19], e_res2[18], short_e_res2[9]
     );
     print("|-----------------------------------------------------------------------------|");
-    // Смещение PE-заголовка от начала
+    // Г‘Г¬ГҐГ№ГҐГ­ГЁГҐ PE-Г§Г ГЈГ®Г«Г®ГўГЄГ  Г®ГІ Г­Г Г·Г Г«Г 
     unsigned char e_lfanew[4] = {getc(file), getc(file), getc(file), getc(file)};
     unsigned short short_e_lfanew = e_lfanew[0] | (e_lfanew[1] << 8);
     fprint("| %03d=%02X | 4 | %02X %02X %02X %02X | %02X %02X %02X %02X = %d\t\t\t\t      |\n",
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                                 ___________                                 |");
     print("|--------------------------------/ NT HEADER \\--------------------------------|");
-    // Сигнатура PE
+    // Г‘ГЁГЈГ­Г ГІГіГ°Г  PE
     unsigned char signature[4] = {getc(file), getc(file), getc(file), getc(file)};
     //unsigned short short_signature = signature[0] | (signature[1] << 8);
     fprint("| %03d=%02X | 4 | Signature | %02X %02X %02X %02X | %02X %02X %02X %02X | \"%c%c%s%s\"\t\t      |\n", offset += 2, offset,
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                          _________________________                          |");
     print("|-------------------------/ NT HEADER / FILE HEADER \\-------------------------|");
-    // Архитектура
+    // ГЂГ°ГµГЁГІГҐГЄГІГіГ°Г 
     unsigned char machine[2+1] = {getc(file), getc(file), '\0'};
     print("|        |-------------------------------------------------|                  |");
     fprint("| %03d=%02X | Machine: %02X %02X                                  | %s               |\n", offset += 4, offset,
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
      machine
     );
     print("|        |-------------------------------------------------|                  |");
-    // Количество секций
+    // ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г±ГҐГЄГ¶ГЁГ©
     unsigned char number_of_sections[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Number of sections: %02X %02X                       | %c%c               |\n", offset += 2, offset,
      number_of_sections[0], number_of_sections[1],
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
      number_of_sections[0], number_of_sections[1]
     );
     print("|        |-------------------------------------------------|                  |");
-    // Дата и время создания файла
+    // Г„Г ГІГ  ГЁ ГўГ°ГҐГ¬Гї Г±Г®Г§Г¤Г Г­ГЁГї ГґГ Г©Г«Г 
     unsigned char time_date_stamp[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Time date stamp: %02X %02X %02X %02X                    | %c%c%c%c             |\n", offset += 2, offset,
      time_date_stamp[0], time_date_stamp[1], time_date_stamp[2], time_date_stamp[3],
@@ -304,28 +304,28 @@ int main(int argc, char *argv[])
      (time_date_stamp[3] == 0x0D) ? ' ' : time_date_stamp[3]
     );
     print("|        |-------------------------------------------------|                  |");
-    // Таблица символов
+    // Г’Г ГЎГ«ГЁГ¶Г  Г±ГЁГ¬ГўГ®Г«Г®Гў
     unsigned char pointer_to_symbol_table[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Pointer to symbol table: %02X %02X %02X %02X            | %s                 |\n", offset += 4, offset,
      pointer_to_symbol_table[0], pointer_to_symbol_table[1], pointer_to_symbol_table[2], pointer_to_symbol_table[3],
      pointer_to_symbol_table
     );
     print("|        |-------------------------------------------------|                  |");
-    // Количество символов
+    // ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г±ГЁГ¬ГўГ®Г«Г®Гў
     unsigned char number_of_symbols[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Number of symbols: %02X %02X %02X %02X                  | %s               |\n", offset += 4, offset,
      number_of_symbols[0], number_of_symbols[1], number_of_symbols[2], number_of_symbols[3],
      number_of_symbols
     );
     print("|        |-------------------------------------------------|                  |");
-    // Размер следующего подзаголовка
+    // ГђГ Г§Г¬ГҐГ° Г±Г«ГҐГ¤ГіГѕГ№ГҐГЈГ® ГЇГ®Г¤Г§Г ГЈГ®Г«Г®ГўГЄГ 
     unsigned char size_of_optional_header[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of optional header: %02X %02X                  | %s                |\n", offset += 4, offset,
      size_of_optional_header[0], size_of_optional_header[1],
      size_of_optional_header
     );
     print("|        |-------------------------------------------------|                  |");
-    // Характеристики файла
+    // Г•Г Г°Г ГЄГІГҐГ°ГЁГ±ГІГЁГЄГЁ ГґГ Г©Г«Г 
     unsigned char characteristics[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Characteristics: %02X %02X                          | %s                |\n", offset += 2, offset,
      characteristics[0], characteristics[1],
@@ -334,7 +334,7 @@ int main(int argc, char *argv[])
     print("|-----------------------------------------------------------------------------|");
     print("|                        _____________________________                        |");
     print("|-----------------------/ NT HEADER / OPTIONAL HEADER \\-----------------------|");
-    // Название формата (PE32)
+    // ГЌГ Г§ГўГ Г­ГЁГҐ ГґГ®Г°Г¬Г ГІГ  (PE32)
     unsigned char magic[2+1] = {getc(file), getc(file), '\0'};
     print("|        |-------------------------------------------------|                  |");
     fprint("| %03d=%02X | Magic: %02X %02X                                    | %s               |\n", offset += 2, offset,
@@ -353,7 +353,7 @@ int main(int argc, char *argv[])
      minor_linker_version, minor_linker_version
     );
     print("|        |-------------------------------------------------|                  |");
-    // Размер секций кода
+    // ГђГ Г§Г¬ГҐГ° Г±ГҐГЄГ¶ГЁГ© ГЄГ®Г¤Г 
     unsigned char size_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 1, offset,
      size_of_code[0],
@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
      size_of_code
     );
     print("|        |-------------------------------------------------|                  |");
-    // Размер секций иниц. данных
+    // ГђГ Г§Г¬ГҐГ° Г±ГҐГЄГ¶ГЁГ© ГЁГ­ГЁГ¶. Г¤Г Г­Г­Г»Гµ
     unsigned char size_of_initialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of initialized data: %02X %02X %02X %02X           | %s                 |\n", offset += 4, offset,
      size_of_initialized_data[0],
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
      size_of_initialized_data
     );
     print("|        |-------------------------------------------------|                  |");
-    // Размер секций не иниц. данных
+    // ГђГ Г§Г¬ГҐГ° Г±ГҐГЄГ¶ГЁГ© Г­ГҐ ГЁГ­ГЁГ¶. Г¤Г Г­Г­Г»Гµ
     unsigned char size_of_unininitialized_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of unininitialized data: %02X %02X %02X %02X       | %s                 |\n", offset += 4, offset,
      size_of_unininitialized_data[0],
@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
      size_of_unininitialized_data
     );
     print("|        |-------------------------------------------------|                  |");
-    // RVA точки входа в программу
+    // RVA ГІГ®Г·ГЄГЁ ГўГµГ®Г¤Г  Гў ГЇГ°Г®ГЈГ°Г Г¬Г¬Гі
     unsigned char address_of_entry_point[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Address of entry point: %02X %02X %02X %02X             | %s               |\n", offset += 4, offset,
      address_of_entry_point[0],
@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
      address_of_entry_point
     );
     print("|        |-------------------------------------------------|                  |");
-    // RVA секции с кодом
+    // RVA Г±ГҐГЄГ¶ГЁГЁ Г± ГЄГ®Г¤Г®Г¬
     unsigned char base_of_code[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Base of code: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
      base_of_code[0],
@@ -403,7 +403,7 @@ int main(int argc, char *argv[])
      base_of_code
     );
     print("|        |-------------------------------------------------|                  |");
-    // RVA секции с данными
+    // RVA Г±ГҐГЄГ¶ГЁГЁ Г± Г¤Г Г­Г­Г»Г¬ГЁ
     unsigned char base_of_data[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Base of data: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
      base_of_data[0],
@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
      base_of_data
     );
     print("|        |-------------------------------------------------|                  |");
-    // Кратно 64 Кб. (4 Мб.)
+    // ГЉГ°Г ГІГ­Г® 64 ГЉГЎ. (4 ГЊГЎ.)
     unsigned char image_base[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Image base: %02X %02X %02X %02X                         | %s                |\n", offset += 4, offset,
      image_base[0],
@@ -423,7 +423,7 @@ int main(int argc, char *argv[])
      image_base
     );
     print("|        |-------------------------------------------------|                  |");
-    // Выравнивание в вирт. памяти (4 Кб.)
+    // Г‚Г»Г°Г ГўГ­ГЁГўГ Г­ГЁГҐ Гў ГўГЁГ°ГІ. ГЇГ Г¬ГїГІГЁ (4 ГЉГЎ.)
     unsigned char section_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Section alignment: %02X %02X %02X %02X                  | %s                 |\n", offset += 4, offset,
      section_alignment[0],
@@ -433,7 +433,7 @@ int main(int argc, char *argv[])
      section_alignment
     );
     print("|        |-------------------------------------------------|                  |");
-    // Выравнивание в exe файле (512 б.)
+    // Г‚Г»Г°Г ГўГ­ГЁГўГ Г­ГЁГҐ Гў exe ГґГ Г©Г«ГҐ (512 ГЎ.)
     unsigned char file_alignment[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | File alignment: %02X %02X %02X %02X                     | %s                 |\n", offset += 4, offset,
      file_alignment[0],
@@ -485,7 +485,7 @@ int main(int argc, char *argv[])
      minor_subsystem_version
     );
     print("|        |-------------------------------------------------|                  |");
-    // Зарезервировано
+    // Г‡Г Г°ГҐГ§ГҐГ°ГўГЁГ°Г®ГўГ Г­Г®
     unsigned char win32_version_value[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Win32 version value: %02X %02X %02X %02X                | %s                 |\n", offset += 2, offset,
      win32_version_value[0],
@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
      size_of_image
     );
     print("|        |-------------------------------------------------|                  |");
-    // Размер всех заголовков
+    // ГђГ Г§Г¬ГҐГ° ГўГ±ГҐГµ Г§Г ГЈГ®Г«Г®ГўГЄГ®Гў
     unsigned char size_of_headers[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of headers: %02X %02X %02X %02X                    | %s                 |\n", offset += 4, offset,
      size_of_headers[0],
@@ -514,7 +514,7 @@ int main(int argc, char *argv[])
      size_of_headers
     );
     print("|        |-------------------------------------------------|                  |");
-    // Контрольная сумма
+    // ГЉГ®Г­ГІГ°Г®Г«ГјГ­Г Гї Г±ГіГ¬Г¬Г 
     unsigned char check_sum[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Check sum: %02X %02X %02X %02X                          | %s              |\n", offset += 4, offset,
      check_sum[0],
@@ -524,7 +524,7 @@ int main(int argc, char *argv[])
      check_sum
     );
     print("|        |-------------------------------------------------|                  |");
-    // Тип программы
+    // Г’ГЁГЇ ГЇГ°Г®ГЈГ°Г Г¬Г¬Г»
     unsigned char subsystem[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Subsystem: %02X %02X                                | %s                |\n", offset += 4, offset,
      subsystem[0],
@@ -532,7 +532,7 @@ int main(int argc, char *argv[])
      subsystem
     );
     print("|        |-------------------------------------------------|                  |");
-    // Хар-ки DLL-файла
+    // Г•Г Г°-ГЄГЁ DLL-ГґГ Г©Г«Г 
     unsigned char dll_characteristics[2+1] = {getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Dll characteristics: %02X %02X                      | %s               |\n", offset += 2, offset,
      dll_characteristics[0],
@@ -540,7 +540,7 @@ int main(int argc, char *argv[])
      dll_characteristics
     );
     print("|        |-------------------------------------------------|                  |");
-    // Зарезерв. место под стек (1 Мб.)
+    // Г‡Г Г°ГҐГ§ГҐГ°Гў. Г¬ГҐГ±ГІГ® ГЇГ®Г¤ Г±ГІГҐГЄ (1 ГЊГЎ.)
     unsigned char size_of_stack_reserve[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of stack reserve: %02X %02X %02X %02X              | %s                 |\n", offset += 2, offset,
      size_of_stack_reserve[0],
@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
      size_of_stack_reserve
     );
     print("|        |-------------------------------------------------|                  |");
-    // Изначальный размер стека (4 Кб.)
+    // Г€Г§Г­Г Г·Г Г«ГјГ­Г»Г© Г°Г Г§Г¬ГҐГ° Г±ГІГҐГЄГ  (4 ГЉГЎ.)
     unsigned char size_of_stack_commit[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of stack commit: %02X %02X %02X %02X               | %s                 |\n", offset += 4, offset,
      size_of_stack_commit[0],
@@ -560,7 +560,7 @@ int main(int argc, char *argv[])
      size_of_stack_commit
     );
     print("|        |-------------------------------------------------|                  |");
-    // Зарезерв. место под кучу (1 Мб.)
+    // Г‡Г Г°ГҐГ§ГҐГ°Гў. Г¬ГҐГ±ГІГ® ГЇГ®Г¤ ГЄГіГ·Гі (1 ГЊГЎ.)
     unsigned char size_of_heap_reserve[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of heap reserve: %02X %02X %02X %02X               | %s                 |\n", offset += 4, offset,
      size_of_heap_reserve[0],
@@ -570,7 +570,7 @@ int main(int argc, char *argv[])
      size_of_heap_reserve
     );
     print("|        |-------------------------------------------------|                  |");
-    // Изначальный размер кучи (4 Кб.)
+    // Г€Г§Г­Г Г·Г Г«ГјГ­Г»Г© Г°Г Г§Г¬ГҐГ° ГЄГіГ·ГЁ (4 ГЉГЎ.)
     unsigned char size_of_heap_commit[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Size of heap commit: %02X %02X %02X %02X                | %s                 |\n", offset += 4, offset,
      size_of_heap_commit[0],
@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
      size_of_heap_commit
     );
     print("|        |-------------------------------------------------|                  |");
-    // Не используется
+    // ГЌГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї
     unsigned char loader_flags[4+1] = {getc(file), getc(file), getc(file), getc(file), '\0'};
     fprint("| %03d=%02X | Loader flags: %02X %02X %02X %02X                       | %s                 |\n", offset += 4, offset,
      loader_flags[0],
@@ -628,18 +628,5 @@ int main(int argc, char *argv[])
     print("|--------------------------------/ SECTIONS \\---------------------------------|");
     print("|-----------------------------------------------------------------------------|");
     print("|_____________________________________________________________________________|");
-    
-    setlocale(0, "");
-    void *labels[] = {&&label0, &&label1, &&label2};
-    int i = 2;
-    goto *labels[i]; // переход по вычисляемой метке
-    label0:
-     printf("Это метка 0\n");
-     return 0;
-    label1:
-     printf("Это метка 1\n");
-     return 0;
-    label2:
-     printf("Это метка 2\n");
-     return 0;
+    return 0;
 }
