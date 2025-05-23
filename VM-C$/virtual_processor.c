@@ -1,8 +1,11 @@
+/*/
+ *   /!\ Encoding Windows-1251
+ *   /!\ Кодировка Windows-1251
+/*/
 #include <stdio.h>
 #include <locale.h>
-int main()
+void vCPU()
 {
-    setlocale(0, "");
     void *ptr_label[] = {&&_1, &&_2, &&_3};
     for (char i = 0; i < 3; i++)
     {
@@ -17,5 +20,10 @@ int main()
         puts("Я попал в метку 3.");
         continue;
     }
+}
+int main()
+{
+    setlocale(0, "");
+    vCPU();
     return 0;
 }
