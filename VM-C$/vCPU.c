@@ -22,7 +22,7 @@ void Start_vCPU()
     };
     while (true)
     {
-        goto *instructions[bytecode[IP]]; // Аналог *(instructions + (*(bytecode + IP))).
+        goto *(*(instructions + *(bytecode + IP)));
         //-------------------------------------------------
         HLT: // 0 | Останавливает выполнение vCPU
         puts("#DEBUG: HLT - Остановить выполнение vCPU.");
@@ -49,3 +49,4 @@ int main()
     Start_vCPU();
     return 0;
 }
+// goto *instructions[bytecode[IP]];
