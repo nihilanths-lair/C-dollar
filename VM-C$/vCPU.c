@@ -1,6 +1,6 @@
 /*/
- *   /!\ Encoding Windows-1251
- *   /!\ Кодировка Windows-1251
+-*-   /!\ Encoding Windows-1251
+-*-   /!\ Кодировка Windows-1251
 /*/
 #include <stdio.h>   // Для ввода/вывода данных на консоль.
 #include <locale.h>  // Для локализации консоли.
