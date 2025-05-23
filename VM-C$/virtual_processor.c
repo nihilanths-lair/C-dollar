@@ -1,29 +1,36 @@
 /*/
  *   /!\ Encoding Windows-1251
- *   /!\ РљРѕРґРёСЂРѕРІРєР° Windows-1251
+ *   /!\ Кодировка Windows-1251
 /*/
-#include <stdio.h>
-#include <locale.h>
-void vCPU()
+#include <stdio.h>   // Для ввода/вывода данных на консоль.
+#include <locale.h>  // Для локализации консоли.
+#include <stdbool.h> // Для использования логических типов: false/true.
+
+char bytecode[] = {0x00, 0x00, 0x00, 0x01};
+short ip = 0x0000;
+
+void Start_vCPU()
 {
-    void *ptr_label[] = {&&_1, &&_2, &&_3};
-    for (char i = 0; i < 3; i++)
+    void *instructions[] =
     {
-        goto *ptr_label[i]; // Р°РЅР°Р»РѕРі *(ptr_label+i)
-        _1:
-        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 1.");
+        &&nop,
+        &&hlt
+    };
+    while (true)
+    {
+        goto *instructions[bytecode[ip]]; // Аналог *(ptr_label+i).
+        nop: // Заглушка
+        puts("#DEBUG: NOP - заглушка");
+        ip++;
         continue;
-        _2:
-        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 2.");
-        continue;
-        _3:
-        puts("РЇ РїРѕРїР°Р» РІ РјРµС‚РєСѓ 3.");
-        continue;
+        hlt: // Останавливает выполнение vCPU
+        puts("#DEBUG: HLT - остановить выполнение vCPU.");
+        break;
     }
 }
 int main()
 {
     setlocale(0, "");
-    vCPU();
+    Start_vCPU();
     return 0;
 }
