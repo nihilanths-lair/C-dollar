@@ -4,13 +4,24 @@
 /*/
 #include <stdio.h>   // Для ввода/вывода данных на консоль.
 #include <locale.h>  // Для локализации консоли.
-#include <stdbool.h> // Для использования логических типов: false/true.
+//#include <stdbool.h> // Для использования логических типов: false/true.
+#include <string.h>  // 
 
 char bytecode[] = {0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x00};
 
 short IPR  = 0x0000; // instruction pointer register / регистр указателя инструкций
 short GPR = 0x0000; // general purpose register / регистр общего назначения
 
+char *HexToString(char bytecode)
+{
+    switch (bytecode){
+    case 0x00: return "HLT";
+    case 0x01: return "MOV";
+    case 0x02: return "INT";
+    case 0x03: return "NOP";
+    }
+    return "/!\\";
+}
 void Start_vCPU()
 {
     void *instructions[] =
@@ -24,18 +35,18 @@ void Start_vCPU()
     //{
     EXECUTE: printf("\n"); goto *(*(instructions + *(bytecode + IPR)));
     //-------------------------------------------------
-    _HLT: printf("# DEBUG (%d): HLT - Остановить выполнение vCPU.", IPR); // i0 | Останавливает выполнение vCPU
+    _HLT: printf("# DEBUG (%d): 0x%02X|%s - Остановить выполнение vCPU.", IPR, *(bytecode + IPR), HexToString(*(bytecode + IPR))); // i0 | Останавливает выполнение vCPU
     goto STOP_vCPU; //break;
     //-------------------------------------------------
-    _MOV: printf("# DEBUG (%d): MOV - Перемещение данных.", IPR); // i1 | Пересылка данных
+    _MOV: printf("# DEBUG (%d): 0x%02X|%s - Перемещение данных.", IPR, *(bytecode + IPR), HexToString(*(bytecode + IPR))); // i1 | Пересылка данных
     IPR++;
     goto EXECUTE; //continue;
     //-------------------------------------------------
-    _INT: printf("# DEBUG (%d): INT - Обращение к таблице векторных прерываний (IVT).", IPR); // i2 | Прерывание
+    _INT: printf("# DEBUG (%d): 0x%02X|%s - Обращение к таблице векторных прерываний (IVT).", IPR, *(bytecode + IPR), HexToString(*(bytecode + IPR))); // i2 | Прерывание
     IPR++;
     goto EXECUTE; //continue;
     //-------------------------------------------------
-    _NOP: printf("# DEBUG (%d): NOP - Заглушка", IPR); // i3 | Заглушка
+    _NOP: printf("# DEBUG (%d): 0x%02X|%s - Заглушка", IPR, *(bytecode + IPR), HexToString(*(bytecode + IPR))); // i3 | Заглушка
     IPR++;
     goto EXECUTE; //continue;
     //-------------------------------------------------
