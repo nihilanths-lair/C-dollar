@@ -8,40 +8,39 @@
 
 char bytecode[] = {0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x00};
 
-short IP  = 0x0000;
+short IPR  = 0x0000; // instruction pointer register / регистр указателя инструкций
 short GPR = 0x0000; // general purpose register / регистр общего назначения
 
 void Start_vCPU()
 {
     void *instructions[] =
     {
-        &&HLT, // idx:0, elm:1.
-        &&MOV, // idx:1, elm:2.
-        &&INT, // idx:2, elm:3.
-        &&NOP  // idx:3, elm:4.
+        &&_HLT, // i0, e1.
+        &&_MOV, // i1, e2.
+        &&_INT, // i2, e3.
+        &&_NOP  // i3, e4.
     };
-    while (true)
-    {
-        goto *(*(instructions + *(bytecode + IP)));
-        //-------------------------------------------------
-        HLT: // 0 | Останавливает выполнение vCPU
-        puts("#DEBUG: HLT - Остановить выполнение vCPU.");
-        break;
-        //-------------------------------------------------
-        MOV: // 1 | Пересылка данных
-        puts("#DEBUG: MOV - Перемещает данные между памятью.");
-        continue;
-        //-------------------------------------------------
-        INT: // 2 | Прерывание
-        puts("#DEBUG: INT - Обращается к таблице векторных прерываний (IVT).");
-        continue;
-        //-------------------------------------------------
-        NOP: // 3 | Заглушка
-        puts("#DEBUG: NOP - Заглушка");
-        IP++;
-        continue;
-        //-------------------------------------------------
-    }
+    //while (true)
+    //{
+    EXECUTE: printf("\n"); goto *(*(instructions + *(bytecode + IPR)));
+    //-------------------------------------------------
+    _HLT: printf("# DEBUG (%d): HLT - Остановить выполнение vCPU.", IPR); // i0 | Останавливает выполнение vCPU
+    goto STOP_vCPU; //break;
+    //-------------------------------------------------
+    _MOV: printf("# DEBUG (%d): MOV - Перемещение данных.", IPR); // i1 | Пересылка данных
+    IPR++;
+    goto EXECUTE; //continue;
+    //-------------------------------------------------
+    _INT: printf("# DEBUG (%d): INT - Обращение к таблице векторных прерываний (IVT).", IPR); // i2 | Прерывание
+    IPR++;
+    goto EXECUTE; //continue;
+    //-------------------------------------------------
+    _NOP: printf("# DEBUG (%d): NOP - Заглушка", IPR); // i3 | Заглушка
+    IPR++;
+    goto EXECUTE; //continue;
+    //-------------------------------------------------
+    //}
+    STOP_vCPU: printf("\n");
 }
 int main()
 {
