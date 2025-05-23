@@ -42,38 +42,37 @@ void Start_vCPU()
     //while (true)
     //{
     EXECUTE: printf("\n"); goto *(*(instructions + *(bytecode + IPR)));
-    //----------------------------------------------------------------------------------------------------
-    _HLT: printf("# DEBUG (%d): 0x%02X|%s - Остановить выполнение vCPU.", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x00 | Останавливает выполнение vCPU
+    //-------------------------------------------------------------------------------------
+    _HLT: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x00 | Останавливает выполнение vCPU
     goto STOP_vCPU; //break;
-    //----------------------------------------------------------------------------------------------------
-    _MOV: printf("# DEBUG (%d): 0x%02X|%s - Перемещение данных.", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x01 | Пересылка данных
+    //-------------------------------------------------------------------------------------
+    _MOV: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x01 | Пересылка данных
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _INT: printf("# DEBUG (%d): 0x%02X|%s - Обращение к таблице векторных прерываний (IVT).", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x02 | Прерывание
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _INT: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x02 | Обращение к таблице векторных прерываний (IVT)
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _NOP: printf("# DEBUG (%d): 0x%02X|%s - Заглушка", IPR, bytecode[IPR], HexToString(bytecode[IPR]));            // 0x03 | Заглушка
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _NOP: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x03 | Заглушка
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _MUL: printf("# DEBUG (%d): 0x%02X|%s - Перемножение чисел", IPR, bytecode[IPR], HexToString(bytecode[IPR]));  // 0x04 | Перемножение чисел
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _MUL: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x04 | Перемножение чисел
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _DIV: printf("# DEBUG (%d): 0x%02X|%s - Деление чисел", IPR, bytecode[IPR], HexToString(bytecode[IPR]));       // 0x05 | Деление чисел
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _DIV: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x05 | Деление чисел
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _ADD: printf("# DEBUG (%d): 0x%02X|%s - Сложение чисел", IPR, bytecode[IPR], HexToString(bytecode[IPR]));      // 0x06 | Сложение чисел
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _ADD: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x06 | Сложение чисел
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
-    _SUB: printf("# DEBUG (%d): 0x%02X|%s - Вычитание чисел", IPR, bytecode[IPR], HexToString(bytecode[IPR]));     // 0x07 | Вычитание чисел
+    goto EXECUTE;
+    //-------------------------------------------------------------------------------------
+    _SUB: printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x07 | Вычитание чисел
     IPR++;
-    goto EXECUTE; //continue;
-    //----------------------------------------------------------------------------------------------------
+    goto EXECUTE;
     //}
     STOP_vCPU: printf("\n");
 }
@@ -84,3 +83,4 @@ int main()
     return 0;
 }
 // goto *instructions[bytecode[IP]];
+// goto EXECUTE; / continue;
