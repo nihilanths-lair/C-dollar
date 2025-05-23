@@ -7,13 +7,18 @@
 //#include <stdbool.h> // Для использования логических типов: false/true.
 #include <string.h>  // 
 
-char bytecode[] = {0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x00};
+char bytecode[] = {0x01, 0x03, 0x03, 0x03, 0x03, 0x00};
 
 short IPR  = 0x0000; // instruction pointer register / регистр указателя инструкций
 short GPR = 0x0000; // general purpose register / регистр общего назначения
-
+// GPR: [00|00] <- 00 00
+// MOV GPR, imm16   - поместить в регистр GPR непосредственное значение
+// MOV GPR, mem16   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
+// MOV GPR, [mem16] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
+char hex_to_string[][3+1] = {"HLT", "MOV", "INT", "NOP", "MUL", "DIV", "ADD", "SUB"};
 char *HexToString(char bytecode)
 {
+    /*
     switch (bytecode){
     case 0x00: return "HLT";
     case 0x01: return "MOV";
@@ -25,6 +30,8 @@ char *HexToString(char bytecode)
     case 0x07: return "SUB";
     }
     return "/!\\";
+    */
+   return hex_to_string[bytecode];
 }
 void Start_vCPU()
 {
