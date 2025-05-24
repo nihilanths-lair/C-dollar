@@ -87,6 +87,13 @@ void Start_vCPU()
     //--------------------------------------------------------------------------------
     __INT: // 0x02 | Обращение к таблице векторных прерываний (IVT)
     IPR++;
+    switch (GPR){
+    case 0x00: {}
+    case 0xFF: {}
+    }
+    #if defined DEBUG_MODE
+    printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
+    #endif
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __NOP: // 0x03 | Заглушка
