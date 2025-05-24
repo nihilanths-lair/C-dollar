@@ -198,14 +198,9 @@ void OutputDebugCode(){}
 char *HexToString(char bytecode) // BytecodeToSymbolicView
 {
     switch (bytecode){
-    case 0x00: return "HLT";
-    case 0x01: return "MOV GPR";
-    case 0x02: return "INT";
-    case 0x03: return "NOP";
-    case 0x04: return "MUL GPR";
-    case 0x05: return "DIV GPR";
-    case 0x06: return "ADD GPR";
-    case 0x07: return "SUB GPR";
+    case 0x00: return "SYMBOLIC VIEW";
+    <...>
+    case 0xFF: return "SYMBOLIC VIEW";
     }
     return "/!\\";
 }
@@ -213,13 +208,8 @@ char *HexToBin(char bytecode) // BytecodeToBin
 {
     switch (bytecode){
     case 0x00: return "00000000";
-    case 0x01: return "00000001";
-    case 0x02: return "00000010";
-    case 0x03: return "00000011";
-    case 0x04: return "00000100";
-    case 0x05: return "00000101";
-    case 0x06: return "00000110";
-    case 0x07: return "00000111";
+    <...>
+    case 0xFF: return "11111111";
     }
     return "/!\\";
 }
