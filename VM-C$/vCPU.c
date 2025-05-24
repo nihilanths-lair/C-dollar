@@ -22,6 +22,34 @@ unsigned char GPR = 0x0; // general purpose register / регистр общег
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
 char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
+char hex_to_bin[][8+1] =
+{
+    "00000000",
+    "00000001",
+    "00000010",
+    "00000011",
+    "00000100",
+    "00000101",
+    "00000110",
+    "00000111"
+};
+char *HexToBin(char bytecode)
+{
+    /*
+    switch (bytecode){
+    case 0x00: return "HLT";
+    case 0x01: return "MOV GPR";
+    case 0x02: return "INT";
+    case 0x03: return "NOP";
+    case 0x04: return "MUL GPR";
+    case 0x05: return "DIV GPR";
+    case 0x06: return "ADD GPR";
+    case 0x07: return "SUB GPR";
+    }
+    return "/!\\";
+    */
+   return hex_to_bin[bytecode];
+}
 char *HexToString(char bytecode)
 {
     /*
@@ -60,20 +88,20 @@ void Start_vCPU()
     #endif
     EXECUTE:
     #if defined DEBUG_MODE
-    printf("\n\nIPR [%02X|%03d]\n", IPR, IPR);// | %s\t| %02X\n", IPR, IPR, HexToString(bytecode[IPR]), bytecode[IPR]
-    printf("GPR [%02X|%03d]\n", GPR, GPR);
+    printf("\n\n");
+    printf("IPR [%03d|%02X|%s]\n", IPR, IPR, HexToBin(IPR));
+    printf("GPR [%03d|%02X|%s]\n", GPR, GPR, HexToBin(GPR));
     #endif
     goto *(*(instructions + *(bytecode + IPR)));
-    //-------------------------------------------------------------------------------------
-    __HLT: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x00 | Останавливает выполнение vCPU
+    //--------------------------------------------------------------------------------
+    __HLT: // 0x00 | Останавливает выполнение vCPU
     IPR++;
     #if defined DEBUG_MODE
     printf("\n%s\t\t| %02X", HexToString(bytecode[IPR-1]), bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
     #endif
     goto STOP_vCPU; //break;
-    //-------------------------------------------------------------------------------------
-    __MOV: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x01 | Пересылка данных
-    //dbg_SetBytecodeToCollection()
+    //--------------------------------------------------------------------------------
+    __MOV: // 0x01 | Пересылка данных
     IPR++;
     GPR = bytecode[IPR];
     #if defined DEBUG_MODE
@@ -81,24 +109,24 @@ void Start_vCPU()
     #endif
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __INT: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x02 | Обращение к таблице векторных прерываний (IVT)
+    //--------------------------------------------------------------------------------
+    __INT: // 0x02 | Обращение к таблице векторных прерываний (IVT)
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __NOP: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x03 | Заглушка
+    //--------------------------------------------------------------------------------
+    __NOP: // 0x03 | Заглушка
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __MUL: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x04 | Перемножение чисел
+    //--------------------------------------------------------------------------------
+    __MUL: // 0x04 | Умножение
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __DIV: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x05 | Деление чисел
+    //--------------------------------------------------------------------------------
+    __DIV: // 0x05 | Деление
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __ADD: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x06 | Сложение чисел
+    //--------------------------------------------------------------------------------
+    __ADD: // 0x06 | Сложение
     IPR++;
     GPR += bytecode[IPR];
     #if defined DEBUG_MODE
@@ -106,8 +134,8 @@ void Start_vCPU()
     #endif
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
-    __SUB: //printf("# DEBUG (%d): 0x%02X|%s", IPR, bytecode[IPR], HexToString(bytecode[IPR])); // 0x07 | Вычитание чисел
+    //--------------------------------------------------------------------------------
+    __SUB: // 0x07 | Вычитание
     IPR++;
     GPR -= bytecode[IPR];
     #if defined DEBUG_MODE
@@ -115,12 +143,13 @@ void Start_vCPU()
     #endif
     IPR++;
     goto EXECUTE;
-    //-------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------
     //}
     STOP_vCPU:
     #if defined DEBUG_MODE
-    printf("\n\nIPR [%02X|%03d]\n", IPR, IPR);// | %s\t| %02X\n", IPR, IPR, HexToString(bytecode[IPR]), bytecode[IPR]
-    printf("GPR [%02X|%03d]\n", GPR, GPR);
+    printf("\n\n");
+    printf("IPR [%03d|%02X|%s]\n", IPR, IPR, HexToBin(IPR));
+    printf("GPR [%03d|%02X|%s]\n", GPR, GPR, HexToBin(GPR));
     printf("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #\n");
     #endif
 }
