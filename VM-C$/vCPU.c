@@ -28,10 +28,7 @@ void generate_hex_to_bin_table()
 {
     for (int i = 0; i < 256; i++)
     {
-        for (int j = 7; j >= 0; j--)
-        {
-            hex_to_bin[i][7 - j] = (i & (1 << j)) ? '1' : '0';
-        }
+        for (int j = 7; j >= 0; j--) hex_to_bin[i][7 - j] = (i & (1 << j)) ? '1' : '0';
         hex_to_bin[i][8] = '\0';
     }
 }
