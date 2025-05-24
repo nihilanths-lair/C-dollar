@@ -21,24 +21,10 @@ unsigned char GPR = 0x0; // general purpose register / регистр общег
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
-char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
-char hex_to_bin[][8+1] =
-{
-    "00000000",
-    "00000001",
-    "00000010",
-    "00000011",
-    "00000100",
-    "00000101",
-    "00000110",
-    "00000111"
-};
-char *HexToBin(char bytecode){
-   return hex_to_bin[bytecode];
-}
-char *HexToString(char bytecode){
-   return hex_to_string[bytecode];
-}
+const char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
+const char hex_to_bin[][8+1] = {"00000000", "00000001", "00000010", "00000011", "00000100", "00000101", "00000110", "00000111"};
+#define HexToString(arg) hex_to_string[arg]
+#define HexToBin(arg) hex_to_bin[arg]
 #define DEBUG_MODE
 void Start_vCPU()
 {
@@ -189,5 +175,11 @@ char *HexToBin(char bytecode) // BytecodeToBin
     case 0x07: return "00000111";
     }
     return "/!\\";
+}
+char *HexToBin(char bytecode){
+   return hex_to_bin[bytecode];
+}
+char *HexToString(char bytecode){
+   return hex_to_string[bytecode];
 }
 */
