@@ -9,11 +9,11 @@
 
 char bytecode[] =
 {
-    0x01, 5, // MOV GPR, 5 / gpr = 5;
-    0x06, 1, // ADD GPR, 1 / gpr += 1; | 5+1=6
-    0x07, 3, // SUB GPR, 3 / gpr -= 3; | 6-3=3
-    0x04, 2, // MUL GPR, 2 / gpr *= 2; | 3*2=6
-    0x00     // HLT
+    0x01,  5,  // MOV GPR, 5 / gpr = 5;
+    0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
+    0x07,  3, // SUB GPR, 3 / gpr -= 3; | 50-3=47
+    0x04,  5, // MUL GPR, 5 / gpr *= 5; | 47*5=235
+    0x00      // HLT
 };
 unsigned int  IPR = 0x00000000; // instruction pointer register / регистр указателя инструкций
 unsigned char GPR = 0x00;       // general purpose register / регистр общего назначения
@@ -40,7 +40,7 @@ char *byte_to_binary(unsigned char byte, char *output)
 }
 //#define HEX_TO_STRING(arg) hex_to_string[arg]
 //#define HEX_TO_BIN(arg) hex_to_bin[arg]
-//#define DEBUG_MODE
+#define DEBUG_MODE
 void Start_vCPU()
 {
     void *instructions[] =
@@ -64,8 +64,8 @@ void Start_vCPU()
     EXECUTE:
     #if defined DEBUG_MODE
     printf("\n");
-    printf("IPR [%03d|%02X|%s]\n", IPR, IPR, hex_to_bin[IPR]);
-    printf("GPR [%03d|%02X|%s]\n", GPR, GPR, hex_to_bin[GPR]);
+    printf("IPR [%03d|%02X|%s]\n", IPR, IPR, hex_to_bin[IPR]); // byte_to_binary(IPR, hex_to_bin);
+    printf("GPR [%03d|%02X|%s]\n", GPR, GPR, hex_to_bin[GPR]); // byte_to_binary(GPR, hex_to_bin);
     #endif
     goto *(*(instructions + *(bytecode + IPR)));
     //--------------------------------------------------------------------------------
@@ -90,6 +90,9 @@ void Start_vCPU()
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __NOP: // 0x03 | Заглушка
+    #if defined DEBUG_MODE
+    printf("\n%s\t| %02X\n", hex_to_string[bytecode[IPR]], bytecode[IPR]);
+    #endif
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
