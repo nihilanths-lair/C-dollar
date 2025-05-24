@@ -13,6 +13,7 @@ char bytecode[] =
     0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
     0x07,  3, // SUB GPR, 3 / gpr -= 3; | 50-3=47
     0x04,  5, // MUL GPR, 5 / gpr *= 5; | 47*5=235
+    0x08,  0, // JMP 0
     0x00      // HLT
 };
 unsigned int  IPR = 0x00000000; // instruction pointer register / регистр указателя инструкций
@@ -22,7 +23,7 @@ unsigned char GPR = 0x00;       // general purpose register / регистр о�
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
-const unsigned char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
+const unsigned char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR", "JMP"};
 unsigned char hex_to_bin[256][8+1];
 void generate_hex_to_bin_table()
 {
@@ -52,7 +53,8 @@ void Start_vCPU()
         &&__MUL, // 4
         &&__DIV, // 5
         &&__ADD, // 6
-        &&__SUB  // 7
+        &&__SUB, // 7
+        &&__JMP  // 8
     };
     //while (true)
     //{
@@ -69,14 +71,14 @@ void Start_vCPU()
     #endif
     goto *(*(instructions + *(bytecode + IPR)));
     //--------------------------------------------------------------------------------
-    __HLT: // 0x00 | Останавливает выполнение vCPU
+    __HLT: // 0 | Останавливает выполнение vCPU
     #if defined DEBUG_MODE
     printf("\n%s\t\t| %02X\n", hex_to_string[bytecode[IPR]], bytecode[IPR]);
     #endif
     IPR++;
     goto STOP_vCPU; //break;
     //--------------------------------------------------------------------------------
-    __MOV: // 0x01 | Пересылка данных
+    __MOV: // 1 | Пересылка данных
     IPR++;
     GPR = bytecode[IPR];
     #if defined DEBUG_MODE
@@ -85,7 +87,7 @@ void Start_vCPU()
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __INT: // 0x02 | Обращение к таблице векторных прерываний (IVT)
+    __INT: // 2 | Обращение к таблице векторных прерываний (IVT)
     IPR++;
     switch (GPR){
     case 0x00: {}
@@ -96,14 +98,14 @@ void Start_vCPU()
     #endif
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __NOP: // 0x03 | Заглушка
+    __NOP: // 3 | Заглушка
     #if defined DEBUG_MODE
     printf("\n%s\t| %02X\n", hex_to_string[bytecode[IPR]], bytecode[IPR]);
     #endif
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __MUL: // 0x04 | Умножение
+    __MUL: // 4 | Умножение
     IPR++;
     GPR *= bytecode[IPR];
     #if defined DEBUG_MODE
@@ -112,7 +114,7 @@ void Start_vCPU()
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __DIV: // 0x05 | Деление
+    __DIV: // 5 | Деление
     IPR++;
     GPR /= bytecode[IPR];
     #if defined DEBUG_MODE
@@ -121,7 +123,7 @@ void Start_vCPU()
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __ADD: // 0x06 | Сложение
+    __ADD: // 6 | Сложение
     IPR++;
     GPR += bytecode[IPR];
     #if defined DEBUG_MODE
@@ -130,9 +132,18 @@ void Start_vCPU()
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __SUB: // 0x07 | Вычитание
+    __SUB: // 7 | Вычитание
     IPR++;
     GPR -= bytecode[IPR];
+    #if defined DEBUG_MODE
+    printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
+    #endif
+    IPR++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __JMP: // 8 | Прыжок на метку (адрес)
+    IPR++;
+    IPR = bytecode[IPR];
     #if defined DEBUG_MODE
     printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
     #endif
