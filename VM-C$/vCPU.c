@@ -22,8 +22,8 @@ unsigned char GPR = 0x00;       // general purpose register / регистр о�
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
-const char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
-const char hex_to_bin[256][8+1] =
+const unsigned char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
+const unsigned char hex_to_bin[256][8+1] =
 {
     "00000000", "00000001", "00000010", "00000011",
     "00000100", "00000101", "00000110", "00000111",
@@ -90,7 +90,6 @@ const char hex_to_bin[256][8+1] =
     "11111000", "11111001", "11111010", "11111011",
     "11111100", "11111101", "11111110", "11111111"
 };
-
 //#define HEX_TO_STRING(arg) hex_to_string[arg]
 //#define HEX_TO_BIN(arg) hex_to_bin[arg]
 #define DEBUG_MODE
