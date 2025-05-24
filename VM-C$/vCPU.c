@@ -21,7 +21,7 @@ unsigned char GPR = 0x0; // general purpose register / регистр общег
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
-char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL", "DIV", "ADD GPR", "SUB GPR"};
+char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR"};
 char *HexToString(char bytecode)
 {
     /*
@@ -30,8 +30,8 @@ char *HexToString(char bytecode)
     case 0x01: return "MOV GPR";
     case 0x02: return "INT";
     case 0x03: return "NOP";
-    case 0x04: return "MUL";
-    case 0x05: return "DIV";
+    case 0x04: return "MUL GPR";
+    case 0x05: return "DIV GPR";
     case 0x06: return "ADD GPR";
     case 0x07: return "SUB GPR";
     }
@@ -39,7 +39,7 @@ char *HexToString(char bytecode)
     */
    return hex_to_string[bytecode];
 }
-//#define DEBUG_MODE
+#define DEBUG_MODE
 void Start_vCPU()
 {
     void *instructions[] =
