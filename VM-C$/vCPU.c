@@ -9,7 +9,7 @@
 
 char bytecode[] =
 {
-    0x01,  5,  // MOV GPR, 5 / gpr = 5;
+    0x01,  5, // MOV GPR, 5 / gpr = 5;
     0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
     0x07,  3, // SUB GPR, 3 / gpr -= 3; | 50-3=47
     0x04,  5, // MUL GPR, 5 / gpr *= 5; | 47*5=235
@@ -106,6 +106,11 @@ void Start_vCPU()
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __DIV: // 0x05 | Деление
+    IPR++;
+    GPR /= bytecode[IPR];
+    #if defined DEBUG_MODE
+    printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
+    #endif
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
