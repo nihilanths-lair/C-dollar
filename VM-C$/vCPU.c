@@ -32,6 +32,12 @@ void generate_hex_to_bin_table()
         hex_to_bin[i][8] = '\0';
     }
 }
+char *byte_to_binary(unsigned char byte, char *output)
+{
+    for (int i = 7; i >= 0; i--) output[7 - i] = (byte & (1 << i)) ? '1' : '0';
+    output[8] = '\0';
+    return output;
+}
 //#define HEX_TO_STRING(arg) hex_to_string[arg]
 //#define HEX_TO_BIN(arg) hex_to_bin[arg]
 //#define DEBUG_MODE
