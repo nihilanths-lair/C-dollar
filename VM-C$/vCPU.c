@@ -16,8 +16,10 @@ char bytecode[] =
     0x08,  0, // JMP 0
     0x00      // HLT
 };
-unsigned int  IPR = 0x00000000; // instruction pointer register / регистр указателя инструкций
-unsigned char GPR = 0x00;       // general purpose register / регистр общего назначения
+unsigned char IPR = 0x00; // instruction pointer register / регистр указателя инструкций
+unsigned char GPR = 0x00; // general purpose register / регистр общего назначения
+//unsigned short DR = 0x0000; // debug register / регистр отладки
+//unsigned char DR[2] = {'\0', '\0'}; // debug register / регистр отладки
 // [MOV GPR], [?] / где, [MNC + OP1] = 0x01
 // GPR: [00] <- 0x00 или 00h
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
@@ -142,11 +144,14 @@ void Start_vCPU()
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __JMP: // 8 | Прыжок на метку (адрес)
-    IPR++;
-    IPR = bytecode[IPR];
     #if defined DEBUG_MODE
-    printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
+    printf("\n%s, ", hex_to_string[bytecode[IPR]]); // инструкция
     #endif
+    IPR++;
+    #if defined DEBUG_MODE
+    printf("%02X\t\t| %02X %02X\n", bytecode[IPR], bytecode[IPR-1], bytecode[IPR]); // данные
+    #endif
+    IPR = bytecode[IPR];
     IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
