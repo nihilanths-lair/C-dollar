@@ -13,7 +13,9 @@ unsigned char bytecode[] =
     0x06, 45, // ADD GPR, 45 / gpr += 45; | 5 + 45 = 50
     0x07,  3, // SUB GPR, 3  / gpr -= 3;  | 50 - 3 = 47
     0x04,  5, // MUL GPR, 5  / gpr *= 5;  | 47 * 5 = 235
-    0x08, 10, // JMP, 10
+    0x08, 12, // JMP, 12
+    0x03,     // NOP
+    0x03,     // NOP
     0x03,     // NOP
     0x03,     // NOP
     0x03,     // NOP
@@ -28,21 +30,6 @@ unsigned char GPR = 0x00; // general purpose register / регистр обще�
 // MOV GPR, mem8   - поместить в регистр GPR значение из памяти, обращение по имени (value = ptr_address)
 // MOV GPR, [mem8] - поместить в регистр GPR значение из памяти, обращение по адресу (value = *ptr_value)
 const unsigned char hex_to_string[][7+1] = {"HLT", "MOV GPR", "INT", "NOP", "MUL GPR", "DIV GPR", "ADD GPR", "SUB GPR", "JMP"};
-unsigned char hex_to_bin[256][8+1];
-void generate_hex_to_bin_table()
-{
-    for (int i = 0; i < 256; i++)
-    {
-        for (int j = 7; j >= 0; j--) hex_to_bin[i][7 - j] = (i & (1 << j)) ? '1' : '0';
-        hex_to_bin[i][8] = '\0';
-    }
-}
-char *byte_to_binary(unsigned char byte, char *output)
-{
-    for (int i = 7; i >= 0; i--) output[7 - i] = (byte & (1 << i)) ? '1' : '0';
-    output[8] = '\0';
-    return output;
-}
 //#define HEX_TO_STRING(arg) hex_to_string[arg]
 //#define HEX_TO_BIN(arg) hex_to_bin[arg]
 #define DEBUG_MODE
@@ -62,8 +49,8 @@ void Start_vCPU()
     };
     //while (true)
     //{
+    //generate_hex_to_bin_table();
     #if defined DEBUG_MODE
-    generate_hex_to_bin_table();
     puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #");
     #endif
     EXECUTE:
