@@ -157,8 +157,7 @@ void Start_vCPU()
     printf("\n%03d=%02X | %s %02X\t\t| %02X %02X", IPR-1, IPR-1, hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]); // , \\-\t
     #endif
     IPR = bytecode[IPR];
-    //IPR++; // получение адреса след. инструкции
-    goto EXECUTE; // переход к след. инструкции
+    goto EXECUTE;
     //--------------------------------------------------------------------------------
     //}
     STOP_vCPU:
