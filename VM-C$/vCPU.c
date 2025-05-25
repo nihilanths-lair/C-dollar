@@ -7,7 +7,7 @@
 #include <stdbool.h> // Для использования логических типов: false/true.
 #include <string.h>  // 
 
-char bytecode[] =
+unsigned char bytecode[] =
 {
     0x01,  5, // MOV GPR, 5 / gpr = 5;
     0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
