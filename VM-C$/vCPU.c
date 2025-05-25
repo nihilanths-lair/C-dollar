@@ -13,7 +13,7 @@ char bytecode[] =
     0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
     0x07,  3, // SUB GPR, 3 / gpr -= 3; | 50-3=47
     0x04,  5, // MUL GPR, 5 / gpr *= 5; | 47*5=235
-    0x08,  0, // JMP 0
+    0x08,  9, // JMP, 9
     0x00      // HLT
 };
 unsigned char IPR = 0x00; // instruction pointer register / регистр указателя инструкций
@@ -144,16 +144,15 @@ void Start_vCPU()
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __JMP: // 8 | Прыжок на метку (адрес)
-    #if defined DEBUG_MODE
-    printf("\n%s, ", hex_to_string[bytecode[IPR]]); // инструкция
-    #endif
+    //printf("\n%s, ", hex_to_string[bytecode[IPR]]); // мнемоника в символическом виде
     IPR++;
     #if defined DEBUG_MODE
-    printf("%02X\t\t| %02X %02X\n", bytecode[IPR], bytecode[IPR-1], bytecode[IPR]); // данные
+    //printf("%02X\t\t| %02X %02X\n", bytecode[IPR], bytecode[IPR-1], bytecode[IPR]); // данные
+    printf("\n%s, %02X\t\t| %02X %02X\n", hex_to_string[bytecode[IPR-1]], bytecode[IPR], bytecode[IPR-1], bytecode[IPR]);
     #endif
     IPR = bytecode[IPR];
-    IPR++;
-    goto EXECUTE;
+    IPR++; // получение адреса след. инструкции
+    goto EXECUTE; // переход к след. инструкции
     //--------------------------------------------------------------------------------
     //}
     STOP_vCPU:
