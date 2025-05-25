@@ -9,10 +9,10 @@
 
 unsigned char bytecode[] =
 {
-    0x01,  5, // MOV GPR, 5 / gpr = 5;
-    0x06, 45, // ADD GPR, 45 / gpr += 45; | 5+45=50
-    0x07,  3, // SUB GPR, 3 / gpr -= 3; | 50-3=47
-    0x04,  5, // MUL GPR, 5 / gpr *= 5; | 47*5=235
+    0x01,  5, // MOV GPR, 5  / gpr = 5;
+    0x06, 45, // ADD GPR, 45 / gpr += 45; | 5 + 45 = 50
+    0x07,  3, // SUB GPR, 3  / gpr -= 3;  | 50 - 3 = 47
+    0x04,  5, // MUL GPR, 5  / gpr *= 5;  | 47 * 5 = 235
     0x08, 10, // JMP, 10
     0x03,     // NOP
     0x03,     // NOP
@@ -21,8 +21,7 @@ unsigned char bytecode[] =
 };
 unsigned char IPR = 0x00; // instruction pointer register / регистр указателя инструкций
 unsigned char GPR = 0x00; // general purpose register / регистр общего назначения
-//unsigned short DR = 0x0000; // debug register / регистр отладки
-//unsigned char DR[2] = {'\0', '\0'}; // debug register / регистр отладки
+//unsigned short DR = 0x00; // debug register / регистр отладки
 // [MOV GPR], [?] / где, [MNC + OP1] = 0x01
 // GPR: [00] <- 0x00 или 00h
 // MOV GPR, imm8   - поместить в регистр GPR непосредственное значение
