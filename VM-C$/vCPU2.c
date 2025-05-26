@@ -16,7 +16,7 @@ unsigned char bytecode[] =
     0x08, 12,     // JMP, 12
     0x03,         // NOP
     0x03,         // NOP
-    0x0C, 56, 65, // CMP
+    0x0C, 2, 2,   // CMP
     0x03,         // NOP
     0x03,         // NOP
     0x00          // HLT
@@ -41,9 +41,9 @@ const unsigned char hex_to_string[13][7+1] =
     "ADD GPR", //  6
     "SUB GPR", //  7
     "JMP",     //  8
-    "-",       //  9
-    "-",       // 10
-    "-",       // 11
+    "CALL",    //  9
+    "PUSH",    // 10
+    "POP",     // 11
     "CMP"      // 12
 };
 //#define HEX_TO_STRING(arg) hex_to_string[arg]
@@ -181,20 +181,23 @@ void Start_vCPU()
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __CALL: //  9 | Вызов процедуры
+    IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __PUSH: // 10 | Положить на стек
+    IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __POP:  // 11 | Снять со стека
+    IPR++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
     __CMP: // 12 | Сравнение
     if (bytecode[++IPR] == bytecode[++IPR]) ZFR = true;
     else ZFR = false;
     #if defined DEBUG_MODE
-    printf("\n%03d=%02X | %s %02X %02X\t| %02X %02X %02X\n\n", IPR-1, IPR-1, hex_to_string[bytecode[IPR-2]], bytecode[IPR-1], bytecode[IPR], bytecode[IPR-2], bytecode[IPR-1], bytecode[IPR]); // ,
-    //printf("\n%03d=%02X | %s %02X %02X\t\t| %02X %02X %02X", IPR-1, IPR-1, hex_to_string[bytecode[IPR-2]], bytecode[IPR-1], bytecode[IPR], bytecode[IPR-2], bytecode[IPR-1], bytecode[IPR]);
+    printf("\n%03d=%02X | %s %02X %02X\t| %02X %02X %02X\n\n", IPR-2, IPR-2, hex_to_string[bytecode[IPR-2]], bytecode[IPR-1], bytecode[IPR], bytecode[IPR-2], bytecode[IPR-1], bytecode[IPR]); // ,
+    //printf("\n%03d=%02X | %s %02X %02X\t\t| %02X %02X %02X", IPR-2, IPR-2, hex_to_string[bytecode[IPR-2]], bytecode[IPR-1], bytecode[IPR], bytecode[IPR-2], bytecode[IPR-1], bytecode[IPR]);
     #endif
     IPR++;
     goto EXECUTE;
