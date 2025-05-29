@@ -13,6 +13,7 @@ int main()
         i++;
     }
     //printf("    \"\", // %02X %03d\n", i, i);
+    putchar('\n');
     printf("    \"MOV AL\", // %02X %03d\n", i, i);
     i++;
     printf("    \"MOV CL\", // %02X %03d\n", i, i);
@@ -20,6 +21,7 @@ int main()
     printf("    \"MOV DL\", // %02X %03d\n", i, i);
     i++;
     printf("    \"MOV BL\", // %02X %03d\n", i, i);
+    putchar('\n');
     i++;
     printf("    \"MOV AH\", // %02X %03d\n", i, i);
     i++;
@@ -28,6 +30,7 @@ int main()
     printf("    \"MOV DH\", // %02X %03d\n", i, i);
     i++;
     printf("    \"MOV BH\", // %02X %03d\n", i, i);
+    putchar('\n');
     i++;
     printf("    \"MOV AX\", // %02X %03d\n", i, i);
     i++;
@@ -35,7 +38,8 @@ int main()
     i++;
     printf("    \"MOV DX\", // %02X %03d\n", i, i);
     i++;
-    printf("    \"MOV BX\"  // %02X %03d\n", i, i);
+    printf("    \"MOV BX\", // %02X %03d\n", i, i);
+    putchar('\n');
     i = 188;//0xBC
     while (i < 255)//0xFF
     {
