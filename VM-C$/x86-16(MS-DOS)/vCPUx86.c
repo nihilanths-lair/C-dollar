@@ -793,7 +793,8 @@ void Run_vCPUx86()
     // Пересылка данных
     __176: // __B0: / MOV AL,
     {//#1
-        AX = opcode[++IP];//IP++;
+        //AX = opcode[++IP];//IP++;
+        AX = (AX & 0xFF00) | opcode[++IP];  // обнуляем AL, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -803,7 +804,8 @@ void Run_vCPUx86()
     }//#1
     __177: // __B1: / MOV CL,
     {//#2
-        CX = opcode[++IP];//IP++;
+        //CX = opcode[++IP];//IP++;
+        CX = (CX & 0xFF00) | opcode[++IP];  // обнуляем CL, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -813,7 +815,8 @@ void Run_vCPUx86()
     }//#2
     __178: // __B2: / MOV DL,
     {//#3
-        DX = opcode[++IP];//IP++;
+        //DX = opcode[++IP];//IP++;
+        DX = (DX & 0xFF00) | opcode[++IP];  // обнуляем DL, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -823,7 +826,8 @@ void Run_vCPUx86()
     }//#3
     __179: // __B3: / MOV BL,
     {//#4
-        BX = opcode[++IP];//IP++;
+        //BX = opcode[++IP];//IP++;
+        BX = (BX & 0xFF00) | opcode[++IP];  // обнуляем BL, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -833,7 +837,8 @@ void Run_vCPUx86()
     }//#4
     __180: // __B4: / MOV AH,
     {//#5
-        AX = opcode[++IP];//IP++;
+        //AX = opcode[++IP];//IP++;
+        AX = (AX & 0x00FF) | (opcode[++IP] << 8);  // обнуляем AH, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -843,7 +848,8 @@ void Run_vCPUx86()
     }//#5
     __181: // __B5: / MOV CH,
     {//#6
-        CX = opcode[++IP];//IP++;
+        //CX = opcode[++IP];//IP++;
+        CX = (CX & 0x00FF) | (opcode[++IP] << 8);  // обнуляем CH, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -853,7 +859,8 @@ void Run_vCPUx86()
     }//#6
     __182: // __B6: / MOV DH,
     {//#7
-        DX = opcode[++IP];//IP++;
+        //DX = opcode[++IP];//IP++;
+        DX = (DX & 0x00FF) | (opcode[++IP] << 8);  // обнуляем DH, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
@@ -863,7 +870,8 @@ void Run_vCPUx86()
     }//#7
     __183: // __B7: / MOV BH,
     {//#8
-        BX = opcode[++IP];//IP++;
+        //BX = opcode[++IP];//IP++;
+        BX = (BX & 0x00FF) | (opcode[++IP] << 8);  // обнуляем BH, записываем байт
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
