@@ -2,8 +2,9 @@
 
 int main()
 {
-    short count = 255;
+    short count = 32;
     short i;
+    /*
     puts("const unsigned char translate_opcode_into_symbolic_form[][8+1] =");
     puts("{");
     i = 0;
@@ -48,25 +49,52 @@ int main()
     }
     printf("    \"?\"  // %02X %03d\n", i, i);
     printf("};");
-    /*
+    */
     puts("void *instructions[] =");
+    puts("{");
+    i = 0;
+    while (i < 205)
+    {
+        printf("    &&instructions_%03d,\n", i);
+        i++;
+    }
+    printf("    &&instructions_%03d\n", i);
+    puts("};");
+    puts("goto *instructions[opcode[++IP]];");
+    i = 0;
+    while (i < 175)
+    {
+        printf("instructions_%03d:\n", i);
+        puts("{");
+        puts("}");
+        i++;
+    }
+    printf("instructions_%03d:\n", i);
+    puts("{");
+    puts("}");
+    /*
+    puts("void *functions[] =");
     puts("{");
     i = 0;
     while (i < count)
     {
-        printf("    &&__%03d,\n", i);
+        printf("    &&functions_%03d,\n", i);
         i++;
     }
-    printf("    &&__%03d\n", i);
+    printf("    &&functions_%03d\n", i);
     puts("};");
-    puts("goto *(*(instructions + *(opcode + IP)));");
+    puts("goto *functions[opcode[++IP]];");
     i = 0;
     while (i < count)
     {
-        printf("__%03d:\n", i);
+        printf("functions_%03d:\n", i);
+        puts("{");
+        puts("}");
         i++;
     }
-    printf("__%03d:", i);
+    printf("functions_%03d:\n", i);
+    puts("{");
+    putchar('}');
     */
     return 0;
 }
