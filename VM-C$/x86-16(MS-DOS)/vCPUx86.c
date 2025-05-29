@@ -257,7 +257,9 @@ const unsigned char translate_opcode_into_symbolic_form[][8+1] =
     "?", // CA 202
     "?", // CB 203
     "?", // CC 204
-    "?", // CD 205
+
+    "INT", // CD 205
+
     "?", // CE 206
     "?", // CF 207
     "?", // D0 208
@@ -908,9 +910,25 @@ void Run_vCPUx86()
         //goto EXECUTE;
         goto STOP_vCPU;
     }//#11
-    __187:
+    __187: // __BB: / MOV BX,
     {//#12
-
+        //BX = opcode[++IP];//IP++;
+        /*
+        // Big-endian (BH = 1-й байт, BL = 2-й байт)
+        BX = opcode[++IP] << 8;  // BH = первый байт (старший)
+        BX |= opcode[++IP];      // BL = второй байт (младший)
+        */
+        //* 
+        // Little-endian (BL = 1-й байт, BH = 2-й байт)
+        BX = opcode[++IP];       // BL = первый байт (младший)
+        BX |= opcode[++IP] << 8; // BH = второй байт (старший)
+        //*/
+        #if defined DEBUG_MODE
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-2, IP-2, opcode[IP-2], opcode[IP-1], opcode[IP-2], opcode[IP-1], translate_opcode_into_symbolic_form[opcode[IP-2]], opcode[IP-1]);
+        #endif
+        IP++;
+        goto EXECUTE;
     }//#12
     __188:
     __189:
@@ -929,7 +947,151 @@ void Run_vCPUx86()
     __202:
     __203:
     __204:
-    __205:
+    __205: // __CD: / INT
+    {
+        void *functions[] =
+        {
+            &&functions_000,
+            &&functions_001,
+            &&functions_002,
+            &&functions_003,
+            &&functions_004,
+            &&functions_005,
+            &&functions_006,
+            &&functions_007,
+            &&functions_008,
+            &&functions_009,
+            &&functions_010,
+            &&functions_011,
+            &&functions_012,
+            &&functions_013,
+            &&functions_014,
+            &&functions_015,
+            &&functions_016,
+            &&functions_017,
+            &&functions_018,
+            &&functions_019,
+            &&functions_020,
+            &&functions_021,
+            &&functions_022,
+            &&functions_023,
+            &&functions_024,
+            &&functions_025,
+            &&functions_026,
+            &&functions_027,
+            &&functions_028,
+            &&functions_029,
+            &&functions_030,
+            &&functions_031,
+            &&functions_032,
+            &&functions_033
+        };
+        goto *functions[opcode[++IP]];
+        functions_000:
+        {
+        }
+        functions_001:
+        {
+        }
+        functions_002:
+        {
+        }
+        functions_003:
+        {
+        }
+        functions_004:
+        {
+        }
+        functions_005:
+        {
+        }
+        functions_006:
+        {
+        }
+        functions_007:
+        {
+        }
+        functions_008:
+        {
+        }
+        functions_009:
+        {
+        }
+        functions_010:
+        {
+        }
+        functions_011:
+        {
+        }
+        functions_012:
+        {
+        }
+        functions_013:
+        {
+        }
+        functions_014:
+        {
+        }
+        functions_015:
+        {
+        }
+        functions_016:
+        {
+        }
+        functions_017:
+        {
+        }
+        functions_018:
+        {
+        }
+        functions_019:
+        {
+        }
+        functions_020:
+        {
+        }
+        functions_021:
+        {
+        }
+        functions_022:
+        {
+        }
+        functions_023:
+        {
+        }
+        functions_024:
+        {
+        }
+        functions_025:
+        {
+        }
+        functions_026:
+        {
+        }
+        functions_027:
+        {
+        }
+        functions_028:
+        {
+        }
+        functions_029:
+        {
+        }
+        functions_030:
+        {
+        }
+        functions_031:
+        {
+        }
+        functions_032: // 20
+        {
+        }
+        functions_033: // 21
+        {
+            while (opcode[++IP] != '\0') putchar(opcode[IP]);
+            goto EXECUTE;
+        }
+    }
     __206:
     __207:
     __208:
