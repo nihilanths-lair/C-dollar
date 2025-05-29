@@ -881,7 +881,17 @@ void Run_vCPUx86()
     }//#10
     __186: // __BA: / MOV DX,
     {//#11
-        DX = opcode[++IP];//IP++;
+        //DX = opcode[++IP];//IP++;
+        /*
+        // Big-endian (DH = 1-й байт, DL = 2-й байт)
+        DX = opcode[++IP] << 8;  // DH = первый байт (старший)
+        DX |= opcode[++IP];      // DL = второй байт (младший)
+        */
+        //* 
+        // Little-endian (DL = 1-й байт, DH = 2-й байт)
+        DX = opcode[++IP];       // DL = первый байт (младший)
+        DX |= opcode[++IP] << 8; // DH = второй байт (старший)
+        //*/
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
         printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
