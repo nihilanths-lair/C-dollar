@@ -1,10 +1,10 @@
 /*/
 |*|   /!\ Encoding Windows-1251
-|*|   /!\ Кодировка Windows-1251
+|*|   /!\ РљРѕРґРёСЂРѕРІРєР° Windows-1251
 /*/
-#include <stdio.h>   // Для ввода/вывода данных на консоль.
-#include <locale.h>  // Для локализации консоли.
-#include <string.h>  // Для работы со строками.
+#include <stdio.h>   // Р”Р»СЏ РІРІРѕРґР°/РІС‹РІРѕРґР° РґР°РЅРЅС‹С… РЅР° РєРѕРЅСЃРѕР»СЊ.
+#include <locale.h>  // Р”Р»СЏ Р»РѕРєР°Р»РёР·Р°С†РёРё РєРѕРЅСЃРѕР»Рё.
+#include <string.h>  // Р”Р»СЏ СЂР°Р±РѕС‚С‹ СЃРѕ СЃС‚СЂРѕРєР°РјРё.
 
 unsigned char bytecode[] =
 {
@@ -23,26 +23,26 @@ unsigned char bytecode[] =
 typedef unsigned char uch;
 typedef unsigned short ush;
 /*--------------------------*/
-uch IP = 0x00; // Instruction pointer / Указатель инструкций.
+uch IP = 0x00; // Instruction pointer / РЈРєР°Р·Р°С‚РµР»СЊ РёРЅСЃС‚СЂСѓРєС†РёР№.
 /*--------------------------*/
-uch GP = 0x00; // General purpose / Общего назначения.
+uch GP = 0x00; // General purpose / РћР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ.
 
 ush AX = 0x0000;
 ush DX = 0x0000;
 /*--------------------------*/
-uch SP = 0x00; // Stack pointer / Указатель стека.
-uch BP = 0x00; // Base pointer / Указатель базы.
+uch SP = 0x00; // Stack pointer / РЈРєР°Р·Р°С‚РµР»СЊ СЃС‚РµРєР°.
+uch BP = 0x00; // Base pointer / РЈРєР°Р·Р°С‚РµР»СЊ Р±Р°Р·С‹.
 /*--------------------------*/
-uch SI = 0x00; // Source index / Индекс источника.
+uch SI = 0x00; // Source index / РРЅРґРµРєСЃ РёСЃС‚РѕС‡РЅРёРєР°.
 /*--------------------------*/
-#include <stdbool.h> // Для использования логических типов: false/true.
-bool ZFR = false; // zero flag register / регистр нулевого флага.
-//unsigned short DR = 0x00; // debug register / регистр отладки.
-// [MOV GP], [?] / где, [MNC + OP1] = 0x01
-// GP: [00] <- 0x00 или 00h
-// MOV GP, imm8   - поместить в регистр GP непосредственное значение
-// MOV GP, mem8   - поместить в регистр GP значение из памяти, обращение по имени (value = ptr_address)
-// MOV GP, [mem8] - поместить в регистр GP значение из памяти, обращение по адресу (value = *ptr_value)
+#include <stdbool.h> // Р”Р»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Р»РѕРіРёС‡РµСЃРєРёС… С‚РёРїРѕРІ: false/true.
+bool ZFR = false; // zero flag register / СЂРµРіРёСЃС‚СЂ РЅСѓР»РµРІРѕРіРѕ С„Р»Р°РіР°.
+//unsigned short DR = 0x00; // debug register / СЂРµРіРёСЃС‚СЂ РѕС‚Р»Р°РґРєРё.
+// [MOV GP], [?] / РіРґРµ, [MNC + OP1] = 0x01
+// GP: [00] <- 0x00 РёР»Рё 00h
+// MOV GP, imm8   - РїРѕРјРµСЃС‚РёС‚СЊ РІ СЂРµРіРёСЃС‚СЂ GP РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
+// MOV GP, mem8   - РїРѕРјРµСЃС‚РёС‚СЊ РІ СЂРµРіРёСЃС‚СЂ GP Р·РЅР°С‡РµРЅРёРµ РёР· РїР°РјСЏС‚Рё, РѕР±СЂР°С‰РµРЅРёРµ РїРѕ РёРјРµРЅРё (value = ptr_address)
+// MOV GP, [mem8] - РїРѕРјРµСЃС‚РёС‚СЊ РІ СЂРµРіРёСЃС‚СЂ GP Р·РЅР°С‡РµРЅРёРµ РёР· РїР°РјСЏС‚Рё, РѕР±СЂР°С‰РµРЅРёРµ РїРѕ Р°РґСЂРµСЃСѓ (value = *ptr_value)
 const unsigned char hex_to_string[][6+1] =
 {
     "HLT",     //  0
@@ -72,7 +72,7 @@ void generate_hex_to_bin_table()
 }
 //#define HEX_TO_BIN(arg) hex_to_bin[arg]
 #define DEBUG_MODE
-void Run_vCPU()
+void Run_vCPUx86()
 {
     void *instructions[] =
     {
@@ -93,7 +93,7 @@ void Run_vCPU()
     };
     #if defined DEBUG_MODE
     generate_hex_to_bin_table();
-    puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #\n");
+    puts("\n# DEBUG MODE ON | Р Р•Р–РРњ РћРўР›РђР”РљР Р’РљР›Р®Р§Р•Рќ #\n");
     #endif
     EXECUTE:
     #if defined DEBUG_MODE
@@ -109,14 +109,14 @@ void Run_vCPU()
     #endif
     goto *(*(instructions + *(bytecode + IP))); // goto *instructions[bytecode[IP]];
     //--------------------------------------------------------------------------------
-    __HLT: // 0 | Останавливает выполнение vCPU
+    __HLT: // 0 | РћСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІС‹РїРѕР»РЅРµРЅРёРµ vCPU
     #if defined DEBUG_MODE
     printf("\n%03d=%02X | %s\t\t| %02X\n", IP, IP, hex_to_string[bytecode[IP]], bytecode[IP]);
     #endif
     IP++;
     goto STOP_vCPU; //break;
     //--------------------------------------------------------------------------------
-    __MOV: // 1 | Пересылка данных
+    __MOV: // 1 | РџРµСЂРµСЃС‹Р»РєР° РґР°РЅРЅС‹С…
     IP++;
     GP = bytecode[IP];
     #if defined DEBUG_MODE
@@ -126,7 +126,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __INT: // 2 | Обращение к таблице векторных прерываний (IVT)
+    __INT: // 2 | РћР±СЂР°С‰РµРЅРёРµ Рє С‚Р°Р±Р»РёС†Рµ РІРµРєС‚РѕСЂРЅС‹С… РїСЂРµСЂС‹РІР°РЅРёР№ (IVT)
     IP++;
     #if defined DEBUG_MODE
     printf("\n%03d=%02X | %s %02X\t| %02X %02X\n", hex_to_string[bytecode[IP-1]], bytecode[IP], bytecode[IP-1], bytecode[IP]);
@@ -146,7 +146,7 @@ void Run_vCPU()
     // } 2
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __NOP: // 3 | Заглушка
+    __NOP: // 3 | Р—Р°РіР»СѓС€РєР°
     #if defined DEBUG_MODE
     printf("\n%03d=%02X | %s\t\t| %02X\n\n", IP, IP, hex_to_string[bytecode[IP]], bytecode[IP]);
     //printf("\n%03d=%02X | %s\t\t| %02X", IP, IP, hex_to_string[bytecode[IP]], bytecode[IP]);
@@ -154,7 +154,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __MUL: // 4 | Умножение
+    __MUL: // 4 | РЈРјРЅРѕР¶РµРЅРёРµ
     IP++;
     GP *= bytecode[IP];
     #if defined DEBUG_MODE
@@ -164,7 +164,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __DIV: // 5 | Деление
+    __DIV: // 5 | Р”РµР»РµРЅРёРµ
     IP++;
     GP /= bytecode[IP];
     #if defined DEBUG_MODE
@@ -173,7 +173,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __ADD: // 6 | Сложение
+    __ADD: // 6 | РЎР»РѕР¶РµРЅРёРµ
     IP++;
     GP += bytecode[IP];
     #if defined DEBUG_MODE
@@ -183,7 +183,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __SUB: // 7 | Вычитание
+    __SUB: // 7 | Р’С‹С‡РёС‚Р°РЅРёРµ
     IP++;
     GP -= bytecode[IP];
     #if defined DEBUG_MODE
@@ -193,7 +193,7 @@ void Run_vCPU()
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __JMP: // 8 | Прыжок на метку (адрес)
+    __JMP: // 8 | РџСЂС‹Р¶РѕРє РЅР° РјРµС‚РєСѓ (Р°РґСЂРµСЃ)
     IP++;
     #if defined DEBUG_MODE
     printf("\n%03d=%02X | %s %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[bytecode[IP-1]], bytecode[IP], bytecode[IP-1], bytecode[IP]); // ,
@@ -202,23 +202,23 @@ void Run_vCPU()
     IP = bytecode[IP];
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __CALL: //  9 | Вызов процедуры
+    __CALL: //  9 | Р’С‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __PUSH: // 10 | Положить на стек
+    __PUSH: // 10 | РџРѕР»РѕР¶РёС‚СЊ РЅР° СЃС‚РµРє
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __POP: // 11 | Снять со стека
+    __POP: // 11 | РЎРЅСЏС‚СЊ СЃРѕ СЃС‚РµРєР°
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __RET: // 12 | Возврат из процедуры
+    __RET: // 12 | Р’РѕР·РІСЂР°С‚ РёР· РїСЂРѕС†РµРґСѓСЂС‹
     IP++;
     goto EXECUTE;
     //--------------------------------------------------------------------------------
-    __CMP: // 13 | Сравнение
+    __CMP: // 13 | РЎСЂР°РІРЅРµРЅРёРµ
     if (bytecode[++IP] == bytecode[++IP]) ZFR = true;
     else ZFR = false;
     #if defined DEBUG_MODE
@@ -237,7 +237,7 @@ void Run_vCPU()
     puts("    Z");
     printf("FR [%-1d]\n", ZFR);
     //puts("    Z");
-    puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
+    puts("\n# DEBUG MODE OFF | Р Р•Р–РРњ РћРўР›РђР”РљР Р’Р«РљР›Р®Р§Р•Рќ #");
     #endif
-    //puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
+    //puts("\n# DEBUG MODE OFF | Р Р•Р–РРњ РћРўР›РђР”РљР Р’Р«РљР›Р®Р§Р•Рќ #");
 }
