@@ -310,7 +310,9 @@ const unsigned char translate_opcode_into_symbolic_form[][8+1] =
     "?", // CA 202
     "?", // CB 203
     "?", // CC 204
-    "?", // CD 205
+    
+    "INT", // CD 205
+    
     "?", // CE 206
     "?", // CF 207
     "?", // D0 208
