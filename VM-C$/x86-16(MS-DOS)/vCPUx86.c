@@ -225,18 +225,22 @@ const unsigned char translate_opcode_into_symbolic_form[][8+1] =
     "?", // AD 173
     "?", // AE 174
     "?", // AF 175
+    
     "MOV AL", // B0 176
     "MOV CL", // B1 177
     "MOV DL", // B2 178
     "MOV BL", // B3 179
+
     "MOV AH", // B4 180
     "MOV CH", // B5 181
     "MOV DH", // B6 182
-    "MOV BH"  // B7 183
-    "?", // B8 184
-    "?", // B9 185
-    "?", // BA 186
-    "?", // BB 187
+    "MOV BH", // B7 183
+
+    "MOV AX", // B8 184
+    "MOV CX", // B9 185
+    "MOV DX", // BA 186
+    "MOV BX", // BB 187
+
     "?", // BC 188
     "?", // BD 189
     "?", // BE 190
