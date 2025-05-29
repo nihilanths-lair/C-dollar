@@ -1,0 +1,520 @@
+/*/
+|*|   /!\ Encoding Windows-1251
+|*|   /!\ Кодировка Windows-1251
+/*/
+#include <stdio.h>   // Для ввода/вывода данных на консоль.
+#include <locale.h>  // Для локализации консоли.
+#include <string.h>  // Для работы со строками.
+
+unsigned char opcode[] =
+{
+    0xB4,  9,     // MOV AH, 9
+    0x06, 45,     // MOV DX, offset String / -offset = 109
+    0x00          // HLT
+};
+/*------------------------------------------------------------*/
+typedef unsigned short R16;
+/*------------------------------------------------------------*/
+R16 AX; // Accumulator / Аккумулятор
+R16 BX; //        Base / База
+R16 CX; //     Counter / Счётчик
+R16 DX; //        Data / Данные
+/*------------------------------------------------------------*/
+R16 IP = 0x0100; // Instruction pointer / Указатель инструкций
+/*------------------------------------------------------------*/
+R16 CS = 0xFF00; //  Code segment / Сегмент кода
+R16 DS = 0x0700; //  Data segment / Сегмент данных
+R16 SS = 0x0700; // Stack segment / Сегмент стека
+
+R16 ES = 0x0700; // Extended segment / Расширенный сегмент
+/*------------------------------------------------------------*/
+R16 SP; // Stack pointer / Указатель стека
+R16 BP; //  Base pointer / Указатель базы
+/*------------------------------------------------------------*/
+R16 SI; //      Source index / Индекс источника
+R16 DI; // Destination index / Индекс приёмника
+/*------------------------------------------------------------*/
+#include <stdbool.h> // Для использования логических типов: false/true.
+bool ZF = false; // zero flag register / регистр нулевого флага.
+//unsigned short DR = 0x00; // debug register / регистр отладки.
+// [MOV GP], [?] / где, [MNC + OP1] = 0x01
+// GP: [00] <- 0x00 или 00h
+// MOV GP, imm8   - поместить в регистр GP непосредственное значение
+// MOV GP, mem8   - поместить в регистр GP значение из памяти, обращение по имени (value = ptr_address)
+// MOV GP, [mem8] - поместить в регистр GP значение из памяти, обращение по адресу (value = *ptr_value)
+const unsigned char hex_to_string[][6+1] =
+{
+    "HLT",    //  0
+    "MOV GP", //  1
+    "INT",    //  2
+    "NOP",    //  3
+    "MUL GP", //  4
+    "DIV GP", //  5
+    "ADD GP", //  6
+    "SUB GP", //  7
+    "JMP",    //  8
+    "CALL",   //  9
+    "PUSH",   // 10
+    "POP",    // 11
+    "RET"     // 12
+    "CMP"     // 13
+};
+//#define HEX_TO_STRING(arg) hex_to_string[arg]
+unsigned char hex_to_bin[256][8+1];
+void generate_hex_to_bin_table()
+{
+    for (int i = 0; i < 256; i++)
+    {
+        for (int j = 7; j >= 0; j--) hex_to_bin[i][7-j] = (i & (1 << j)) ? '1' : '0';
+        hex_to_bin[i][8] = '\0';
+    }
+}
+//#define HEX_TO_BIN(arg) hex_to_bin[arg]
+#define DEBUG_MODE
+void Run_vCPUx86()
+{
+    void *instructions[] =
+    {
+        &&__HLT,  //  0
+        &&__MOV,  //  1
+        &&__INT,  //  2
+        &&__NOP,  //  3
+        &&__MUL,  //  4
+        &&__DIV,  //  5
+        &&__ADD,  //  6
+        &&__SUB,  //  7
+        &&__JMP,  //  8
+        &&__CALL, //  9
+        &&__PUSH, // 10
+        &&__POP,  // 11
+        &&__RET,  // 12
+        &&__CMP   // 13
+    };
+    #if defined DEBUG_MODE
+    generate_hex_to_bin_table();
+    puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #\n");
+    #endif
+    EXECUTE:
+    #if defined DEBUG_MODE
+    puts("-------------------------------------------");
+    puts("\t HEX\t    DEC");
+    puts("\t*H|*L(8)   *H|*L(8)");
+    //puts("\tAH|AL(8)   AH|AL(8)");
+    printf("AX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (AX>>8)&0xFF, AX&0xFF, (AX>>8)&0xFF, AX&0xFF, AX);//, hex_to_bin[AX]);
+    //puts("\tBH|BL(8)   BH|BL(8)");
+    printf("BX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (BX>>8)&0xFF, BX&0xFF, (BX>>8)&0xFF, BX&0xFF, BX);
+    //puts("\tCH|CL(8)   CH|CL(8)");
+    printf("CX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (CX>>8)&0xFF, CX&0xFF, (CX>>8)&0xFF, CX&0xFF, CX);
+    //puts("\tDH|DL(8)   DH|DL(8)");
+    printf("DX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (DX>>8)&0xFF, DX&0xFF, (DX>>8)&0xFF, DX&0xFF, DX);
+    puts("");
+    printf("CS(16):[%02X.%02X] | [%03d.%03d] = %d\n", (CS>>8)&0xFF, CS&0xFF, (CS>>8)&0xFF, CS&0xFF, CS); // "/%d", , 0xFFFF);
+    printf("IP(16):[%02X.%02X] | [%03d.%03d] = %d\n", (IP>>8)&0xFF, IP&0xFF, (IP>>8)&0xFF, IP&0xFF, IP); // "/%d", , 0xFFFF);
+    puts("");
+    printf("CS:IP(16) [%02X.%02X:%02X.%02X] | [%03d.%03d:%03d.%03d] = %d:%d\n",// =%d
+     (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
+     (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
+     CS, IP//, CS+IP-1
+    );
+    printf("CS+IP(16) [%02X.%02X]  [%03d.%03d] = %d\n",
+     (CS+IP-1)>>8&0xFF, (CS+IP-1)&0xFF,
+     (CS+IP-1)>>8&0xFF, (CS+IP-1)&0xFF,
+     CS+IP-1
+    );
+    //printf("IP(16):[%02X|%02X] | [%03d|%03d] = %4d/%d\n", (IP>>8)&0xFF, IP&0xFF, (IP>>8)&0xFF, IP&0xFF, IP, 0xFFFF);
+    puts("------------------------------------------");
+    puts("    Z");
+    printf("FR [%-1d]\n", ZF);
+    //puts("    Z");
+    puts("------");
+    #endif
+    goto *(*(instructions + *(opcode + IP))); // goto *instructions[opcode[IP]];
+    //--------------------------------------------------------------------------------
+    __000:
+    __001:
+    __002:
+    __003:
+    __004:
+    __005:
+    __006:
+    __007:
+    __008:
+    __009:
+    __010:
+    __011:
+    __012:
+    __013:
+    __014:
+    __015:
+    __016:
+    __017:
+    __018:
+    __019:
+    __020:
+    __021:
+    __022:
+    __023:
+    __024:
+    __025:
+    __026:
+    __027:
+    __028:
+    __029:
+    __030:
+    __031:
+    __032:
+    __033:
+    __034:
+    __035:
+    __036:
+    __037:
+    __038:
+    __039:
+    __040:
+    __041:
+    __042:
+    __043:
+    __044:
+    __045:
+    __046:
+    __047:
+    __048:
+    __049:
+    __050:
+    __051:
+    __052:
+    __053:
+    __054:
+    __055:
+    __056:
+    __057:
+    __058:
+    __059:
+    __060:
+    __061:
+    __062:
+    __063:
+    __064:
+    __065:
+    __066:
+    __067:
+    __068:
+    __069:
+    __070:
+    __071:
+    __072:
+    __073:
+    __074:
+    __075:
+    __076:
+    __077:
+    __078:
+    __079:
+    __080:
+    __081:
+    __082:
+    __083:
+    __084:
+    __085:
+    __086:
+    __087:
+    __088:
+    __089:
+    __090:
+    __091:
+    __092:
+    __093:
+    __094:
+    __095:
+    __096:
+    __097:
+    __098:
+    __099:
+    __100:
+    __101:
+    __102:
+    __103:
+    __104:
+    __105:
+    __106:
+    __107:
+    __108:
+    __109:
+    __110:
+    __111:
+    __112:
+    __113:
+    __114:
+    __115:
+    __116:
+    __117:
+    __118:
+    __119:
+    __120:
+    __121:
+    __122:
+    __123:
+    __124:
+    __125:
+    __126:
+    __127:
+    __128:
+    __129:
+    __130:
+    __131:
+    __132:
+    __133:
+    __134:
+    __135:
+    __136:
+    __137:
+    __138:
+    __139:
+    __140:
+    __141:
+    __142:
+    __143:
+    __144:
+    __145:
+    __146:
+    __147:
+    __148:
+    __149:
+    __150:
+    __151:
+    __152:
+    __153:
+    __154:
+    __155:
+    __156:
+    __157:
+    __158:
+    __159:
+    __160:
+    __161:
+    __162:
+    __163:
+    __164:
+    __165:
+    __166:
+    __167:
+    __168:
+    __169:
+    __170:
+    __171:
+    __172:
+    __173:
+    __174:
+    __175:
+    __176:
+    __177:
+    __178:
+    __179:
+    __180:
+    __181:
+    __182:
+    __183:
+    __184:
+    __185:
+    __186:
+    __187:
+    __188:
+    __189:
+    __190:
+    __191:
+    __192:
+    __193:
+    __194:
+    __195:
+    __196:
+    __197:
+    __198:
+    __199:
+    __200:
+    __201:
+    __202:
+    __203:
+    __204:
+    __205:
+    __206:
+    __207:
+    __208:
+    __209:
+    __210:
+    __211:
+    __212:
+    __213:
+    __214:
+    __215:
+    __216:
+    __217:
+    __218:
+    __219:
+    __220:
+    __221:
+    __222:
+    __223:
+    __224:
+    __225:
+    __226:
+    __227:
+    __228:
+    __229:
+    __230:
+    __231:
+    __232:
+    __233:
+    __234:
+    __235:
+    __236:
+    __237:
+    __238:
+    __239:
+    __240:
+    __241:
+    __242:
+    __243:
+    __244:
+    __245:
+    __246:
+    __247:
+    __248:
+    __249:
+    __250:
+    __251:
+    __252:
+    __253:
+    __254:
+    __255:
+    __HLT: // 0 | Останавливает выполнение vCPU
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s\t\t| %02X\n", IP, IP, hex_to_string[opcode[IP]], opcode[IP]);
+    #endif
+    IP++;
+    goto STOP_vCPU; //break;
+    //--------------------------------------------------------------------------------
+    __MOV: // 1 | Пересылка данных
+    IP++;
+    //GP = opcode[IP];
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __INT: // 2 | Обращение к таблице векторных прерываний (IVT)
+    IP++;
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s %02X\t| %02X %02X\n", hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    void *functions[] =
+    {
+        &&__09h,
+        &&__10h
+    };
+    goto *functions[opcode[IP]]; // goto *(*(functions + AX));
+    // { 2
+    __09h:
+    //uch *ptr_str = &opcode[DX];
+    //puts(ptr_str);
+    goto EXECUTE;
+    __10h:
+    // } 2
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __NOP: // 3 | Заглушка
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s\t\t| %02X\n\n", IP, IP, hex_to_string[opcode[IP]], opcode[IP]);
+    //printf("\n%03d=%02X | %s\t\t| %02X", IP, IP, hex_to_string[opcode[IP]], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __MUL: // 4 | Умножение
+    IP++;
+    //GP *= opcode[IP];
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __DIV: // 5 | Деление
+    IP++;
+    //GP /= opcode[IP];
+    #if defined DEBUG_MODE
+    printf("\n%s, %02X\t| %02X %02X\n", hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __ADD: // 6 | Сложение
+    IP++;
+    //GP += opcode[IP];
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __SUB: // 7 | Вычитание
+    IP++;
+    //GP -= opcode[IP];
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __JMP: // 8 | Прыжок на метку (адрес)
+    IP++;
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]); // ,
+    //printf("\n%03d=%02X | %s %02X\t\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]); //
+    #endif
+    IP = opcode[IP];
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __CALL: //  9 | Вызов процедуры
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __PUSH: // 10 | Положить на стек
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __POP: // 11 | Снять со стека
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __RET: // 12 | Возврат из процедуры
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    __CMP: // 13 | Сравнение
+    if (opcode[++IP] == opcode[++IP]) ZF = true;
+    else ZF = false;
+    #if defined DEBUG_MODE
+    printf("\n%03d=%02X | %s %02X %02X\t| %02X %02X %02X\n\n", IP-2, IP-2, hex_to_string[opcode[IP-2]], opcode[IP-1], opcode[IP], opcode[IP-2], opcode[IP-1], opcode[IP]); // ,
+    //printf("\n%03d=%02X | %s %02X %02X\t\t| %02X %02X %02X", IP-2, IP-2, hex_to_string[opcode[IP-2]], opcode[IP-1], opcode[IP], opcode[IP-2], opcode[IP-1], opcode[IP]);
+    #endif
+    IP++;
+    goto EXECUTE;
+    //--------------------------------------------------------------------------------
+    //}
+    STOP_vCPU:
+    #if defined DEBUG_MODE
+    printf("\nIP [%03d|%02X|%s]\n", IP, IP, hex_to_bin[IP]);
+    //printf("GP [%03d|%02X|%s]\n", GP, GP, hex_to_bin[GP]);
+    puts("------");
+    puts("    Z");
+    printf("FR [%-1d]\n", ZF);
+    //puts("    Z");
+    puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
+    #endif
+    //puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
+}
