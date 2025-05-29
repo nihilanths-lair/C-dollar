@@ -22,7 +22,7 @@ R16 DX; //        Data / Данные
 /*------------------------------------------------------------*/
 R16 IP = 0x0100; // Instruction pointer / Указатель инструкций
 /*------------------------------------------------------------*/
-R16 CS = 0x0700; //  Code segment / Сегмент кода
+R16 CS = 0xFF00; //  Code segment / Сегмент кода
 R16 DS = 0x0700; //  Data segment / Сегмент данных
 R16 SS = 0x0700; // Stack segment / Сегмент стека
 
@@ -100,21 +100,29 @@ void Run_vCPUx86()
     puts("\t HEX\t    DEC");
     puts("\t*H|*L(8)   *H|*L(8)");
     //puts("\tAH|AL(8)   AH|AL(8)");
-    printf("AX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (AX>>8)&0xFF, AX&0xFF, (AX>>8)&0xFF, AX&0xFF, AX);//, hex_to_bin[AX]);
+    printf("AX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (AX>>8)&0xFF, AX&0xFF, (AX>>8)&0xFF, AX&0xFF, AX);//, hex_to_bin[AX]);
     //puts("\tBH|BL(8)   BH|BL(8)");
-    printf("BX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (BX>>8)&0xFF, BX&0xFF, (BX>>8)&0xFF, BX&0xFF, BX);
+    printf("BX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (BX>>8)&0xFF, BX&0xFF, (BX>>8)&0xFF, BX&0xFF, BX);
     //puts("\tCH|CL(8)   CH|CL(8)");
-    printf("CX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (CX>>8)&0xFF, CX&0xFF, (CX>>8)&0xFF, CX&0xFF, CX);
+    printf("CX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (CX>>8)&0xFF, CX&0xFF, (CX>>8)&0xFF, CX&0xFF, CX);
     //puts("\tDH|DL(8)   DH|DL(8)");
-    printf("DX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (DX>>8)&0xFF, DX&0xFF, (DX>>8)&0xFF, DX&0xFF, DX);
+    printf("DX(16):[%02X.%02X] | [%03d.%03d] = %d\n", (DX>>8)&0xFF, DX&0xFF, (DX>>8)&0xFF, DX&0xFF, DX);
     puts("");
-    printf("CS:IP(16):[%02X|%02X:%02X|%02X] | [%03d|%03d:%03d|%03d] = %d/%d\n",
+    printf("CS(16):[%02X.%02X] | [%03d.%03d] = %d\n", (CS>>8)&0xFF, CS&0xFF, (CS>>8)&0xFF, CS&0xFF, CS); // "/%d", , 0xFFFF);
+    printf("IP(16):[%02X.%02X] | [%03d.%03d] = %d\n", (IP>>8)&0xFF, IP&0xFF, (IP>>8)&0xFF, IP&0xFF, IP); // "/%d", , 0xFFFF);
+    puts("");
+    printf("CS:IP(16) [%02X.%02X:%02X.%02X] | [%03d.%03d:%03d.%03d] = %d:%d\n",// =%d
      (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
      (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
-     CS+IP, 0xFFFF
+     CS, IP//, CS+IP-1
+    );
+    printf("CS+IP(16) [%02X.%02X]  [%03d.%03d] = %d\n",
+     (CS+IP-1)>>8&0xFF, (CS+IP-1)&0xFF,
+     (CS+IP-1)>>8&0xFF, (CS+IP-1)&0xFF,
+     CS+IP-1
     );
     //printf("IP(16):[%02X|%02X] | [%03d|%03d] = %4d/%d\n", (IP>>8)&0xFF, IP&0xFF, (IP>>8)&0xFF, IP&0xFF, IP, 0xFFFF);
-    puts("------");
+    puts("------------------------------------------");
     puts("    Z");
     printf("FR [%-1d]\n", ZF);
     //puts("    Z");
