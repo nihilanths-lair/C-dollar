@@ -27,15 +27,23 @@ int main()
     i++;
     printf("    \"MOV DH\", // %02X %03d\n", i, i);
     i++;
-    printf("    \"MOV BH\"  // %02X %03d\n", i, i);
-    i = 184;//0xB8
+    printf("    \"MOV BH\", // %02X %03d\n", i, i);
+    i++;
+    printf("    \"MOV AX\", // %02X %03d\n", i, i);
+    i++;
+    printf("    \"MOV CX\", // %02X %03d\n", i, i);
+    i++;
+    printf("    \"MOV DX\", // %02X %03d\n", i, i);
+    i++;
+    printf("    \"MOV BX\"  // %02X %03d\n", i, i);
+    i = 188;//0xBC
     while (i < 255)//0xFF
     {
         printf("    \"?\", // %02X %03d\n", i, i);
         i++;
     }
     printf("    \"?\"  // %02X %03d\n", i, i);
-    puts("};");
+    printf("};");
     /*
     puts("void *instructions[] =");
     puts("{");
