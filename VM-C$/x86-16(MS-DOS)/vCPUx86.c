@@ -548,10 +548,51 @@ void Run_vCPUx86()
     __173:
     __174:
     __175:
-    __176:
-    __177:
-    __178:
-    __179:
+    // Пересылка данных
+    __176: // __B0: / MOV AL,
+    {//#1
+        IP++;
+        AX = opcode[IP];
+        #if defined DEBUG_MODE
+        printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        #endif
+        IP++;
+        goto EXECUTE;
+    }//#1
+    __177: // __B1: / MOV CL,
+    {//#2
+        IP++;
+        CX = opcode[IP];
+        #if defined DEBUG_MODE
+        printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        #endif
+        IP++;
+        goto EXECUTE;
+    }//#2
+    __178: // __B2: / MOV DL,
+    {//#3
+        IP++;
+        DX = opcode[IP];
+        #if defined DEBUG_MODE
+        printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        #endif
+        IP++;
+        goto EXECUTE;
+    }//#3
+    __179: // __B3: / MOV BL,
+    {//#4
+        IP++;
+        BX = opcode[IP];
+        #if defined DEBUG_MODE
+        printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        #endif
+        IP++;
+        goto EXECUTE;
+    }//#4
     __180:
     __181:
     __182:
@@ -634,16 +675,6 @@ void Run_vCPUx86()
     #endif
     IP++;
     goto STOP_vCPU; //break;
-    //--------------------------------------------------------------------------------
-    __MOV: // 1 | Пересылка данных
-    IP++;
-    //GP = opcode[IP];
-    #if defined DEBUG_MODE
-    printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-    //printf("\n%03d=%02X | %s, %02X\t| %02X %02X", IP-1, IP-1, hex_to_string[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-    #endif
-    IP++;
-    goto EXECUTE;
     //--------------------------------------------------------------------------------
     __INT: // 2 | Обращение к таблице векторных прерываний (IVT)
     IP++;
