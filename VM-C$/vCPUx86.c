@@ -15,24 +15,24 @@ unsigned char opcode[] =
 /*------------------------------------------------------------*/
 typedef unsigned short R16;
 /*------------------------------------------------------------*/
-R16 IP; // Instruction pointer / Указатель инструкций.
-/*------------------------------------------------------------*/
 R16 AX; // Accumulator / Аккумулятор
 R16 BX; //        Base / База
 R16 CX; //     Counter / Счётчик
 R16 DX; //        Data / Данные
 /*------------------------------------------------------------*/
-R16 CS; //     Code segment / Сегмент кода
-R16 DS; //     Data segment / Сегмент данных
-R16 SS; //    Stack segment / Сегмент стека
+R16 IP = 0x0100; // Instruction pointer / Указатель инструкций
+/*------------------------------------------------------------*/
+R16 CS = 0x0700; //  Code segment / Сегмент кода
+R16 DS = 0x0700; //  Data segment / Сегмент данных
+R16 SS = 0x0700; // Stack segment / Сегмент стека
 
-R16 ES; // Extended segment / Расширенный сегмент
+R16 ES = 0x0700; // Extended segment / Расширенный сегмент
 /*------------------------------------------------------------*/
-R16 SP; // Stack pointer / Указатель стека.
-R16 BP; // Base pointer / Указатель базы.
+R16 SP; // Stack pointer / Указатель стека
+R16 BP; //  Base pointer / Указатель базы
 /*------------------------------------------------------------*/
-R16 SI; // Source index / Индекс источника.
-R16 DI; // Destination index / Индекс приёмника.
+R16 SI; //      Source index / Индекс источника
+R16 DI; // Destination index / Индекс приёмника
 /*------------------------------------------------------------*/
 #include <stdbool.h> // Для использования логических типов: false/true.
 bool ZF = false; // zero flag register / регистр нулевого флага.
@@ -96,14 +96,24 @@ void Run_vCPUx86()
     #endif
     EXECUTE:
     #if defined DEBUG_MODE
-    puts("------------");
-    printf("IP [%03d|%02X|%s]\n", IP, IP, hex_to_bin[IP]);
-    //
-    puts("\tH | L\n");
-    printf("AX [%03d|%02X]\n", AX, AX);//, hex_to_bin[AX]);
-    printf("BX [%03d|%02X]\n", BX, BX);//, hex_to_bin[BX]);
-    printf("CX [%03d|%02X]\n", CX, CX);//, hex_to_bin[CX]);
-    printf("DX [%03d|%02X]\n", DX, DX);//, hex_to_bin[DX]);
+    puts("-------------------------------------------");
+    puts("\t HEX\t    DEC");
+    puts("\t*H|*L(8)   *H|*L(8)");
+    //puts("\tAH|AL(8)   AH|AL(8)");
+    printf("AX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (AX>>8)&0xFF, AX&0xFF, (AX>>8)&0xFF, AX&0xFF, AX);//, hex_to_bin[AX]);
+    //puts("\tBH|BL(8)   BH|BL(8)");
+    printf("BX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (BX>>8)&0xFF, BX&0xFF, (BX>>8)&0xFF, BX&0xFF, BX);
+    //puts("\tCH|CL(8)   CH|CL(8)");
+    printf("CX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (CX>>8)&0xFF, CX&0xFF, (CX>>8)&0xFF, CX&0xFF, CX);
+    //puts("\tDH|DL(8)   DH|DL(8)");
+    printf("DX(16):[%02X|%02X] | [%03d|%03d] = %d\n", (DX>>8)&0xFF, DX&0xFF, (DX>>8)&0xFF, DX&0xFF, DX);
+    puts("");
+    printf("CS:IP(16):[%02X|%02X:%02X|%02X] | [%03d|%03d:%03d|%03d] = %d/%d\n",
+     (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
+     (CS>>8)&0xFF, CS&0xFF, (IP>>8)&0xFF, IP&0xFF,
+     CS+IP, 0xFFFF
+    );
+    //printf("IP(16):[%02X|%02X] | [%03d|%03d] = %4d/%d\n", (IP>>8)&0xFF, IP&0xFF, (IP>>8)&0xFF, IP&0xFF, IP, 0xFFFF);
     puts("------");
     puts("    Z");
     printf("FR [%-1d]\n", ZF);
