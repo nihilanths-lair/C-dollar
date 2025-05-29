@@ -41,12 +41,11 @@ R16 DI; // Destination index / Индекс приёмника
 /*------------------------------------------------------------*/
 #include <stdbool.h> // Для использования логических типов: false/true.
 bool ZF = false; // zero flag register / регистр нулевого флага.
-//unsigned short DR = 0x00; // debug register / регистр отладки.
 // [MOV GP], [?] / где, [MNC + OP1] = 0x01
-// GP: [00] <- 0x00 или 00h
-// MOV GP, imm8   - поместить в регистр GP непосредственное значение
-// MOV GP, mem8   - поместить в регистр GP значение из памяти, обращение по имени (value = ptr_address)
-// MOV GP, [mem8] - поместить в регистр GP значение из памяти, обращение по адресу (value = *ptr_value)
+// R: [00] <- 0x00 или 00h
+// MOV R, imm8   - поместить в регистр непосредственное значение
+// MOV R, mem8   - поместить в регистр значение из памяти, обращение по имени (value = ptr_address)
+// MOV R, [mem8] - поместить в регистр значение из памяти, обращение по адресу (value = *ptr_value)
 const unsigned char translate_opcode_into_symbolic_form[][8+1] =
 {
     "?", // 00 000
@@ -576,7 +575,8 @@ void Run_vCPUx86()
     };
     #if defined DEBUG_MODE
     //generate_hex_to_bin_table();
-    puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #\n");
+    //puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #\n");
+    puts("\n# DEBUG MODE ON | РЕЖИМ ОТЛАДКИ ВКЛЮЧЕН #");
     #endif
     EXECUTE:
     #if !defined DEBUG_MODE
@@ -902,10 +902,11 @@ void Run_vCPUx86()
         //*/
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-2, IP-2, opcode[IP-2], opcode[IP-1], opcode[IP-2], opcode[IP-1], translate_opcode_into_symbolic_form[opcode[IP-2]], opcode[IP-1]);
         #endif
         IP++;
-        goto EXECUTE;
+        //goto EXECUTE;
+        goto STOP_vCPU;
     }//#11
     __187:
     {//#12
@@ -1123,5 +1124,5 @@ void Run_vCPUx86()
     puts("------");
     puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
     #endif
-    //puts("\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
+    puts("\n\n# DEBUG MODE OFF | РЕЖИМ ОТЛАДКИ ВЫКЛЮЧЕН #");
 }
