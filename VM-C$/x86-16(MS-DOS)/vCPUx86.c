@@ -796,7 +796,7 @@ void Run_vCPUx86()
         AX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -806,7 +806,7 @@ void Run_vCPUx86()
         CX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -816,7 +816,7 @@ void Run_vCPUx86()
         DX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -826,7 +826,7 @@ void Run_vCPUx86()
         BX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -836,7 +836,7 @@ void Run_vCPUx86()
         AX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -846,7 +846,7 @@ void Run_vCPUx86()
         CX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -856,7 +856,7 @@ void Run_vCPUx86()
         DX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
@@ -866,15 +866,33 @@ void Run_vCPUx86()
         BX = opcode[++IP];//IP++;
         #if defined DEBUG_MODE
         //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
-        printf("\n%03d=%02X | %s, %02X\t| %02X %02X",     IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
         #endif
         IP++;
         goto EXECUTE;
     }//#8
     __184:
+    {//#9
+
+    }//#9
     __185:
-    __186:
+    {//#10
+
+    }//#10
+    __186: // __BA: / MOV DX,
+    {//#11
+        DX = opcode[++IP];//IP++;
+        #if defined DEBUG_MODE
+        //printf("\n%03d=%02X | %s, %02X\t| %02X %02X\n\n", IP-1, IP-1, translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP], opcode[IP-1], opcode[IP]);
+        printf("\n%03d=%02X | %02X %02X | %03d %03d | %s, %d",     IP-1, IP-1, opcode[IP-1], opcode[IP], opcode[IP-1], opcode[IP], translate_opcode_into_symbolic_form[opcode[IP-1]], opcode[IP]);
+        #endif
+        IP++;
+        goto EXECUTE;
+    }//#11
     __187:
+    {//#12
+
+    }//#12
     __188:
     __189:
     __190:
