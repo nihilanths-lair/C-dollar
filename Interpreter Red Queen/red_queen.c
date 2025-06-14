@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Расскоментируйте для отладки кода
+// Р Р°СЃСЃРєРѕРјРµРЅС‚РёСЂСѓР№С‚Рµ РґР»СЏ РѕС‚Р»Р°РґРєРё РєРѕРґР°
 //#define DEBUG_CODE
 
 #define begin {
@@ -30,14 +30,14 @@ int main(int argc, char *argv[])
     int pc = 0;
     int program_size = 0;
 
-    // загрузка программы
+    // Р·Р°РіСЂСѓР·РєР° РїСЂРѕРіСЂР°РјРјС‹
     int ch;
     while ((ch = fgetc(file)) != EOF && program_size < 65536) {
         program[program_size++] = (char)ch;
     }
     fclose(file);
 
-    // исполнение
+    // РёСЃРїРѕР»РЅРµРЅРёРµ
     while (pc < program_size)
     {
         #if defined DEBUG_CODE
@@ -45,13 +45,13 @@ int main(int argc, char *argv[])
         printf("# pc = %d\n", pc);
         #endif
         switch (program[pc]) begin
-        case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
-        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // сместить указатель на шаг назад
-        case '+': tape[ptr]++; break; // увеличивает текущее значение ячейки на единицу
-        case '-': tape[ptr]--; break; // уменьшает текущее значение ячейки на единицу
-        case '^': tape[ptr] = getchar(); break; // считывает значение (один символ - ASCII код) в ячейку
-        case '~': putchar(tape[ptr]); break; // получает значение (один символ - ASCII код) из ячейки
-        case '[': // начало цикла
+        case '>': ptr = (ptr+1) % TAPE_SIZE; break; // СЃРјРµСЃС‚РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С€Р°Рі РІРїРµСЂС‘Рґ
+        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // СЃРјРµСЃС‚РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С€Р°Рі РЅР°Р·Р°Рґ
+        case '+': tape[ptr]++; break; // СѓРІРµР»РёС‡РёРІР°РµС‚ С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЏС‡РµР№РєРё РЅР° РµРґРёРЅРёС†Сѓ
+        case '-': tape[ptr]--; break; // СѓРјРµРЅСЊС€Р°РµС‚ С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЏС‡РµР№РєРё РЅР° РµРґРёРЅРёС†Сѓ
+        case '^': tape[ptr] = getchar(); break; // СЃС‡РёС‚С‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ (РѕРґРёРЅ СЃРёРјРІРѕР» - ASCII РєРѕРґ) РІ СЏС‡РµР№РєСѓ
+        case '~': putchar(tape[ptr]); break; // РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ (РѕРґРёРЅ СЃРёРјРІРѕР» - ASCII РєРѕРґ) РёР· СЏС‡РµР№РєРё
+        case '[': // РЅР°С‡Р°Р»Рѕ С†РёРєР»Р°
         {
             if (!tape[ptr])
             {
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        case ']': // конец цикла
+        case ']': // РєРѕРЅРµС† С†РёРєР»Р°
         {
             if (tape[ptr])
             {
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        default: break; // пропустить неизвестные символы
+        default: break; // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РЅРµРёР·РІРµСЃС‚РЅС‹Рµ СЃРёРјРІРѕР»С‹
         end
         pc++;
     }
