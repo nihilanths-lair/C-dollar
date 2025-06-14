@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Р Р°СЃСЃРєРѕРјРµРЅС‚РёСЂСѓР№С‚Рµ РґР»СЏ РѕС‚Р»Р°РґРєРё РєРѕРґР°
-#define DEBUG_CODE
+// Расскоментируйте для отладки кода
+//#define DEBUG_CODE
 
 #define begin {
 #define end }
@@ -30,14 +30,14 @@ int main(int argc, char *argv[])
     int pc = 0;
     int program_size = 0;
 
-    // Р·Р°РіСЂСѓР·РєР° РїСЂРѕРіСЂР°РјРјС‹
+    // загрузка программы
     int ch;
     while ((ch = fgetc(file)) != EOF && program_size < 65536) {
         program[program_size++] = (char)ch;
     }
     fclose(file);
 
-    // РёСЃРїРѕР»РЅРµРЅРёРµ
+    // исполнение
     while (pc < program_size)
     {
         #if defined DEBUG_CODE
@@ -45,13 +45,13 @@ int main(int argc, char *argv[])
         printf("# pc = %d\n", pc);
         #endif
         switch (program[pc]) begin
-        case '>': ptr = (ptr+1) % TAPE_SIZE; break;
-        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break;
-        case '+': tape[ptr]++; break;
-        case '-': tape[ptr]--; break;
-        case '^': tape[ptr] = getchar(); break;
-        case '~': putchar(tape[ptr]); break;
-        case '[':
+        case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
+        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // сместить указатель на шаг назад
+        case '+': tape[ptr]++; break; // увеличивает текущее значение ячейки на единицу
+        case '-': tape[ptr]--; break; // уменьшает текущее значение ячейки на единицу
+        case '^': tape[ptr] = getchar(); break; // считывает значение (один символ - ASCII код) в ячейку
+        case '~': putchar(tape[ptr]); break; // получает значение (один символ - ASCII код) из ячейки
+        case '[': // начало цикла
         {
             if (!tape[ptr])
             {
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        case ']':
+        case ']': // конец цикла
         {
             if (tape[ptr])
             {
@@ -77,8 +77,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РЅРµРёР·РІРµСЃС‚РЅС‹Рµ СЃРёРјРІРѕР»С‹
-        default: break;
+        default: break; // пропустить неизвестные символы
         end
         pc++;
     }
