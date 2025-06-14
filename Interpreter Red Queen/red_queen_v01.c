@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Расскоментируйте для отладки кода
+// Для отладки кода расскоментируйте строку ниже
 //#define DEBUG_CODE
 
 #define begin {
@@ -52,12 +52,12 @@ int main(int argc, char *argv[])
     {
         //##
         #if defined DEBUG_CODE
-        fprintf(debug_log, "\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 16, ptr && 0xFF, ptr << 16, ptr && 0xFF, ptr);
+        fprintf(debug_log, "# ptr = (%02X %02X | %03d %03d) = %d\n", (ptr << 16) && 0xFF, ptr && 0xFF, (ptr << 16) && 0xFF, ptr && 0xFF, ptr);
         switch (program[pc]) begin
-        case '\0': fprintf(debug_log, "# program[pc:%d] = '\\0'\n", pc); break;
-        case '\r': fprintf(debug_log, "# program[pc:%d] = '\\r'\n", pc); break;
-        case '\n': fprintf(debug_log, "# program[pc:%d] = '\\n'\n", pc); break;
-        default: fprintf(debug_log, "# program[pc:%d] = '%c'\n", pc, program[pc]);
+        case '\0': fprintf(debug_log, "# program[pc:%d] = '\\0'\n\n", pc); break;
+        case '\r': fprintf(debug_log, "# program[pc:%d] = '\\r'\n\n", pc); break;
+        case '\n': fprintf(debug_log, "# program[pc:%d] = '\\n'\n\n", pc); break;
+        default: fprintf(debug_log, "# program[pc:%d] = '%c'\n\n", pc, program[pc]);
         end
         #endif
         //##
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        default: break; // пропустить неизвестные символы
+        default: break; // прочие символы
         end
         pc++;
     }
