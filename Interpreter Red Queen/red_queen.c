@@ -46,10 +46,13 @@ int main(int argc, char *argv[])
     while (pc < program_size)
     {
         #if defined DEBUG_CODE
-        printf("\n# ptr = %d\n", ptr);
-        if (pc == '\r') printf("#  pc = %d | %s\n", pc, "\\r");
-        else if (pc == '\n') printf("#  pc = %d | %s\n", pc, "\\n");
-        else printf("#  pc = %d | %c\n", pc, pc);
+        printf("\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 8, ptr && 0xFF, ptr << 8, ptr && 0xFF, ptr);
+        switch (pc) begin
+        case '\0': printf("#  pc = %03d | %s\n", pc, "\\0");
+        case '\r': printf("#  pc = %03d | %s\n", pc, "\\r");
+        case '\n': printf("#  pc = %03d | %s\n", pc, "\\n");
+        default: printf("#  pc = %03d | %c\n", pc, pc);
+        end
         #endif
         switch (program[pc]) begin
         case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
