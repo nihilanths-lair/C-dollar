@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char tape[TAPE_SIZE] = {0}; // Работа с памятью, запись (ввод)/чтение (вывод) данных
-    char program[65536]; // После запуска интерпретатора тут будет находится загружаемый байт-код
+    char tape[TAPE_SIZE] = ""/* {'\0'} / {0} */; // Работа с памятью, запись (ввод)/чтение (вывод) данных
+    char program[65536]  = ""/* {'\0'} / {0} */; // После запуска интерпретатора тут будет находится загружаемый байт-код
     int ptr = 0; // Указатель на ячейки памяти
     int pc = 0; // Установленное значение (ASCII-код символа)
     int program_size = 0;
@@ -41,19 +41,33 @@ int main(int argc, char *argv[])
         program[program_size++] = (char)ch;
     }
     fclose(file);
+    //#
+    #if defined DEBUG_CODE
+    ///program[program_size] = '\0';
+    //printf("# program[] = \"%s\"", program);
+    #endif
+    //#
 
-    // исполнение
+    // Исполнение
     while (pc < program_size)
     {
+        //#
         #if defined DEBUG_CODE
         printf("\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 8, ptr && 0xFF, ptr << 8, ptr && 0xFF, ptr);
         switch (pc) begin
-        case '\0': printf("#  pc = %03d | %s\n", pc, "\\0");
-        case '\r': printf("#  pc = %03d | %s\n", pc, "\\r");
-        case '\n': printf("#  pc = %03d | %s\n", pc, "\\n");
-        default: printf("#  pc = %03d | %c\n", pc, pc);
+        case '\0': printf("# pc = %03d | %s\n", pc, "\\0");
+        case '\r': printf("# pc = %03d | %s\n", pc, "\\r");
+        case '\n': printf("# pc = %03d | %s\n", pc, "\\n");
+        default: printf("# pc = %03d | %c\n", pc, pc);
+        end
+        switch (program[program_size]) begin
+        case '\0': printf("# program[%d] = '\\0'\n", program_size);
+        case '\r': printf("# program[%d] = '\\r'\n", program_size);
+        case '\n': printf("# program[%d] = '\\n'\n", program_size);
+        default: printf("# program[%d] = %c\n", program_size, program[program_size]);
         end
         #endif
+        //#
         switch (program[pc]) begin
         case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
         case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // сместить указатель на шаг назад
