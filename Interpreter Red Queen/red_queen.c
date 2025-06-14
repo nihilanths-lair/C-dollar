@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 // Расскоментируйте для отладки кода
-//#define DEBUG_CODE
+//
+#define DEBUG_CODE
 
 #define begin {
 #define end }
@@ -24,13 +25,13 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char tape[TAPE_SIZE] = {0};
-    char program[65536];
-    int ptr = 0;
-    int pc = 0;
+    char tape[TAPE_SIZE] = {0}; // Работа с памятью, запись (ввод)/чтение (вывод) данных
+    char program[65536]; // После запуска интерпретатора тут будет находится загружаемый байт-код
+    int ptr = 0; // Указатель на ячейки памяти
+    int pc = 0; // Установленное значение (ASCII-код символа)
     int program_size = 0;
 
-    // загрузка программы
+    // Загрузка программы
     int ch;
     while ((ch = fgetc(file)) != EOF && program_size < 65536) {
         program[program_size++] = (char)ch;
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
     while (pc < program_size)
     {
         #if defined DEBUG_CODE
-        printf("# ptr= %d\n", ptr);
+        printf("\n# ptr= %d\n", ptr);
         printf("# pc = %d\n", pc);
         #endif
         switch (program[pc]) begin
