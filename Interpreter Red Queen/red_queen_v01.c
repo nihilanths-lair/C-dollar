@@ -1,13 +1,15 @@
 /*****************************************
  *  Interpreter Red Queen v.:0.1
- *  РРЅС‚РµСЂРїСЂРµС‚Р°С‚РѕСЂ РљСЂР°СЃРЅР°СЏ РљРѕСЂРѕР»РµРІР° РІ.:0.1
+ *  Интерпретатор Красная Королева в.:0.1
 /*****************************************
 /*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Р”Р»СЏ РѕС‚Р»Р°РґРєРё РєРѕРґР° СЂР°СЃСЃРєРѕРјРµРЅС‚РёСЂСѓР№С‚Рµ СЃС‚СЂРѕРєСѓ РЅРёР¶Рµ
-//#define DEBUG_CODE
+// Для отладки кода расскоментируйте строку ниже
+//
+#define DEBUG_CODE
 
 #define begin {
 #define end }
@@ -18,27 +20,33 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        printf("Usage: %s <source.dsl>\n", argv[0]);
+        printf("Usage: %s <source.rq>\n", argv[0]);
         return 1;
     }
 
-    char file_name[41];
-    sprintf(file_name, "%s.rq", *argv[1]);
+    // Проверка, что имя файла заканчивается на ".rq"
+    char *filename = argv[1];
+    size_t len = strlen(filename);
+    if (len < 4 || strcmp(filename+len-3, ".rq") != 0)
+    {
+        fprintf(stderr, "Error file must have '.rq' extension.\n");
+        return 1;
+    }
 
-    FILE *file = fopen(/*argv[1]*/file_name, "r");
+    FILE *file = fopen(argv[1], "r");
     if (!file)
     {
         perror("Error opening source file");
         return 1;
     }
 
-    char tape[TAPE_SIZE] = ""/* {'\0'} / {0} */; // Р Р°Р±РѕС‚Р° СЃ РїР°РјСЏС‚СЊСЋ, Р·Р°РїРёСЃСЊ (РІРІРѕРґ)/С‡С‚РµРЅРёРµ (РІС‹РІРѕРґ) РґР°РЅРЅС‹С…
-    char program[65536]  = ""/* {'\0'} / {0} */; // РџРѕСЃР»Рµ Р·Р°РїСѓСЃРєР° РёРЅС‚РµСЂРїСЂРµС‚Р°С‚РѕСЂР° С‚СѓС‚ Р±СѓРґРµС‚ РЅР°С…РѕРґРёС‚СЃСЏ Р·Р°РіСЂСѓР¶Р°РµРјС‹Р№ Р±Р°Р№С‚-РєРѕРґ
-    short ptr = 0; // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° СЏС‡РµР№РєРё РїР°РјСЏС‚Рё
-    int pc = 0; // РЈСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ (ASCII-РєРѕРґ СЃРёРјРІРѕР»Р°)
+    char tape[TAPE_SIZE] = ""/* {'\0'} / {0} */; // Работа с памятью, запись (ввод)/чтение (вывод) данных
+    char program[65536]  = ""/* {'\0'} / {0} */; // После запуска интерпретатора тут будет находится загружаемый байт-код
+    short ptr = 0; // Указатель на ячейки памяти
+    int pc = 0; // Установленное значение (ASCII-код символа)
     int program_size = 0;
 
-    // Р—Р°РіСЂСѓР·РєР° РїСЂРѕРіСЂР°РјРјС‹
+    // Загрузка программы
     int ch;
     while ((ch = fgetc(file)) != EOF && program_size < 65536) {
         program[program_size++] = (char)ch;
@@ -50,7 +58,7 @@ int main(int argc, char *argv[])
     #endif
     //##
 
-    // РСЃРїРѕР»РЅРµРЅРёРµ
+    // Исполнение
     while (pc < program_size)
     {
         //##
@@ -65,13 +73,13 @@ int main(int argc, char *argv[])
         #endif
         //##
         switch (program[pc]) begin
-        case '>': ptr = (ptr+1) % TAPE_SIZE; break; // СЃРјРµСЃС‚РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С€Р°Рі РІРїРµСЂС‘Рґ
-        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // СЃРјРµСЃС‚РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С€Р°Рі РЅР°Р·Р°Рґ
-        case '+': tape[ptr]++; break; // СѓРІРµР»РёС‡РёРІР°РµС‚ С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЏС‡РµР№РєРё РЅР° РµРґРёРЅРёС†Сѓ
-        case '-': tape[ptr]--; break; // СѓРјРµРЅСЊС€Р°РµС‚ С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ СЏС‡РµР№РєРё РЅР° РµРґРёРЅРёС†Сѓ
-        case '^': tape[ptr] = getchar(); break; // СЃС‡РёС‚С‹РІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ (РѕРґРёРЅ СЃРёРјРІРѕР» - ASCII РєРѕРґ) РІ СЏС‡РµР№РєСѓ
-        case '~': putchar(tape[ptr]); break; // РїРѕР»СѓС‡Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ (РѕРґРёРЅ СЃРёРјРІРѕР» - ASCII РєРѕРґ) РёР· СЏС‡РµР№РєРё
-        case '[': // РЅР°С‡Р°Р»Рѕ С†РёРєР»Р°
+        case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
+        case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // сместить указатель на шаг назад
+        case '+': tape[ptr]++; break; // увеличивает текущее значение ячейки на единицу
+        case '-': tape[ptr]--; break; // уменьшает текущее значение ячейки на единицу
+        case '^': tape[ptr] = getchar(); break; // считывает значение (один символ - ASCII код) в ячейку
+        case '~': putchar(tape[ptr]); break; // получает значение (один символ - ASCII код) из ячейки
+        case '[': // начало цикла
         {
             if (!tape[ptr])
             {
@@ -84,7 +92,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        case ']': // РєРѕРЅРµС† С†РёРєР»Р°
+        case ']': // конец цикла
         {
             if (tape[ptr])
             {
@@ -97,7 +105,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        default: break; // РїСЂРѕС‡РёРµ СЃРёРјРІРѕР»С‹
+        default: break; // прочие символы
         end
         pc++;
     }
