@@ -22,7 +22,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "r");
+    char file_name[41];
+    sprintf(file_name, "%s.rq", *argv[1]);
+
+    FILE *file = fopen(/*argv[1]*/file_name, "r");
     if (!file)
     {
         perror("Error opening source file");
