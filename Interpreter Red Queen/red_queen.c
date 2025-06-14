@@ -1,9 +1,13 @@
+/*****************************************
+ *  Interpreter Red Queen v.:0.1
+ *  Интерпретатор Красная Королева в.:0.1
+/*****************************************
+/*/
 #include <stdio.h>
 #include <stdlib.h>
 
 // Расскоментируйте для отладки кода
-//
-#define DEBUG_CODE
+//#define DEBUG_CODE
 
 #define begin {
 #define end }
