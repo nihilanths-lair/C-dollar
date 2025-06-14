@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Расскоментируйте для отладки кода
+// Р Р°СЃСЃРєРѕРјРµРЅС‚РёСЂСѓР№С‚Рµ РґР»СЏ РѕС‚Р»Р°РґРєРё РєРѕРґР°
 #define DEBUG_CODE
 
 #define begin {
@@ -30,17 +30,18 @@ int main(int argc, char *argv[])
     int pc = 0;
     int program_size = 0;
 
-    // загрузка программы
+    // Р·Р°РіСЂСѓР·РєР° РїСЂРѕРіСЂР°РјРјС‹
     int ch;
     while ((ch = fgetc(file)) != EOF && program_size < 65536) {
         program[program_size++] = (char)ch;
     }
     fclose(file);
 
-    // исполнение
+    // РёСЃРїРѕР»РЅРµРЅРёРµ
     while (pc < program_size)
     {
         #if defined DEBUG_CODE
+        printf("# ptr= %d\n", ptr);
         printf("# pc = %d\n", pc);
         #endif
         switch (program[pc]) begin
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        // пропустить неизвестные символы
+        // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РЅРµРёР·РІРµСЃС‚РЅС‹Рµ СЃРёРјРІРѕР»С‹
         default: break;
         end
         pc++;
