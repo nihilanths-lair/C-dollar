@@ -41,33 +41,27 @@ int main(int argc, char *argv[])
         program[program_size++] = (char)ch;
     }
     fclose(file);
-    //#
+    //##
     #if defined DEBUG_CODE
     ///program[program_size] = '\0';
     //printf("# program[] = \"%s\"", program);
     #endif
-    //#
+    //##
 
     // Исполнение
     while (pc < program_size)
     {
-        //#
+        //##
         #if defined DEBUG_CODE
         printf("\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 8, ptr && 0xFF, ptr << 8, ptr && 0xFF, ptr);
-        switch (pc) begin
-        case '\0': printf("# pc = %03d | %s\n", pc, "\\0");
-        case '\r': printf("# pc = %03d | %s\n", pc, "\\r");
-        case '\n': printf("# pc = %03d | %s\n", pc, "\\n");
-        default: printf("# pc = %03d | %c\n", pc, pc);
-        end
-        switch (program[program_size]) begin
-        case '\0': printf("# program[%d] = '\\0'\n", program_size);
-        case '\r': printf("# program[%d] = '\\r'\n", program_size);
-        case '\n': printf("# program[%d] = '\\n'\n", program_size);
-        default: printf("# program[%d] = '%c'\n", program_size, program[program_size]);
+        switch (program[pc]) begin
+        case '\0': printf("# program[pc:%d] = '\\0'\n", pc); break;
+        case '\r': printf("# program[pc:%d] = '\\r'\n", pc); break;
+        case '\n': printf("# program[pc:%d] = '\\n'\n", pc); break;
+        default: printf("# program[pc:%d] = '%c'\n", pc, program[pc]);
         end
         #endif
-        //#
+        //##
         switch (program[pc]) begin
         case '>': ptr = (ptr+1) % TAPE_SIZE; break; // сместить указатель на шаг вперёд
         case '<': ptr = (ptr-1 + TAPE_SIZE) % TAPE_SIZE; break; // сместить указатель на шаг назад
