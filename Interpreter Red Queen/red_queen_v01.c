@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         case '\0': printf("# program[%d] = '\\0'\n", program_size);
         case '\r': printf("# program[%d] = '\\r'\n", program_size);
         case '\n': printf("# program[%d] = '\\n'\n", program_size);
-        default: printf("# program[%d] = %c\n", program_size, program[program_size]);
+        default: printf("# program[%d] = '%c'\n", program_size, program[program_size]);
         end
         #endif
         //#
