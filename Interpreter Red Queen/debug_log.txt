@@ -1,98 +1,98 @@
 # ptr = (00 00 | 000 000) = 0
-# program[pc:0] = '÷'
+# program[pc:0] = '–¶'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:1] = 'Ë'
+# program[pc:1] = '–∏'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:2] = 'Í'
+# program[pc:2] = '–∫'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:3] = 'Î'
+# program[pc:3] = '–ª'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:4] = ' '
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:5] = 'Ù'
+# program[pc:5] = '—Ñ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:6] = 'Ó'
+# program[pc:6] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:7] = ''
+# program[pc:7] = '—Ä'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:8] = 'Ï'
+# program[pc:8] = '–º'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:9] = 'Ë'
+# program[pc:9] = '–∏'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:10] = ''
+# program[pc:10] = '—Ä'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:11] = 'Ó'
+# program[pc:11] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:12] = '‚'
+# program[pc:12] = '–≤'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:13] = '‡'
+# program[pc:13] = '–∞'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:14] = 'Ì'
+# program[pc:14] = '–Ω'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:15] = 'Ë'
+# program[pc:15] = '–∏'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:16] = 'ˇ'
+# program[pc:16] = '—è'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:17] = ' '
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:18] = 'Ó'
+# program[pc:18] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:19] = 'Ò'
+# program[pc:19] = '—Å'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:20] = 'Ì'
+# program[pc:20] = '–Ω'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:21] = 'Ó'
+# program[pc:21] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:22] = '‚'
+# program[pc:22] = '–≤'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:23] = 'Ì'
+# program[pc:23] = '–Ω'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:24] = '˚'
+# program[pc:24] = '—ã'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:25] = 'ı'
+# program[pc:25] = '—Ö'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:26] = ' '
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:27] = '˜'
+# program[pc:27] = '—á'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:28] = 'Ë'
+# program[pc:28] = '–∏'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:29] = 'Ò'
+# program[pc:29] = '—Å'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:30] = 'Â'
+# program[pc:30] = '–µ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:31] = 'Î'
+# program[pc:31] = '–ª'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:32] = '\n'
@@ -1247,61 +1247,61 @@
 # program[pc:82] = '\n'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:83] = '¬'
+# program[pc:83] = '–í'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:84] = '˚'
+# program[pc:84] = '—ã'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:85] = '‚'
+# program[pc:85] = '–≤'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:86] = 'Ó'
+# program[pc:86] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:87] = '‰'
+# program[pc:87] = '–¥'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:88] = ' '
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:89] = 'Ô'
+# program[pc:89] = '–ø'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:90] = 'Â'
+# program[pc:90] = '–µ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:91] = ''
+# program[pc:91] = '—Ä'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:92] = '‚'
+# program[pc:92] = '–≤'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:93] = 'Ó'
+# program[pc:93] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:94] = '„'
+# program[pc:94] = '–≥'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:95] = 'Ó'
+# program[pc:95] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:96] = ' '
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:97] = 'Ò'
+# program[pc:97] = '—Å'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:98] = 'Î'
+# program[pc:98] = '–ª'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:99] = 'Ó'
+# program[pc:99] = '–æ'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:100] = '‚'
+# program[pc:100] = '–≤'
 
 # ptr = (00 00 | 000 000) = 0
-# program[pc:101] = '‡'
+# program[pc:101] = '–∞'
 
 # ptr = (00 00 | 000 000) = 0
 # program[pc:102] = '\n'
@@ -1394,160 +1394,160 @@
 # program[pc:131] = '\n'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:132] = '¬'
+# program[pc:132] = '–í'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:133] = '˚'
+# program[pc:133] = '—ã'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:134] = '‚'
+# program[pc:134] = '–≤'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:135] = 'Ó'
+# program[pc:135] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:136] = '‰'
+# program[pc:136] = '–¥'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:137] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:138] = '‚'
+# program[pc:138] = '–≤'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:139] = 'Ú'
+# program[pc:139] = '—Ç'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:140] = 'Ó'
+# program[pc:140] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:141] = ''
+# program[pc:141] = '—Ä'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:142] = 'Ó'
+# program[pc:142] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:143] = '„'
+# program[pc:143] = '–≥'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:144] = 'Ó'
+# program[pc:144] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:145] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:146] = 'Ò'
+# program[pc:146] = '—Å'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:147] = 'Î'
+# program[pc:147] = '–ª'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:148] = 'Ó'
+# program[pc:148] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:149] = '‚'
+# program[pc:149] = '–≤'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:150] = '‡'
+# program[pc:150] = '–∞'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:151] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:152] = 'Ò'
+# program[pc:152] = '—Å'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:153] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:154] = 'Ô'
+# program[pc:154] = '–ø'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:155] = 'Ó'
+# program[pc:155] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:156] = '‚'
+# program[pc:156] = '–≤'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:157] = 'Ú'
+# program[pc:157] = '—Ç'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:158] = 'Ó'
+# program[pc:158] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:159] = ''
+# program[pc:159] = '—Ä'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:160] = 'Ì'
+# program[pc:160] = '–Ω'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:161] = '˚'
+# program[pc:161] = '—ã'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:162] = 'Ï'
+# program[pc:162] = '–º'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:163] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:164] = 'Ë'
+# program[pc:164] = '–∏'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:165] = 'Ò'
+# program[pc:165] = '—Å'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:166] = 'Ô'
+# program[pc:166] = '–ø'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:167] = 'Ó'
+# program[pc:167] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:168] = 'Î'
+# program[pc:168] = '–ª'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:169] = '¸'
+# program[pc:169] = '—å'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:170] = 'Á'
+# program[pc:170] = '–∑'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:171] = 'Ó'
+# program[pc:171] = '–æ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:172] = '‚'
+# program[pc:172] = '–≤'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:173] = '‡'
+# program[pc:173] = '–∞'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:174] = 'Ì'
+# program[pc:174] = '–Ω'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:175] = 'Ë'
+# program[pc:175] = '–∏'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:176] = 'Â'
+# program[pc:176] = '–µ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:177] = 'Ï'
+# program[pc:177] = '–º'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:178] = ' '
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:179] = 'ˇ'
+# program[pc:179] = '—è'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:180] = '˜'
+# program[pc:180] = '—á'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:181] = 'Â'
+# program[pc:181] = '–µ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:182] = 'Â'
+# program[pc:182] = '–µ'
 
 # ptr = (01 01 | 001 001) = 3
-# program[pc:183] = 'Í'
+# program[pc:183] = '–∫'
 
 # ptr = (01 01 | 001 001) = 3
 # program[pc:184] = '\n'
