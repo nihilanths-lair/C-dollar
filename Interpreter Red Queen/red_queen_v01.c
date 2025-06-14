@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     char tape[TAPE_SIZE] = ""/* {'\0'} / {0} */; // Работа с памятью, запись (ввод)/чтение (вывод) данных
     char program[65536]  = ""/* {'\0'} / {0} */; // После запуска интерпретатора тут будет находится загружаемый байт-код
-    int ptr = 0; // Указатель на ячейки памяти
+    short ptr = 0; // Указатель на ячейки памяти
     int pc = 0; // Установленное значение (ASCII-код символа)
     int program_size = 0;
 
@@ -43,8 +43,7 @@ int main(int argc, char *argv[])
     fclose(file);
     //##
     #if defined DEBUG_CODE
-    ///program[program_size] = '\0';
-    //printf("# program[] = \"%s\"", program);
+    FILE *debug_log = fopen("debug_log.txt", "w");
     #endif
     //##
 
@@ -53,12 +52,12 @@ int main(int argc, char *argv[])
     {
         //##
         #if defined DEBUG_CODE
-        printf("\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 8, ptr && 0xFF, ptr << 8, ptr && 0xFF, ptr);
+        fprintf(debug_log, "\n# ptr = (%02X %02X | %03d %03d) = %d\n", ptr << 16, ptr && 0xFF, ptr << 16, ptr && 0xFF, ptr);
         switch (program[pc]) begin
-        case '\0': printf("# program[pc:%d] = '\\0'\n", pc); break;
-        case '\r': printf("# program[pc:%d] = '\\r'\n", pc); break;
-        case '\n': printf("# program[pc:%d] = '\\n'\n", pc); break;
-        default: printf("# program[pc:%d] = '%c'\n", pc, program[pc]);
+        case '\0': fprintf(debug_log, "# program[pc:%d] = '\\0'\n", pc); break;
+        case '\r': fprintf(debug_log, "# program[pc:%d] = '\\r'\n", pc); break;
+        case '\n': fprintf(debug_log, "# program[pc:%d] = '\\n'\n", pc); break;
+        default: fprintf(debug_log, "# program[pc:%d] = '%c'\n", pc, program[pc]);
         end
         #endif
         //##
