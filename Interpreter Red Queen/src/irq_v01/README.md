@@ -26,7 +26,6 @@
 ------~
 --------~
 >+~
->~
 ```
 
 ---
@@ -45,4 +44,4 @@ Hello World!
 irq_v01.exe hello_world.rq
 ```
 
-*(где `irq_v01.exe` — это интерпретатор под Windows, а `hello_world.rq` — файл с исходным кодом)*
+*(где `irq_v01.exe` — это интерпретатор под OS Windows, а `hello_world.rq` — файл с исходным кодом)*
