@@ -24,16 +24,16 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        printf("Usage: %s <source.rq>\n", argv[0]);
+        printf("Usage: %s <source.bin>\n", argv[0]);
         return 1;
     }
 
-    // Проверка, что имя файла заканчивается на ".rq"
+    // Проверка, что имя файла заканчивается на ".bin"
     char *filename = argv[1];
     size_t len = strlen(filename);
-    if (len < 4 || strcmp(filename+len-3, ".rq") != 0)
+    if (len < 4 || strcmp(filename+len-4, ".bin") != 0)
     {
-        fprintf(stderr, "Error file must have '.rq' extension.\n");
+        fprintf(stderr, "Error file must have '.bin' extension.\n");
         return 1;
     }
 
@@ -57,14 +57,14 @@ int main(int argc, char *argv[])
     {
         if (in_comment)
         {
-            if (ch == '\n' || ch == '\r')
+            if (ch == '\n')
             {
                 in_comment = 0; // Конец комментария
-                program[program_size++] = '\n'; // Можно сохранить перенос строки
+                //program[program_size++] = '\n'; // Можно сохранить перенос строки
             }
             continue;
         }
-        if (ch == ';')
+        if (ch == ' ' || ch == ';')
         {
             in_comment = 1; // Начало комментария
             continue;
@@ -163,7 +163,11 @@ int main(int argc, char *argv[])
             pc++;
             break;
         }
-        default: break; // прочие символы
+        default: // прочие символы
+        {
+            pc++;
+            break;
+        }
         end
     }
     return 0;
