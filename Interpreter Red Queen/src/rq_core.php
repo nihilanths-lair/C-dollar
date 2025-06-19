@@ -1,3 +1,4 @@
+<?php
 function assemble_rq(string $source): string
 {
     $lines = preg_split('/\R/', $source);
