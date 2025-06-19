@@ -1,0 +1,4 @@
+import "macros.rq"
+import "stdlib.rq"
+
+PRINT('Привет, RQ!')
