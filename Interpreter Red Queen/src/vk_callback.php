@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$access_token = '<вставьте сюда токен>';
+$access_token = 'NaN';
 $peer_id = 2000000005;
 $vk_callback = json_decode(file_get_contents('php://input'));
 file_put_contents('input.log', file_get_contents('php://input'));
@@ -61,6 +61,24 @@ function assemble_rq(string $source): string
         $line = trim($line);
         if ($line === '' || str_starts_with($line, ';')) continue; // была #, сделал ;
 
+        if (preg_match('/^\[(\d{1,5})\]\s*:=\s*(\d{1,3})$/', $line, $m))
+        {
+            $target = intval($m[1]);
+            $value = intval($m[2]);
+            
+            // генерируем последовательность перемещения
+            $bytes[] = 0x40; // специальный код перехода по адресу (расширим — см. ниже)
+            $bytes[] = $target; // ячейка
+            $bytes[] = 0x77; // :=
+            $bytes[] = $value;
+            continue;
+        }
+        else if (preg_match('/^@\s*(\d{1,5})$/', $line, $m))
+        {
+            $bytes[] = 0x40;
+            $bytes[] = intval($m[1]);
+        }
+
         if ($line === '+') $bytes[] = 0x2B;
         else if ($line === '-') $bytes[] = 0x2D;
         else if ($line === '>') $bytes[] = 0x3E;
@@ -69,17 +87,26 @@ function assemble_rq(string $source): string
 
         else if (preg_match('/^~!\s*(\d{1,3})$/', $line, $m)) // ~!
         {
-            $bytes[] = 0x9F;          // байт-код безусловного перехода
-            $bytes[] = intval($m[1]); // адрес ячейки памяти, куда необходимо осуществить переход (однобайтовый)
+            $bytes[] = 0x9F;           // байт-код безусловного перехода
+            $bytes[] = intval($m[1]);  // адрес ячейки памяти, куда необходимо осуществить переход (однобайтовый)
         }
-        else if (preg_match('/^\+=\s*(\d{1,3})$/', $line, $m)) // +=
+        else if (preg_match('/^\[(\d{1,5})\]\s*\+=\s*(\d{1,3})$/', $line, $m))
         {
-            $bytes[] = 0x68;
-            $bytes[] = intval($m[1]);
+            $bytes[] = 0x41;           // код модификации ячейки
+            $bytes[] = intval($m[1]);  // адрес
+            $bytes[] = 0x68;           // +=
+            $bytes[] = intval($m[2]);  // значение
         }
-        else if (preg_match('/^-\=\s*(\d{1,3})$/', $line, $m)) // -=
+        else if (preg_match('/^\[(\d{1,5})\]\s*\-=\s*(\d{1,3})$/', $line, $m))
         {
-            $bytes[] = 0x6A;
+            $bytes[] = 0x41;           // код модификации ячейки
+            $bytes[] = intval($m[1]);  // адрес
+            $bytes[] = 0x6A;           // -=
+            $bytes[] = intval($m[2]);  // значение
+        }
+        else if (preg_match('/^:=\s*(\d{1,3})$/', $line, $m)) // :=
+        {
+            $bytes[] = 0x77;
             $bytes[] = intval($m[1]);
         }
         else {
@@ -144,20 +171,22 @@ function interpret_rq_binary(string $code): string
         {
             if ($i+1 < $len)
             {
-                $val = ord($code[$i + 1]);
+                $val = ord($code[$i+1]);
                 $tape[$ptr] = ($tape[$ptr] + $val) % 256;
                 $i += 2;
-            } else $i++; // пропуск некорректного
+            }
+            else $i++; // пропуск некорректного
             break;
         }
         case 0x6A: // -= byte
         {
             if ($i+1 < $len)
             {
-                $val = ord($code[$i + 1]);
+                $val = ord($code[$i+1]);
                 $tape[$ptr] = ($tape[$ptr] - $val + 256) % 256;
                 $i += 2;
-            } else $i++; // пропуск
+            }
+            else $i++; // пропуск
             break;
         }
         case 0x9F: // ~! безусловный переход
@@ -165,10 +194,55 @@ function interpret_rq_binary(string $code): string
             if ($i+1 < $len)
             {
                 $jmp_count++;
-                $target = ord($code[$i + 1]);
+                $target = ord($code[$i+1]);
                 $i = $target; // прыжок на указанный адрес в коде
             }
             else $i++; // если нет второго байта — пропустить
+            break;
+        }
+        case 0x40: // @<n> — прямое позиционирование указателя
+        {
+            // [addr] := value — атомарная форма
+            if ($i + 3 < $len && ord($code[$i+2]) === 0x77)
+            {
+                $target = ord($code[$i+1]);
+                $value = ord($code[$i+3]);
+                $tape[$target] = $value;
+                $i += 4; // съедаем всю последовательность
+            }
+            else if ($i + 1 < $len)
+            {
+                // просто @<n>
+                $ptr = ord($code[$i + 1]);
+                $i += 2;
+            }
+            else $i++;
+            break;
+        }
+        case 0x41: // [addr] += or -=
+        {
+            if ($i + 3 < $len)
+            {
+                $target = ord($code[$i + 1]);
+                $op = ord($code[$i + 2]);
+                $val = ord($code[$i + 3]);
+
+                if ($op === 0x68) $tape[$target] = ($tape[$target] + $val) % 256; // +=
+                else if ($op === 0x6A) $tape[$target] = ($tape[$target] - $val + 256) % 256; // -=
+                $i += 4;
+            }
+            else $i++; // неполная команда — пропуск
+            break;
+        }
+        case 0x77: // := byte (прямое присваивание)
+        {
+            if ($i + 1 < $len)
+            {
+                $val = ord($code[$i+1]);
+                $tape[$ptr] = $val;
+                $i += 2;
+            }
+            else $i++; // защита от ошибки
             break;
         }
         default: $i++; // неизвестный байт — пропустить
