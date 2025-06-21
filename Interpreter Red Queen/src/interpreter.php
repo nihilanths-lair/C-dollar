@@ -5,7 +5,8 @@ function rq_run_bf(string $code): array
     $ptr = 0;
     $code = preg_replace('/\s+/', '', $code);
     preg_match_all('/(\[\d*\])\s*([+\-*\/%=]=?|=)\s*(\[\d*\]|\d+)/', $code, $matches, PREG_SET_ORDER);
-    foreach ($matches as $match) {
+    foreach ($matches as $match)
+    {
         [$full, $lhs, $op, $rhs] = $match;
         $lhs_index = strlen($lhs) === 2 ? $ptr : (int) trim($lhs, '[]');
         $lhs_value = &$memory[$lhs_index];
@@ -31,7 +32,8 @@ function rq_run_asm(string $code): array
     $memory = array_fill(0, 256, 0);
     $ptr = 0;
     $lines = preg_split('/[\r\n;]+/', $code);
-    foreach ($lines as $line) {
+    foreach ($lines as $line)
+    {
         $line = trim($line);
         if ($line === '') continue;
         if (!preg_match('/^(MOV|ADD|SUB|MUL|DIV|MOD)\s+(\[\d*\]|\[\])\s*,\s*(\[\d*\]|\[\]|\d+)$/i', $line, $m)) continue;
@@ -57,38 +59,57 @@ function rq_run_asm(string $code): array
     }
     return $memory;
 }
+
 function format_memory_dump(array $mem, string $format): string {
     $lines = [];
     for ($row = 0; $row < 256; $row += 16) {
         $cells = array_slice($mem, $row, 16);
         $nums = array_map(function($v) use ($format) {
-            return $format === 'hex' ? strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT)) : str_pad((string)$v, 3, ' ', STR_PAD_LEFT);
+            return $format === 'hex'
+                ? strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT))
+                : str_pad((string)$v, 3, '0', STR_PAD_LEFT);
         }, $cells);
-        $ascii = array_map(function($v) {
-            return ($v >= 32 && $v <= 126) ? chr($v) : '.';
-        }, $cells);
+        $ascii = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $cells);
         $offset = str_pad((string)$row, 3, '0', STR_PAD_LEFT);
         $lines[] = "$offset  " . implode(' ', $nums) . "   | " . implode('', $ascii);
     }
     return "<pre>" . implode("\n", $lines) . "</pre>";
 }
+
+// Инициализация (без выполнения кода)
 $mode = $_POST['mode'] ?? 'bf';
 $base = $_POST['base'] ?? 'dec';
 $inputCode = $_POST['code'] ?? '';
-$result = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST')
-{
+$mem = array_fill(0, 256, 0);
+
+// Если код был отправлен — запускаем
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $inputCode !== '') {
     $mem = $mode === 'asm' ? rq_run_asm($inputCode) : rq_run_bf($inputCode);
-    $result = format_memory_dump($mem, $base);
 }
+$memoryDump = format_memory_dump($mem, $base);
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>RQ Интерпретатор</title>
     <style>
-        body { font-family: monospace; background: #111; color: #eee; padding: 2em; }
+        body {
+            font-family: monospace;
+            background: #111;
+            color: #eee;
+            padding: 2em;
+            display: flex;
+            gap: 2em;
+        }
+        form {
+            flex: 1;
+        }
+        .memory {
+            flex: 1;
+            max-width: 600px;
+        }
         textarea, select, input[type=submit] {
             font-family: monospace;
             background: #222;
@@ -96,7 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             border: none;
             padding: 0.5em;
         }
-        textarea { width: 100%; height: 200px; }
+        textarea {
+            width: 100%;
+            height: 300px;
+        }
         pre {
             background: #222;
             padding: 1em;
@@ -112,8 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     </style>
 </head>
 <body>
-    <h1>RQ Интерпретатор</h1>
     <form method="post">
+        <h2>RQ Интерпретатор</h2>
         <div class="controls">
             <label>Синтаксис:
                 <select name="mode">
@@ -121,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     <option value="asm" <?= $mode === 'asm' ? 'selected' : '' ?>>Assembly</option>
                 </select>
             </label>
-            <label>Вывод:
+            <label>Формат:
                 <select name="base">
                     <option value="dec" <?= $base === 'dec' ? 'selected' : '' ?>>Decimal</option>
                     <option value="hex" <?= $base === 'hex' ? 'selected' : '' ?>>Hex</option>
@@ -131,6 +155,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         </div>
         <textarea name="code" placeholder="Введите код..."><?= htmlspecialchars($inputCode) ?></textarea>
     </form>
-    <?= $result ?>
+
+    <div class="memory">
+        <h2>Память</h2>
+        <?= $memoryDump ?>
+    </div>
 </body>
 </html>
