@@ -1,12 +1,13 @@
 <?php
-function rq_run_bf(string $code): array
-{
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+function rq_run_bf(string $code): array {
     $memory = array_fill(0, 256, 0);
     $ptr = 0;
     $code = preg_replace('/\s+/', '', $code);
     preg_match_all('/(\[\d*\])\s*([+\-*\/%=]=?|=)\s*(\[\d*\]|\d+)/', $code, $matches, PREG_SET_ORDER);
-    foreach ($matches as $match)
-    {
+    foreach ($matches as $match) {
         [$full, $lhs, $op, $rhs] = $match;
         $lhs_index = strlen($lhs) === 2 ? $ptr : (int) trim($lhs, '[]');
         $lhs_value = &$memory[$lhs_index];
@@ -27,13 +28,12 @@ function rq_run_bf(string $code): array
     }
     return $memory;
 }
-function rq_run_asm(string $code): array
-{
+
+function rq_run_asm(string $code): array {
     $memory = array_fill(0, 256, 0);
     $ptr = 0;
     $lines = preg_split('/[\r\n;]+/', $code);
-    foreach ($lines as $line)
-    {
+    foreach ($lines as $line) {
         $line = trim($line);
         if ($line === '') continue;
         if (!preg_match('/^(MOV|ADD|SUB|MUL|DIV|MOD)\s+(\[\d*\]|\[\])\s*,\s*(\[\d*\]|\[\]|\d+)$/i', $line, $m)) continue;
@@ -60,33 +60,40 @@ function rq_run_asm(string $code): array
     return $memory;
 }
 
-function format_memory_dump(array $mem, string $format): string {
+function format_memory_dump(array $mem): string {
     $lines = [];
+    $lines[] =  "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 || Hex | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F || ASCII";
+    $lines[] .= "--- | --------------------------------------------------------------- || --- | ----------------------------------------------- || -----";
+
     for ($row = 0; $row < 256; $row += 16) {
-        $cells = array_slice($mem, $row, 16);
-        $nums = array_map(function($v) use ($format) {
-            return $format === 'hex'
-                ? strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT))
-                : str_pad((string)$v, 3, '0', STR_PAD_LEFT);
-        }, $cells);
-        $ascii = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $cells);
-        $offset = str_pad((string)$row, 3, '0', STR_PAD_LEFT);
-        $lines[] = "$offset  " . implode(' ', $nums) . "   | " . implode('', $ascii);
+        $chunk = array_slice($mem, $row, 16);
+
+        // Значения в разных системах
+        $dec_values = array_map(fn($v) => str_pad((string)$v, 3, '0', STR_PAD_LEFT), $chunk);
+        $hex_values = array_map(fn($v) => strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT)), $chunk);
+        $ascii_chars = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $chunk);
+
+        // Адреса
+        $dec_offset = str_pad((string)$row, 3, '0', STR_PAD_LEFT);
+        $hex_offset = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
+
+        $lines[] =
+         "$dec_offset | " . implode(' ', $dec_values) .
+         str_repeat(' ', max(0, 30 - strlen(implode(' ', $dec_values)))) . " || " .
+         "$hex_offset | " . implode(' ', $hex_values) .
+         str_repeat(' ', max(0, 30 - strlen(implode(' ', $hex_values)))) . " || " .
+         implode('', $ascii_chars);
     }
     return "<pre>" . implode("\n", $lines) . "</pre>";
 }
-
-// Инициализация (без выполнения кода)
 $mode = $_POST['mode'] ?? 'bf';
-$base = $_POST['base'] ?? 'dec';
 $inputCode = $_POST['code'] ?? '';
 $mem = array_fill(0, 256, 0);
 
-// Если код был отправлен — запускаем
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $inputCode !== '') {
     $mem = $mode === 'asm' ? rq_run_asm($inputCode) : rq_run_bf($inputCode);
 }
-$memoryDump = format_memory_dump($mem, $base);
+$memoryDump = format_memory_dump($mem);
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +115,7 @@ $memoryDump = format_memory_dump($mem, $base);
         }
         .memory {
             flex: 1;
-            max-width: 600px;
+            max-width: 700px;
         }
         textarea, select, input[type=submit] {
             font-family: monospace;
@@ -143,12 +150,6 @@ $memoryDump = format_memory_dump($mem, $base);
                 <select name="mode">
                     <option value="bf" <?= $mode === 'bf' ? 'selected' : '' ?>>Brainfuck++</option>
                     <option value="asm" <?= $mode === 'asm' ? 'selected' : '' ?>>Assembly</option>
-                </select>
-            </label>
-            <label>Формат:
-                <select name="base">
-                    <option value="dec" <?= $base === 'dec' ? 'selected' : '' ?>>Decimal</option>
-                    <option value="hex" <?= $base === 'hex' ? 'selected' : '' ?>>Hex</option>
                 </select>
             </label>
             <input type="submit" value="Выполнить">
