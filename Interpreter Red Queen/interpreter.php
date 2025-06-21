@@ -60,21 +60,23 @@ function rq_run_asm(string $code): array {
     return $memory;
 }
 
-function format_memory_dump(array $mem): string {
+function format_memory_dump(array $mem): string
+{
     $lines = [];
-    $lines[] = "OFFSET  DEC Values                             HEX Values               ASCII";
+    $lines[] = "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 || Hex | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F || ASCII";
+    $lines[] = "--- | --------------------------------------------------------------- || --- | ----------------------------------------------- || -----";
 
     for ($row = 0; $row < 256; $row += 16) {
         $chunk = array_slice($mem, $row, 16);
 
-        $dec = array_map(fn($v) => str_pad($v, 3, '0', STR_PAD_LEFT), $chunk);
-        $hex = array_map(fn($v) => strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT)), $chunk);
-        $asc = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $chunk);
+        $dec_values = array_map(fn($v) => str_pad((string)$v, 3, '0', STR_PAD_LEFT), $chunk);
+        $hex_values = array_map(fn($v) => strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT)), $chunk);
+        $ascii_chars = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $chunk);
 
-        $lines[] = str_pad($row, 6, '0', STR_PAD_LEFT) . '   '
-         . implode(' ', $dec) . str_repeat(' ', max(0, 33 - strlen(implode(' ', $dec)))) . ' '
-         . implode(' ', $hex) . str_repeat(' ', max(0, 20 - strlen(implode(' ', $hex)))) . ' '
-         . implode('', $asc);
+        $lines[] =
+            str_pad((string)($row), 3, '0', STR_PAD_LEFT) . " | " . implode(' ', $dec_values) .
+            " || " . strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT)) . " | " . implode(' ', $hex_values) .
+            " || " . implode('', $ascii_chars);
     }
 
     return "<pre>" . implode("\n", $lines) . "</pre>";
