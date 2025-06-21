@@ -62,45 +62,49 @@ function rq_run_asm(string $code): array {
 
 function format_memory_dump(array $mem): string
 {
-    $lines = [];
+    $dec_lines = [];
+    $hex_lines = [];
+    $ascii_lines = [];
 
     // Заголовки
-    $lines[] = "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
-    $lines[] = "--- | ---------------------------------------------------------------";
+    $dec_lines[]   = "DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
+    $hex_lines[]   = "HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
+    $ascii_lines[] = "ASCII";
 
-    // Dec таблица
-    for ($row = 0; $row < 256; $row += 16)
+    $dec_lines[]   = "----|----------------------------------------------------------------";
+    $hex_lines[]   = "----|------------------------------------------------";
+    $ascii_lines[] = "----------------------";
+
+    // Содержимое памяти по строкам
+    for ($row = 0; $row < 16; $row++)
     {
-        $dec_values = [];
+        $dec_row = [];
+        $hex_row = [];
+        $ascii_row = [];
+
         for ($i = 0; $i < 16; $i++)
         {
-            $index = $row + $i;
+            $index = $row * 16 + $i;
             $val = $mem[$index] ?? 0;
-            $dec_values[] = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
+
+            // DEC
+            $dec_row[] = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
+            // HEX
+            $hex_row[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
+            // ASCII
+            $ascii_row[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
         }
+        $offset = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
 
-        $lines[] = str_pad((string)$row, 3, '0', STR_PAD_LEFT) . " | " . implode(' ', $dec_values);
+        $dec_lines[]   = "$offset  | " . implode(' ', $dec_row);
+        $hex_lines[]   = "$offset  | " . implode(' ', $hex_row);
+        $ascii_lines[] = "$offset  | " . implode('', $ascii_row);
     }
-
-    // Пустая строка-разделитель
-    $lines[] = "";
-    $lines[] = "Hex | 00  01  02  03  04  05  06  07  08  09  0A  0B  0C  0D  0E  0F";
-    $lines[] = "--- | --------------------------------------------------------------";
-
-    // Hex таблица
-    for ($row = 0; $row < 256; $row += 16)
-    {
-        $hex_values = [];
-        for ($i = 0; $i < 16; $i++)
-        {
-            $index = $row + $i;
-            $val = $mem[$index] ?? 0;
-            $hex_values[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
-        }
-
-        $lines[] = strtoupper(str_pad(dechex($row), 3, '0', STR_PAD_LEFT)) . " | " . implode('  ', $hex_values);
-    }
-    return "<pre>" . implode("\n", $lines) . "</pre>";
+    return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
+        <pre>" . implode("\n", $dec_lines) . "</pre>
+        <pre>" . implode("\n", $hex_lines) . "</pre>
+        <pre>" . implode("\n", $ascii_lines) . "</pre>
+    </div>";
 }
 
 $mode = $_POST['mode'] ?? 'bf';
@@ -112,51 +116,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $inputCode !== '') {
 }
 $memoryDump = format_memory_dump($mem);
 ?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>RQ Интерпретатор</title>
     <style>
-        body {
-            font-family: monospace;
-            background: #111;
-            color: #eee;
-            padding: 2em;
-            display: flex;
-            gap: 2em;
-        }
-        form {
-            flex: 1;
-        }
-        .memory {
-            flex: 1;
-            max-width: 700px;
-        }
-        textarea, select, input[type=submit] {
-            font-family: monospace;
-            background: #222;
-            color: #fff;
-            border: none;
-            padding: 0.5em;
-        }
-        textarea {
-            width: 100%;
-            height: 300px;
-        }
-        pre {
-            background: #222;
-            padding: 1em;
-            margin-top: 1em;
-            line-height: 1.3em;
-        }
-        .controls {
-            margin-top: 1em;
-            display: flex;
-            gap: 1em;
-            align-items: center;
-        }
+    body {
+        font-family: monospace;
+        background: #111;
+        color: #eee;
+        padding: 2em;
+        display: flex;
+        gap: 2em;
+    }
+    form {
+        flex: 1;
+    }
+    .memory {
+        flex: 1;
+        max-width: 1200px;
+    }
+    textarea, select, input[type=submit] {
+        font-family: monospace;
+        background: #222;
+        color: #fff;
+        border: none;
+        padding: 0.5em;
+    }
+    textarea {
+        width: 600px;
+        height: 300px;
+    }
+    pre {
+        background: #222;
+        padding: 1em;
+        margin-top: 1em;
+        line-height: 1.3em;
+    }
+    .controls {
+        margin-top: 1em;
+        display: flex;
+        gap: 1em;
+        align-items: center;
+    }
     </style>
 </head>
 <body>
@@ -165,18 +168,17 @@ $memoryDump = format_memory_dump($mem);
         <div class="controls">
             <label>Синтаксис:
                 <select name="mode">
-                    <option value="bf" <?= $mode === 'bf' ? 'selected' : '' ?>>Brainfuck++</option>
-                    <option value="asm" <?= $mode === 'asm' ? 'selected' : '' ?>>Assembly</option>
+                    <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
+                    <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
                 </select>
             </label>
             <input type="submit" value="Выполнить">
         </div>
-        <textarea name="code" placeholder="Введите код..."><?= htmlspecialchars($inputCode) ?></textarea>
+        <textarea name="code" rows="10" cols="40" style="font-family: monospace;" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
     </form>
-
     <div class="memory">
         <h2>Память</h2>
-        <?= $memoryDump ?>
+        <?=$memoryDump?>
     </div>
 </body>
 </html>
