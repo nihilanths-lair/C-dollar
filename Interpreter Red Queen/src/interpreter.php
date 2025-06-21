@@ -63,38 +63,42 @@ function rq_run_asm(string $code): array {
 function format_memory_dump(array $mem): string
 {
     $lines = [];
-    $lines[] = "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 || Hex | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F || ASCII";
-    $lines[] = "--- | --------------------------------------------------------------- || --- | ----------------------------------------------- || -----";
 
+    // Заголовки
+    $lines[] = "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
+    $lines[] = "--- | ---------------------------------------------------------------";
+
+    // Dec таблица
     for ($row = 0; $row < 256; $row += 16)
     {
         $dec_values = [];
-        $hex_values = [];
-        $ascii_chars = [];
-
         for ($i = 0; $i < 16; $i++)
         {
             $index = $row + $i;
             $val = $mem[$index] ?? 0;
-
             $dec_values[] = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
-            $hex_values[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
-            $ascii_chars[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
         }
 
-        $dec_offset = str_pad((string)$row, 3, '0', STR_PAD_LEFT);
+        $lines[] = str_pad((string)$row, 3, '0', STR_PAD_LEFT) . " | " . implode(' ', $dec_values);
+    }
 
-        // реальный hex offset каждого байта (00 01 02 ...)
-        $hex_offset_values = [];
+    // Пустая строка-разделитель
+    $lines[] = "";
+    $lines[] = "Hex | 00  01  02  03  04  05  06  07  08  09  0A  0B  0C  0D  0E  0F";
+    $lines[] = "--- | --------------------------------------------------------------";
+
+    // Hex таблица
+    for ($row = 0; $row < 256; $row += 16)
+    {
+        $hex_values = [];
         for ($i = 0; $i < 16; $i++)
         {
-            $hex_offset_values[] = strtoupper(str_pad(dechex($row + $i), 2, '0', STR_PAD_LEFT));
+            $index = $row + $i;
+            $val = $mem[$index] ?? 0;
+            $hex_values[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
         }
 
-        $lines[] =
-            "$dec_offset | " . implode(' ', $dec_values) .
-            " || " . implode(' ', $hex_offset_values) . " | " . implode(' ', $hex_values) .
-            " || " . implode('', $ascii_chars);
+        $lines[] = strtoupper(str_pad(dechex($row), 3, '0', STR_PAD_LEFT)) . " | " . implode('  ', $hex_values);
     }
     return "<pre>" . implode("\n", $lines) . "</pre>";
 }
