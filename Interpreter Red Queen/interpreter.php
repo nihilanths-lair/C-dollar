@@ -66,19 +66,30 @@ function format_memory_dump(array $mem): string
     $lines[] = "Dec | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 || Hex | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F || ASCII";
     $lines[] = "--- | --------------------------------------------------------------- || --- | ----------------------------------------------- || -----";
 
-    for ($row = 0; $row < 256; $row += 16) {
-        $chunk = array_slice($mem, $row, 16);
+    for ($row = 0; $row < 256; $row += 16)
+    {
+        $dec_values = [];
+        $hex_values = [];
+        $ascii_chars = [];
 
-        $dec_values = array_map(fn($v) => str_pad((string)$v, 3, '0', STR_PAD_LEFT), $chunk);
-        $hex_values = array_map(fn($v) => strtoupper(str_pad(dechex($v), 2, '0', STR_PAD_LEFT)), $chunk);
-        $ascii_chars = array_map(fn($v) => ($v >= 32 && $v <= 126) ? chr($v) : '.', $chunk);
+        for ($i = 0; $i < 16; $i++)
+        {
+            $index = $row + $i;
+            $val = $mem[$index] ?? 0;
+
+            $dec_values[] = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
+            $hex_values[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
+            $ascii_chars[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
+        }
+
+        $dec_offset = str_pad((string)$row, 3, '0', STR_PAD_LEFT);
+        $hex_offset = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
 
         $lines[] =
-            str_pad((string)($row), 3, '0', STR_PAD_LEFT) . " | " . implode(' ', $dec_values) .
-            " || " . strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT)) . " | " . implode(' ', $hex_values) .
+            "$dec_offset | " . implode(' ', $dec_values) .
+            " || $hex_offset | " . implode(' ', $hex_values) .
             " || " . implode('', $ascii_chars);
     }
-
     return "<pre>" . implode("\n", $lines) . "</pre>";
 }
 
