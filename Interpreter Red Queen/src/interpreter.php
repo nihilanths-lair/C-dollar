@@ -2,64 +2,75 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-function rq_run_bf(string $code): array {
+//
+function rq_run_bf(string $code): array
+{
     $memory = array_fill(0, 256, 0);
     $ptr = 0;
     $code = preg_replace('/\s+/', '', $code);
     preg_match_all('/(\[\d*\])\s*([+\-*\/%=]=?|=)\s*(\[\d*\]|\d+)/', $code, $matches, PREG_SET_ORDER);
-    foreach ($matches as $match) {
+    foreach ($matches as $match)
+    {
         [$full, $lhs, $op, $rhs] = $match;
         $lhs_index = strlen($lhs) === 2 ? $ptr : (int) trim($lhs, '[]');
         $lhs_value = &$memory[$lhs_index];
-        if (str_starts_with($rhs, '[')) {
+
+        if (str_starts_with($rhs, '['))
+        {
             $rhs_index = strlen($rhs) === 2 ? $ptr : (int) trim($rhs, '[]');
             $rhs_value = $memory[$rhs_index];
         } else {
             $rhs_value = (int)$rhs;
         }
         switch ($op) {
-            case '=':  $lhs_value = $rhs_value; break;
-            case '+=': $lhs_value = ($lhs_value + $rhs_value) & 0xFF; break;
-            case '-=': $lhs_value = ($lhs_value - $rhs_value) & 0xFF; break;
-            case '*=': $lhs_value = ($lhs_value * $rhs_value) & 0xFF; break;
-            case '/=': $lhs_value = $rhs_value !== 0 ? intdiv($lhs_value, $rhs_value) : 0; break;
-            case '%=': $lhs_value = $rhs_value !== 0 ? ($lhs_value % $rhs_value) : 0; break;
+        case '=':  $lhs_value = $rhs_value; break;
+        case '+=': $lhs_value = ($lhs_value + $rhs_value) & 0xFF; break;
+        case '-=': $lhs_value = ($lhs_value - $rhs_value) & 0xFF; break;
+        case '*=': $lhs_value = ($lhs_value * $rhs_value) & 0xFF; break;
+        case '/=': $lhs_value = $rhs_value !== 0 ? intdiv($lhs_value, $rhs_value) : 0; break;
+        case '%=': $lhs_value = $rhs_value !== 0 ? ($lhs_value % $rhs_value) : 0; break;
         }
     }
     return $memory;
 }
-
-function rq_run_asm(string $code): array {
+//
+function rq_run_asm(string $code): array
+{
     $memory = array_fill(0, 256, 0);
     $ptr = 0;
     $lines = preg_split('/[\r\n;]+/', $code);
-    foreach ($lines as $line) {
+    foreach ($lines as $line)
+    {
         $line = trim($line);
+
         if ($line === '') continue;
         if (!preg_match('/^(MOV|ADD|SUB|MUL|DIV|MOD)\s+(\[\d*\]|\[\])\s*,\s*(\[\d*\]|\[\]|\d+)$/i', $line, $m)) continue;
+
         $cmd = strtoupper($m[1]);
         $lhs_raw = $m[2];
         $rhs_raw = $m[3];
         $lhs_index = $lhs_raw === '[]' ? $ptr : (int) trim($lhs_raw, '[]');
         $lhs_value = &$memory[$lhs_index];
-        if (preg_match('/^\[\d*\]|\[\]$/', $rhs_raw)) {
+
+        if (preg_match('/^\[\d*\]|\[\]$/', $rhs_raw))
+        {
             $rhs_index = $rhs_raw === '[]' ? $ptr : (int) trim($rhs_raw, '[]');
             $rhs_value = $memory[$rhs_index];
         } else {
             $rhs_value = (int)$rhs_raw;
         }
         switch ($cmd) {
-            case 'MOV': $lhs_value = $rhs_value; break;
-            case 'ADD': $lhs_value = ($lhs_value + $rhs_value) & 0xFF; break;
-            case 'SUB': $lhs_value = ($lhs_value - $rhs_value) & 0xFF; break;
-            case 'MUL': $lhs_value = ($lhs_value * $rhs_value) & 0xFF; break;
-            case 'DIV': $lhs_value = $rhs_value !== 0 ? intdiv($lhs_value, $rhs_value) : 0; break;
-            case 'MOD': $lhs_value = $rhs_value !== 0 ? ($lhs_value % $rhs_value) : 0; break;
+        case 'MOV': $lhs_value = $rhs_value; break;
+        case 'ADD': $lhs_value = ($lhs_value + $rhs_value) & 0xFF; break;
+        case 'SUB': $lhs_value = ($lhs_value - $rhs_value) & 0xFF; break;
+        case 'MUL': $lhs_value = ($lhs_value * $rhs_value) & 0xFF; break;
+        case 'DIV': $lhs_value = $rhs_value !== 0 ? intdiv($lhs_value, $rhs_value) : 0; break;
+        case 'MOD': $lhs_value = $rhs_value !== 0 ? ($lhs_value % $rhs_value) : 0; break;
         }
     }
     return $memory;
 }
-
+//
 function format_memory_dump(array $mem): string
 {
     $dec_lines = [];
@@ -106,11 +117,11 @@ function format_memory_dump(array $mem): string
         <pre>" . implode("\n", $ascii_lines) . "</pre>
     </div>";
 }
-
+//
 $mode = $_POST['mode'] ?? 'bf';
 $inputCode = $_POST['code'] ?? '';
 $mem = array_fill(0, 256, 0);
-
+//
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $inputCode !== '') {
     $mem = $mode === 'asm' ? rq_run_asm($inputCode) : rq_run_bf($inputCode);
 }
