@@ -73,7 +73,7 @@ function format_memory_dump(array $mem): string
 
     $dec_lines[]   = "----|----------------------------------------------------------------";
     $hex_lines[]   = "----|------------------------------------------------";
-    $ascii_lines[] = "----------------------";
+    $ascii_lines[] = "----------------";
 
     // Содержимое памяти по строкам
     for ($row = 0; $row < 16; $row++)
@@ -94,11 +94,11 @@ function format_memory_dump(array $mem): string
             // ASCII
             $ascii_row[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
         }
-        $offset = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
+        $dec_offset = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT); // десятичный offset с ведущими нулями
 
-        $dec_lines[]   = "$offset  | " . implode(' ', $dec_row);
-        $hex_lines[]   = "$offset  | " . implode(' ', $hex_row);
-        $ascii_lines[] = "$offset  | " . implode('', $ascii_row);
+        $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
+        $hex_lines[]   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT)) . "  | " . implode(' ', $hex_row);
+        $ascii_lines[] = implode('', $ascii_row);
     }
     return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
         <pre>" . implode("\n", $dec_lines) . "</pre>
@@ -147,6 +147,7 @@ $memoryDump = format_memory_dump($mem);
     textarea {
         width: 600px;
         height: 300px;
+        font-family: monospace;
     }
     pre {
         background: #222;
@@ -174,7 +175,7 @@ $memoryDump = format_memory_dump($mem);
             </label>
             <input type="submit" value="Выполнить">
         </div>
-        <textarea name="code" rows="10" cols="40" style="font-family: monospace;" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
+        <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
     </form>
     <div class="memory">
         <h2>Память</h2>
