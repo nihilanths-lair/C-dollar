@@ -89,6 +89,36 @@ function rq_run_asm(string $code): array
     return $memory;
 }
 //
+function format_memory_dump_bin(array $mem): string
+{
+    // Заголовок (offset + 16 колонок)
+    $header = '    BIN    |';
+    for ($col = 0; $col < 16; $col++)
+    {
+        $label = '0000:' . str_pad(decbin($col), 4, '0', STR_PAD_LEFT);
+        $header .= ' ' . str_pad($label, 10, ' ', STR_PAD_RIGHT); // 10 символов на каждую колонку (включая пробел)
+    }
+    $lines[] = $header;
+
+    // Разделитель строк (по ширине заголовка)
+    $lines[] = '-----------|' . str_repeat('-', strlen($header) - strlen('----------|') - 1);
+
+    // Содержимое памяти
+    for ($row = 0; $row < 256; $row += 16)
+    {
+        $chunk = array_slice($mem, $row, 16);
+        $line = ' 0000:' . str_pad(decbin($row / 16), 4, '0', STR_PAD_LEFT) . ' |';
+        foreach ($chunk as $val)
+        {
+            $bin = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
+            //$line .= ' ' . substr($bin, 0, 4) . ':' . substr($bin, 4, 4);
+            $line .= ' ' . str_pad(substr($bin, 0, 4) . ':' . substr($bin, 4, 4), 10, ' ', STR_PAD_RIGHT);
+        }
+        $lines[] = $line;
+    }
+    return '<pre>' . implode("\n", $lines) . '</pre>';
+}
+//
 function format_memory_dump(array $mem): string
 {
     $dec_lines = [];
@@ -99,12 +129,12 @@ function format_memory_dump(array $mem): string
     // Заголовки
     $dec_lines[]   = "DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
     $hex_lines[]   = "HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
-    $bin_lines[]   = "BIN | ";
+    $bin_lines[]   = "BIN | 0000:0000 0000:0001 0000:0010 0000:0011 0000:0100 0000:0101 0000:0110 0000:0111 0000:1000 0000:1001 0000:1010 0000:1011 0000:1100 0000:1101 0000:1110";
     $ascii_lines[] = "ASCII";
 
     $dec_lines[]   = "----|----------------------------------------------------------------";
     $hex_lines[]   = "----|------------------------------------------------";
-    $bin_lines[]   = "----------------";
+    $bin_lines[]   = "----|----------------------------------------------------------------------------";
     $ascii_lines[] = "----------------";
 
     for ($row = 0; $row < 16; $row++)
@@ -168,10 +198,18 @@ $memoryDump = format_memory_dump($mem);
         font-family: monospace;
     }
     body {
+        /*display: flex;/** */
+        /*flex-direction: column;/** */
+        /*align-items: center;/** */
+        justify-content: center;/** */
+
+        font-family: monospace;
+        background: #111;
+        color: #eee;
+        padding: 2em;
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2em;
     }
     .container {
         display: flex;
@@ -204,8 +242,11 @@ $memoryDump = format_memory_dump($mem);
         height: 300px;
     }
     .memory {
-        width: 100%;
-        margin-top: 2em;
+        /*width: 100%;/** */
+        /*margin-top: 2em;/** */
+
+        flex: 1 1 45%;
+        max-width: 800px;
     }
     pre {
         background: #222;
@@ -231,11 +272,16 @@ $memoryDump = format_memory_dump($mem);
             </div>
             <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
         </form>
-
+        <!--.-->
         <div class="memory">
-            <h2>Память</h2>
+            <h2>Память (DEC/HEX/ASCII)</h2>
             <?=$memoryDump?>
         </div>
+        <div class="memory">
+            <h2>Память (BIN)</h2>
+            <?=format_memory_dump_bin($mem)?>
+        </div>
+        <!--.-->
     </div>
 </body>
 </html>
