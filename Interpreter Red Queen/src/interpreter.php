@@ -95,7 +95,7 @@ function format_memory_dump_bin(array $mem): string
     $lines = [];
 
     // Заголовок (offset + 16 колонок)
-    $header = '    BIN    |';
+    $header = '    BIN   |';
     for ($col = 0; $col < 16; $col++)
     {
         $label = '0000:' . str_pad(decbin($col), 4, '0', STR_PAD_LEFT);
@@ -104,13 +104,18 @@ function format_memory_dump_bin(array $mem): string
     $lines[] = $header;
 
     // Разделитель строк (по ширине заголовка)
-    $lines[] = '-----------|' . str_repeat('-', strlen($header) - strlen('-----------|'));
+    $lines[] = '----------|' . str_repeat('-', strlen($header) - strlen('-----------|'));
 
     // Содержимое памяти
     for ($row = 0; $row < 256; $row += 16)
     {
         $chunk = array_slice($mem, $row, 16);
-        $line = ' 0000:' . str_pad(decbin($row / 16), 4, '0', STR_PAD_LEFT) . ' |';
+        //$offset = strtoupper(str_pad(dechex($row), 4, '0', STR_PAD_LEFT));
+        //$line = strtoupper(str_pad(decbin($row), 4, '0', STR_PAD_LEFT)) . ' |';
+        //$line = ' 0000:' . str_pad(decbin($row), 4, '0', STR_PAD_LEFT) . ' |';
+        $offset = str_pad(decbin($row), 8, '0', STR_PAD_LEFT);
+        $line = '';
+        $line .= '' . str_pad(substr($offset, 0, 4) . ':' . substr($offset, 4, 4), 10, ' ', STR_PAD_RIGHT) . '|';
         foreach ($chunk as $val)
         {
             $bin = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
@@ -157,7 +162,7 @@ function format_memory_dump(array $mem): string
         }
 
         $dec_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT);
-        $hex_offset   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
+        $hex_offset   = strtoupper(str_pad(dechex($row * 16), 2, '0', STR_PAD_LEFT));
         //$ascii_prefix = '';
 
         $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
@@ -191,6 +196,7 @@ $memoryDump = format_memory_dump($mem);
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon/logo(16x16).ico">
   <title>RQ Интерпретатор</title>
   <style>
   html, body {
@@ -239,6 +245,7 @@ $memoryDump = format_memory_dump($mem);
   textarea {
     width: 600px;
     height: 300px;
+    resize: none; /* 🔒 запрещаем изменение размера */
   }
   .memory {
     flex: 1 1 45%;
@@ -255,27 +262,27 @@ $memoryDump = format_memory_dump($mem);
 </head>
 <body>
   <div class="container">
-    <form method="post">
-      <h2>RQ Интерпретатор</h2>
-      <div class="controls">
-        <label>Синтаксис:
-          <select name="mode">
-            <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
-            <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
-          </select>
-        </label>
-        <input type="submit" value="Выполнить">
-      </div>
-      <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
-    </form>
-    <div class="memory">
-      <h2>Память (DEC/HEX/ASCII)</h2>
-      <?=$memoryDump?>
+  <form method="post">
+    <h2>RQ Интерпретатор</h2>
+    <div class="controls">
+      <label>Синтаксис:
+        <select name="mode">
+        <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
+        <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
+        </select>
+      </label>
+      <input type="submit" value="Выполнить">
     </div>
-    <div class="memory">
-      <h2>Память (BIN)</h2>
-      <?=format_memory_dump_bin($mem)?>
-    </div>
+    <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
+  </form>
+  <div class="memory">
+    <h2>Память (DEC/HEX/ASCII)</h2>
+    <?=$memoryDump?>
   </div>
+  <div class="memory">
+    <h2>Память (BIN)</h2>
+    <?=format_memory_dump_bin($mem)?>
+  </div>
+</div>
 </body>
 </html>
