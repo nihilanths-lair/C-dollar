@@ -3,6 +3,24 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 //
+session_start();
+
+// Post → Redirect → Get
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['last_input'] = $_POST;
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// Восстановление данных после редиректа
+$inputCode = '';
+$mode = 'bf';
+if (isset($_SESSION['last_input'])) {
+    $inputCode = $_SESSION['last_input']['code'] ?? '';
+    $mode = $_SESSION['last_input']['mode'] ?? 'bf';
+    unset($_SESSION['last_input']);
+}
+//
 function rq_run_bf(string $code): array
 {
     $memory = array_fill(0, 256, 0);
@@ -79,13 +97,13 @@ function format_memory_dump(array $mem): string
     $ascii_lines = [];
 
     // Заголовки
-    $dec_lines[]   = "DEC  | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
-    $hex_lines[]   = "HEX  | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
-    $bin_lines[]   = "BIN  | ";
+    $dec_lines[]   = "DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
+    $hex_lines[]   = "HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
+    $bin_lines[]   = "BIN | ";
     $ascii_lines[] = "ASCII";
 
-    $dec_lines[]   = "-----|----------------------------------------------------------------";
-    $hex_lines[]   = "-----|------------------------------------------------";
+    $dec_lines[]   = "----|----------------------------------------------------------------";
+    $hex_lines[]   = "----|------------------------------------------------";
     $bin_lines[]   = "----------------";
     $ascii_lines[] = "----------------";
 
