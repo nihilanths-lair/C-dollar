@@ -124,25 +124,25 @@ function format_memory_dump(array $mem): string
 {
     $dec_lines = [];
     $hex_lines = [];
-    $bin_lines = [];
+    //$bin_lines = [];
     $ascii_lines = [];
 
     // Заголовки
-    $dec_lines[]   = "DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
-    $hex_lines[]   = "HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
-    $bin_lines[]   = "BIN | 0000:0000 0000:0001 0000:0010 0000:0011 0000:0100 0000:0101 0000:0110 0000:0111 0000:1000 0000:1001 0000:1010 0000:1011 0000:1100 0000:1101 0000:1110";
-    $ascii_lines[] = "ASCII";
+    $dec_lines[]   = 'DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015';
+    $hex_lines[]   = 'HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F';
+    //$bin_lines[]   = "BIN | 0000:0000 0000:0001 0000:0010 0000:0011 0000:0100 0000:0101 0000:0110 0000:0111 0000:1000 0000:1001 0000:1010 0000:1011 0000:1100 0000:1101 0000:1110";
+    $ascii_lines[] = 'ASCII';
 
-    $dec_lines[]   = "----|----------------------------------------------------------------";
-    $hex_lines[]   = "----|------------------------------------------------";
-    $bin_lines[]   = "----|----------------------------------------------------------------------------";
-    $ascii_lines[] = "----------------";
+    $dec_lines[]   = '----|----------------------------------------------------------------';
+    $hex_lines[]   = '----|------------------------------------------------';
+    //$bin_lines[]   = "----|----------------------------------------------------------------------------';
+    $ascii_lines[] = '----------------';
 
     for ($row = 0; $row < 16; $row++)
     {
         $dec_row = [];
         $hex_row = [];
-        $bin_row = [];
+        //$bin_row = [];
         $ascii_row = [];
 
         for ($i = 0; $i < 16; $i++)
@@ -152,26 +152,25 @@ function format_memory_dump(array $mem): string
 
             $dec_row[]  = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
             $hex_row[]  = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
-            $bin_row[]  = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
+            //$bin_row[]  = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
             $ascii_row[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
         }
 
         $dec_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT);
         $hex_offset   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
-        $ascii_prefix = "     ";
+        $ascii_prefix = '     ';
 
         $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
         $hex_lines[]   = "$hex_offset  | " . implode(' ', $hex_row);
-        $bin_lines[]   = $ascii_prefix . "  " . implode(' ', $bin_row);
-        $ascii_lines[] = $ascii_prefix . "  " . implode('', $ascii_row);
+        //$bin_lines[]   = $ascii_prefix . '  ' . implode(' ', $bin_row);
+        $ascii_lines[] = $ascii_prefix . '  ' . implode('', $ascii_row);
     }
     return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
         <pre>" . implode("\n", $dec_lines) . "</pre>
         <pre>" . implode("\n", $hex_lines) . "</pre>
-        <pre>" . implode("\n", $bin_lines) . "</pre>
         <pre>" . implode("\n", $ascii_lines) . "</pre>
     </div>";
-}
+}//<pre>" . implode("\n", $bin_lines) . "</pre>
 $mode = $_POST['mode'] ?? 'bf';
 $inputCode = $_POST['code'] ?? '';
 $mem = array_fill(0, 256, 0);
@@ -200,6 +199,9 @@ $memoryDump = format_memory_dump($mem);
     flex-wrap: wrap;
     gap: 2em;
     padding: 2em;
+    justify-content: center; /* горизонтальное центрирование */
+    /*align-items: center;   /* вертикальное центрирование */
+    /*min-height: 100vh;     /* чтобы align-items сработал по высоте окна */
   }
   .container {
     display: flex;
