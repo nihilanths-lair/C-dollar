@@ -158,18 +158,25 @@ function format_memory_dump(array $mem): string
 
         $dec_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT);
         $hex_offset   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
-        $ascii_prefix = '     ';
+        //$ascii_prefix = '';
 
         $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
         $hex_lines[]   = "$hex_offset  | " . implode(' ', $hex_row);
         //$bin_lines[]   = $ascii_prefix . '  ' . implode(' ', $bin_row);
-        $ascii_lines[] = $ascii_prefix . '  ' . implode('', $ascii_row);
+        $ascii_lines[] = /*$ascii_prefix . '  ' . */ implode('', $ascii_row);
     }
+    return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
+        <pre style=\"overflow-x: hidden;\">" . implode("\n", $dec_lines) . "</pre>
+        <pre style=\"overflow-x: hidden;\">" . implode("\n", $hex_lines) . "</pre>
+        <pre style=\"overflow-x: hidden;\">" . implode("\n", $ascii_lines) . "</pre>
+    </div>";
+    /*
     return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
         <pre>" . implode("\n", $dec_lines) . "</pre>
         <pre>" . implode("\n", $hex_lines) . "</pre>
         <pre>" . implode("\n", $ascii_lines) . "</pre>
     </div>";
+    */
 }//<pre>" . implode("\n", $bin_lines) . "</pre>
 $mode = $_POST['mode'] ?? 'bf';
 $inputCode = $_POST['code'] ?? '';
