@@ -75,22 +75,25 @@ function format_memory_dump(array $mem): string
 {
     $dec_lines = [];
     $hex_lines = [];
+    $bin_lines = [];
     $ascii_lines = [];
 
     // Заголовки
-    $dec_lines[]   = "DEC | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
-    $hex_lines[]   = "HEX | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
+    $dec_lines[]   = "DEC  | 000 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015";
+    $hex_lines[]   = "HEX  | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
+    $bin_lines[]   = "BIN  | ";
     $ascii_lines[] = "ASCII";
 
-    $dec_lines[]   = "----|----------------------------------------------------------------";
-    $hex_lines[]   = "----|------------------------------------------------";
+    $dec_lines[]   = "-----|----------------------------------------------------------------";
+    $hex_lines[]   = "-----|------------------------------------------------";
+    $bin_lines[]   = "----------------";
     $ascii_lines[] = "----------------";
 
-    // Содержимое памяти по строкам
     for ($row = 0; $row < 16; $row++)
     {
         $dec_row = [];
         $hex_row = [];
+        $bin_row = [];
         $ascii_row = [];
 
         for ($i = 0; $i < 16; $i++)
@@ -98,22 +101,27 @@ function format_memory_dump(array $mem): string
             $index = $row * 16 + $i;
             $val = $mem[$index] ?? 0;
 
-            // DEC
-            $dec_row[] = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
-            // HEX
-            $hex_row[] = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
-            // ASCII
+            $dec_row[]  = str_pad((string)$val, 3, '0', STR_PAD_LEFT);
+            $hex_row[]  = strtoupper(str_pad(dechex($val), 2, '0', STR_PAD_LEFT));
+            $bin_row[]  = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
             $ascii_row[] = ($val >= 32 && $val <= 126) ? chr($val) : '.';
         }
-        $dec_offset = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT); // десятичный offset с ведущими нулями
+
+        $dec_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT);
+        $hex_offset   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
+        $bin_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT); // можно не использовать
+        $ascii_prefix = "     ";
 
         $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
-        $hex_lines[]   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT)) . "  | " . implode(' ', $hex_row);
-        $ascii_lines[] = implode('', $ascii_row);
+        $hex_lines[]   = "$hex_offset  | " . implode(' ', $hex_row);
+        $bin_lines[]   = $ascii_prefix . "  " . implode(' ', $bin_row);
+        $ascii_lines[] = $ascii_prefix . "  " . implode('', $ascii_row);
     }
+
     return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
         <pre>" . implode("\n", $dec_lines) . "</pre>
         <pre>" . implode("\n", $hex_lines) . "</pre>
+        <pre>" . implode("\n", $bin_lines) . "</pre>
         <pre>" . implode("\n", $ascii_lines) . "</pre>
     </div>";
 }
@@ -133,20 +141,38 @@ $memoryDump = format_memory_dump($mem);
     <meta charset="UTF-8">
     <title>RQ Интерпретатор</title>
     <style>
-    body {
-        font-family: monospace;
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
         background: #111;
         color: #eee;
-        padding: 2em;
+        font-family: monospace;
+    }
+    body {
         display: flex;
-        gap: 2em;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2em;
+        width: 100%;
+        max-width: 1400px;
     }
     form {
-        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1em;
     }
-    .memory {
-        flex: 1;
-        max-width: 1200px;
+    .controls {
+        display: flex;
+        gap: 1em;
+        align-items: center;
     }
     textarea, select, input[type=submit] {
         font-family: monospace;
@@ -158,39 +184,40 @@ $memoryDump = format_memory_dump($mem);
     textarea {
         width: 600px;
         height: 300px;
-        font-family: monospace;
+    }
+    .memory {
+        width: 100%;
+        margin-top: 2em;
     }
     pre {
         background: #222;
         padding: 1em;
         margin-top: 1em;
         line-height: 1.3em;
-    }
-    .controls {
-        margin-top: 1em;
-        display: flex;
-        gap: 1em;
-        align-items: center;
+        overflow-x: auto;
     }
     </style>
 </head>
 <body>
-    <form method="post">
-        <h2>RQ Интерпретатор</h2>
-        <div class="controls">
-            <label>Синтаксис:
-                <select name="mode">
-                    <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
-                    <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
-                </select>
-            </label>
-            <input type="submit" value="Выполнить">
+    <div class="container">
+        <form method="post">
+            <h2>RQ Интерпретатор</h2>
+            <div class="controls">
+                <label>Синтаксис:
+                    <select name="mode">
+                        <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
+                        <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
+                    </select>
+                </label>
+                <input type="submit" value="Выполнить">
+            </div>
+            <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
+        </form>
+
+        <div class="memory">
+            <h2>Память</h2>
+            <?=$memoryDump?>
         </div>
-        <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
-    </form>
-    <div class="memory">
-        <h2>Память</h2>
-        <?=$memoryDump?>
     </div>
 </body>
 </html>
