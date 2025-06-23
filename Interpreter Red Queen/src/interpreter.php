@@ -2,11 +2,12 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-//
+
 session_start();
 
 // Post → Redirect → Get
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
+{
     $_SESSION['last_input'] = $_POST;
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
@@ -15,12 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Восстановление данных после редиректа
 $inputCode = '';
 $mode = 'bf';
-if (isset($_SESSION['last_input'])) {
+
+if (isset($_SESSION['last_input']))
+{
     $inputCode = $_SESSION['last_input']['code'] ?? '';
     $mode = $_SESSION['last_input']['mode'] ?? 'bf';
     unset($_SESSION['last_input']);
 }
-//
 function rq_run_bf(string $code): array
 {
     $memory = array_fill(0, 256, 0);
@@ -37,7 +39,8 @@ function rq_run_bf(string $code): array
         {
             $rhs_index = strlen($rhs) === 2 ? $ptr : (int) trim($rhs, '[]');
             $rhs_value = $memory[$rhs_index];
-        } else {
+        }
+        else {
             $rhs_value = (int)$rhs;
         }
         switch ($op) {
@@ -51,7 +54,6 @@ function rq_run_bf(string $code): array
     }
     return $memory;
 }
-//
 function rq_run_asm(string $code): array
 {
     $memory = array_fill(0, 256, 0);
@@ -60,7 +62,6 @@ function rq_run_asm(string $code): array
     foreach ($lines as $line)
     {
         $line = trim($line);
-
         if ($line === '') continue;
         if (!preg_match('/^(MOV|ADD|SUB|MUL|DIV|MOD)\s+(\[\d*\]|\[\])\s*,\s*(\[\d*\]|\[\]|\d+)$/i', $line, $m)) continue;
 
@@ -74,7 +75,8 @@ function rq_run_asm(string $code): array
         {
             $rhs_index = $rhs_raw === '[]' ? $ptr : (int) trim($rhs_raw, '[]');
             $rhs_value = $memory[$rhs_index];
-        } else {
+        }
+        else {
             $rhs_value = (int)$rhs_raw;
         }
         switch ($cmd) {
@@ -88,9 +90,10 @@ function rq_run_asm(string $code): array
     }
     return $memory;
 }
-//
 function format_memory_dump_bin(array $mem): string
 {
+    $lines = [];
+
     // Заголовок (offset + 16 колонок)
     $header = '    BIN    |';
     for ($col = 0; $col < 16; $col++)
@@ -101,7 +104,7 @@ function format_memory_dump_bin(array $mem): string
     $lines[] = $header;
 
     // Разделитель строк (по ширине заголовка)
-    $lines[] = '-----------|' . str_repeat('-', strlen($header) - strlen('----------|') - 1);
+    $lines[] = '-----------|' . str_repeat('-', strlen($header) - strlen('-----------|'));
 
     // Содержимое памяти
     for ($row = 0; $row < 256; $row += 16)
@@ -111,14 +114,12 @@ function format_memory_dump_bin(array $mem): string
         foreach ($chunk as $val)
         {
             $bin = str_pad(decbin($val), 8, '0', STR_PAD_LEFT);
-            //$line .= ' ' . substr($bin, 0, 4) . ':' . substr($bin, 4, 4);
             $line .= ' ' . str_pad(substr($bin, 0, 4) . ':' . substr($bin, 4, 4), 10, ' ', STR_PAD_RIGHT);
         }
         $lines[] = $line;
     }
     return '<pre>' . implode("\n", $lines) . '</pre>';
 }
-//
 function format_memory_dump(array $mem): string
 {
     $dec_lines = [];
@@ -157,7 +158,6 @@ function format_memory_dump(array $mem): string
 
         $dec_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT);
         $hex_offset   = strtoupper(str_pad(dechex($row), 2, '0', STR_PAD_LEFT));
-        $bin_offset   = str_pad((string)($row * 16), 3, '0', STR_PAD_LEFT); // можно не использовать
         $ascii_prefix = "     ";
 
         $dec_lines[]   = "$dec_offset | " . implode(' ', $dec_row);
@@ -165,7 +165,6 @@ function format_memory_dump(array $mem): string
         $bin_lines[]   = $ascii_prefix . "  " . implode(' ', $bin_row);
         $ascii_lines[] = $ascii_prefix . "  " . implode('', $ascii_row);
     }
-
     return "<div style=\"display: flex; gap: 30px; font-family: monospace; font-size: 14px;\">
         <pre>" . implode("\n", $dec_lines) . "</pre>
         <pre>" . implode("\n", $hex_lines) . "</pre>
@@ -173,11 +172,10 @@ function format_memory_dump(array $mem): string
         <pre>" . implode("\n", $ascii_lines) . "</pre>
     </div>";
 }
-//
 $mode = $_POST['mode'] ?? 'bf';
 $inputCode = $_POST['code'] ?? '';
 $mem = array_fill(0, 256, 0);
-//
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $inputCode !== '') {
     $mem = $mode === 'asm' ? rq_run_asm($inputCode) : rq_run_bf($inputCode);
 }
@@ -186,102 +184,89 @@ $memoryDump = format_memory_dump($mem);
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>RQ Интерпретатор</title>
-    <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background: #111;
-        color: #eee;
-        font-family: monospace;
-    }
-    body {
-        /*display: flex;/** */
-        /*flex-direction: column;/** */
-        /*align-items: center;/** */
-        justify-content: center;/** */
-
-        font-family: monospace;
-        background: #111;
-        color: #eee;
-        padding: 2em;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2em;
-    }
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2em;
-        width: 100%;
-        max-width: 1400px;
-    }
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1em;
-    }
-    .controls {
-        display: flex;
-        gap: 1em;
-        align-items: center;
-    }
-    textarea, select, input[type=submit] {
-        font-family: monospace;
-        background: #222;
-        color: #fff;
-        border: none;
-        padding: 0.5em;
-    }
-    textarea {
-        width: 600px;
-        height: 300px;
-    }
-    .memory {
-        /*width: 100%;/** */
-        /*margin-top: 2em;/** */
-
-        flex: 1 1 45%;
-        max-width: 800px;
-    }
-    pre {
-        background: #222;
-        padding: 1em;
-        margin-top: 1em;
-        line-height: 1.3em;
-        overflow-x: auto;
-    }
-    </style>
+  <meta charset="UTF-8">
+  <title>RQ Интерпретатор</title>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #111;
+    color: #eee;
+    font-family: monospace;
+  }
+  body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    padding: 2em;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    width: 100%;
+    max-width: 1400px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+  }
+  .controls {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+  }
+  textarea, select, input[type=submit] {
+    font-family: monospace;
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 0.5em;
+  }
+  textarea {
+    width: 600px;
+    height: 300px;
+  }
+  .memory {
+    flex: 1 1 45%;
+    max-width: 800px;
+  }
+  pre {
+    background: #222;
+    padding: 1em;
+    margin-top: 1em;
+    line-height: 1.3em;
+    overflow-x: auto;
+  }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <form method="post">
-            <h2>RQ Интерпретатор</h2>
-            <div class="controls">
-                <label>Синтаксис:
-                    <select name="mode">
-                        <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
-                        <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
-                    </select>
-                </label>
-                <input type="submit" value="Выполнить">
-            </div>
-            <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
-        </form>
-        <!--.-->
-        <div class="memory">
-            <h2>Память (DEC/HEX/ASCII)</h2>
-            <?=$memoryDump?>
-        </div>
-        <div class="memory">
-            <h2>Память (BIN)</h2>
-            <?=format_memory_dump_bin($mem)?>
-        </div>
-        <!--.-->
+  <div class="container">
+    <form method="post">
+      <h2>RQ Интерпретатор</h2>
+      <div class="controls">
+        <label>Синтаксис:
+          <select name="mode">
+            <option value="bf" <?=$mode === 'bf' ? 'selected' : ''?>>Brainfuck++</option>
+            <option value="asm" <?=$mode === 'asm' ? 'selected' : ''?>>Assembly</option>
+          </select>
+        </label>
+        <input type="submit" value="Выполнить">
+      </div>
+      <textarea name="code" rows="10" cols="40" placeholder="Введите код..."><?=htmlspecialchars($inputCode)?></textarea>
+    </form>
+    <div class="memory">
+      <h2>Память (DEC/HEX/ASCII)</h2>
+      <?=$memoryDump?>
     </div>
+    <div class="memory">
+      <h2>Память (BIN)</h2>
+      <?=format_memory_dump_bin($mem)?>
+    </div>
+  </div>
 </body>
 </html>
