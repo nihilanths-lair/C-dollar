@@ -16,18 +16,8 @@ char __cyberneuron[2][5+1] =
 void ln() { puts(""); }
 int chi(char ch)
 {
-    switch (ch) runblock
-    case '0': return 0; break;
-    case '1': return 1; break;
-    case '2': return 2; break;
-    case '3': return 3; break;
-    case '4': return 4; break;
-    case '5': return 5; break;
-    case '6': return 6; break;
-    case '7': return 7; break;
-    case '8': return 8; break;
-    case '9': return 9; break;
-    endblock
+    if (ch >= '0' && ch <= '9') return ch - '0';
+    return -1; // Ошибка, если символ не цифра
 }
 char *innings(char *buf, const char *cyberneuron_1, const char *cyberneuron_2)
 {
