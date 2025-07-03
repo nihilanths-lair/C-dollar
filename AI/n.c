@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+// Удобно для конструкции switch-case
 #define runblock {
 #define endblock }
 
