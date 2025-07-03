@@ -23,9 +23,9 @@ int chi(char ch)
 char *innings(char *buf, const char *cyberneuron_1, const char *cyberneuron_2)
 {
     snprintf(buf, sizeof (buf), "%d", chi(cyberneuron_1[0]) && chi(cyberneuron_2[0]));
-    /**/
+    /***/
     /** Здесь будет дальнейшая реализация... */
-    /**/
+    /***/
     return buf;
 }
 int main()
