@@ -80,14 +80,14 @@
 
 | Исходный код              | Десятичная СС | Шестнадцатеричная CC |
 |---------------------------|---------------|----------------------|
-| MOV AX, i16 / mov ax, i16 | 184 + 0–65535 | B8 + 0–FFFF          |
-| MOV CX, i16 / mov cx, i16 | 185 + 0–65535 | B9 + 0–FFFF          |
-| MOV DX, i16 / mov dx, i16 | 186 + 0–65535 | BA + 0–FFFF          |
-| MOV BX, i16 / mov bx, i16 | 187 + 0–65535 | BB + 0–FFFF          |
-| MOV SP, i16 / mov sp, i16 | 188 + 0–65535 | BC + 0–FFFF          |
-| MOV BP, i16 / mov bp, i16 | 189 + 0–65535 | BD + 0–FFFF          |
-| MOV SI, i16 / mov si, i16 | 190 + 0–65535 | BE + 0–FFFF          |
-| MOV DI, i16 / mov di, i16 | 191 + 0–65535 | BF + 0–FFFF          |
+| MOV AX, i16 / mov ax, i16 | 184 + 000–65535 | B8 + 0–FFFF          |
+| MOV CX, i16 / mov cx, i16 | 185 + 000–65535 | B9 + 0–FFFF          |
+| MOV DX, i16 / mov dx, i16 | 186 + 000–65535 | BA + 0–FFFF          |
+| MOV BX, i16 / mov bx, i16 | 187 + 000–65535 | BB + 0–FFFF          |
+| MOV SP, i16 / mov sp, i16 | 188 + 000–65535 | BC + 0–FFFF          |
+| MOV BP, i16 / mov bp, i16 | 189 + 000–65535 | BD + 0–FFFF          |
+| MOV SI, i16 / mov si, i16 | 190 + 000–65535 | BE + 0–FFFF          |
+| MOV DI, i16 / mov di, i16 | 191 + (000–255 + 000–255 = 65'535) | BF + 0–FFFF          |
 
 ---
 
